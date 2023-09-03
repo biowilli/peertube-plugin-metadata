@@ -215,8 +215,6 @@ async function register({ registerVideoField, peertubeHelpers }) {
             );
           } else {
             creators.map((creator) => {
-              console.log("creator");
-              console.log(creator + "1111:", creator);
               registerVideoField(
                 {
                   name: "creator" + "-" + creator.id + "-" + creator.name,
@@ -933,7 +931,6 @@ async function register({ registerVideoField, peertubeHelpers }) {
                 { label: "Season", value: "season" },
                 { label: "Episode", value: "episode" },
               ],
-
               default: "",
               hidden: false,
               error: false,
