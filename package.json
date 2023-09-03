@@ -1,14 +1,14 @@
 {
-  "name": "peertube-plugin-ebu",
-  "description": "Enables the addition of EBU metadata",
-  "version": "0.1.20",
+  "name": "peertube-plugin-metadata",
+  "description": "Enables the addition of metadata",
+  "version": "1.0.0",
   "author": "biowilli",
   "repository": {
     "type": "git",
-    "url": "https://github.com/biowilli/peertube-plugin-ebu.git"
+    "url": "https://github.com/biowilli/peertube-plugin-metadata.git"
   },
   "license": "AGPL-3.0",
-  "bugs": "https://github.com/biowilli/peertube-plugin-ebu/issues",
+  "bugs": "https://github.com/biowilli/peertube-plugin-metadata/issues",
   "clientScripts": [
     {
       "script": "client/video-edit-client-plugin.js",
@@ -88,5 +88,8 @@
   },
   "dependencies": {
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@peertube/peertube-types": "^5.2.0"
   }
 }

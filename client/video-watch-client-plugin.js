@@ -6,101 +6,118 @@ function register({ registerHook, peertubeHelpers }) {
       console.log(video.pluginData);
       var json = extractIds(video.pluginData)
       var sortedJson = sortedData(json);
+
+      peertubeHelpers.getSettings()
+      .then(setting => {
       
+      if (setting['title-block-view-active']) {
       //Title
       createHeaderField("Title", 2);
-      createVideoInfo("Titlenotiz", sortedJson["title.note"]);
-      createVideoInfo("Title", sortedJson["title.title"]);
+      if (setting['title-note-element-view-active']) createVideoInfo("Titlenotiz", sortedJson["title.note"]);
+      if (setting['title-element-view-active']) createVideoInfo("Title", sortedJson["title.title"]);
       //createVideoInfo("Titlenotiz3", sortedJson["title.note"]);
-      createVideoInfo("descriptiveTitle", sortedJson["title.descriptiveTitle"]);
+      if (setting['descriptiveTitle-element-view-active']) createVideoInfo("descriptiveTitle", sortedJson["title.descriptiveTitle"]);
       //createVideoInfo("Titlenotiz2", sortedJson["title.note"]);
-      createVideoInfo("discTitle", sortedJson["title.discTitle"]);
+      if (setting['discTitle-element-view-active']) createVideoInfo("discTitle", sortedJson["title.discTitle"]);
       //createVideoInfo("Titlenotiz3", sortedJson["title.note"]);
       createLine();
+      }
 
+      if (setting['description-block-view-active']) {
       //Description
       createHeaderField("Description", 2);
-      createVideoInfo("Subject", sortedJson["description.subject"]);
-      createVideoInfo("Text", sortedJson["description.text"]);
-      createVideoInfo("Tags", sortedJson["description.tags"]);
+      if (setting['subject-element-view-active']) createVideoInfo("Subject", sortedJson["description.subject"]);
+      if (setting['text-element-view-active']) createVideoInfo("Text", sortedJson["description.text"]);
+      if (setting['tags-element-view-active']) createVideoInfo("Tags", sortedJson["description.tags"]);
       createLine();
-            
+      }
+
+      if (setting['creator-block-view-active']) {
       //creator
-      createList("Creator", sortedJson["creator"]);
-
+      if (setting['creator-element-view-active']) createList("Creator", sortedJson["creator"]);
+    }
+      if (setting['contributor-block-view-active']) {
       //contributor
-      createList("Contributor", sortedJson["contributor"]);
+      if (setting['contributor-element-view-active']) createList("Contributor", sortedJson["contributor"]);
+    }
+    if (setting['publisher-block-view-active']) {
       //publisher
-      createList("Publisher", sortedJson["organization"]);
-      
-
-      
+      if (setting['publisher-element-view-active']) createList("Publisher", sortedJson["organization"]);
+    }
+    if (setting['dates-block-view-active']) {
       //Dates
       createHeaderField("Dates", 2);
-      createVideoInfo("Date Digitalisied", sortedJson["dates.dateDigitalised"]);
-      createVideoInfo("Video Links", sortedJson["dates.videLinks"]);
+      if (setting['dateDigitalised-element-view-active']) createVideoInfo("Date Digitalisied", sortedJson["dates.dateDigitalised"]);
+      if (setting['videLinks-element-view-active']) createVideoInfo("Video Links", sortedJson["dates.videLinks"]); //TODO stimmt das
       createHeaderField("Issued", 3);
-      createVideoInfo("First Issued", sortedJson[ "dates.coverage.firstIssued"]);
-      createVideoInfo("Last Issued", sortedJson[ "dates.coverage.lastIssued"]);
+      if (setting['firstIssued-element-view-active']) createVideoInfo("First Issued", sortedJson[ "dates.coverage.firstIssued"]);
+      if (setting['lastIssued-element-view-active']) createVideoInfo("Last Issued", sortedJson[ "dates.coverage.lastIssued"]);
       
       createHeaderField("Coverage", 3);
-      createVideoInfo("Date Recorded", sortedJson[ "dates.coverage.daterecorded"]);
-      createVideoInfo("Location", sortedJson[ "dates.coverage.recordingLocation0"]);
-      createVideoInfo("Location", sortedJson[ "dates.coverage.recordingLocation1"]);
+      if (setting['daterecorded-element-view-active']) createVideoInfo("Date Recorded", sortedJson[ "dates.coverage.daterecorded"]);
+      if (setting['recordingLocation0-element-view-active']) createVideoInfo("Location", sortedJson[ "dates.coverage.recordingLocation0"]);
+      if (setting['recordingLocation1-element-view-active']) createVideoInfo("Location", sortedJson[ "dates.coverage.recordingLocation1"]);
 
       
       createHeaderField("PublicationHistory", 3);
-      createVideoInfo("Date Recorded", sortedJson[ "dates.publicationHistory.firstPublicationChannel"]);
-      createVideoInfo("Time", sortedJson[ "dates.publicationHistory.firstPublicationTime"]);
-      createVideoInfo("Date", sortedJson[ "dates.publicationHistory.firstPublicationDate"]);
-      createVideoInfo("ReapeatChannel", sortedJson[ "dates.publicationHistory.repeatChannel"]);
+      if (setting['firstPublicationChannel-element-view-active']) createVideoInfo("Date Recorded", sortedJson[ "dates.publicationHistory.firstPublicationChannel"]);
+      if (setting['firstPublicationTime-element-view-active']) createVideoInfo("Time", sortedJson[ "dates.publicationHistory.firstPublicationTime"]);
+      if (setting['firstPublicationDate-element-view-active']) createVideoInfo("Date", sortedJson[ "dates.publicationHistory.firstPublicationDate"]);
+      if (setting['repeatChannel-element-view-active']) createVideoInfo("ReapeatChannel", sortedJson[ "dates.publicationHistory.repeatChannel"]);
 
       
       createHeaderField("ArchiveData", 3);
-      createVideoInfo("File Path", sortedJson["dates.archiveData.archiveFilePath"]);
-      createVideoInfo("Filesize", sortedJson["dates.archiveData.filesize"]);
-      createVideoInfo("Filename", sortedJson["dates.archiveData.filename"]);
-      createVideoInfo("ArchiveLocation", sortedJson["dates.archiveData.archiveLocation"]);
+      if (setting['archiveFilePath-element-view-active']) createVideoInfo("File Path", sortedJson["dates.archiveData.archiveFilePath"]);
+      if (setting['filesize-element-view-active']) createVideoInfo("Filesize", sortedJson["dates.archiveData.filesize"]);
+      if (setting['filename-element-view-active']) createVideoInfo("Filename", sortedJson["dates.archiveData.filename"]);
+      if (setting['archiveLocation-element-view-active']) createVideoInfo("ArchiveLocation", sortedJson["dates.archiveData.archiveLocation"]);
       createLine();
-      
+    }
+
+    if (setting['videoInformation-block-view-active']) {
       createHeaderField("Video Information", 2);
-      createVideoInfo("Category", sortedJson["dates.videoInformation.category"]);
-      createVideoInfo("Genre", sortedJson["videoInformation.genre"]);
-      createVideoInfo("Language", sortedJson["videoInformation.language"]);
-      createVideoInfo("Parts", sortedJson["videoInformation.parts"]);
-      createVideoInfo("relation", sortedJson["videoInformation.relation"]);
-      createVideoInfo("showType", sortedJson["videoInformation.showType.serie"]);
-      createVideoInfo("source", sortedJson["videoInformation.source"]);
-      createVideoInfo("targetGroup", sortedJson["videoInformation.targetGroup"]);
-      createVideoInfo("version", sortedJson["videoInformation.version"]);
+      if (setting['category-element-view-active']) createVideoInfo("Category", sortedJson["dates.videoInformation.category"]);
+      if (setting['genre-element-view-active']) createVideoInfo("Genre", sortedJson["videoInformation.genre"]);
+      if (setting['language-element-view-active']) createVideoInfo("Language", sortedJson["videoInformation.language"]);
+      if (setting['parts-element-view-active']) createVideoInfo("Parts", sortedJson["videoInformation.parts"]);
+      if (setting['relation-element-view-active']) createVideoInfo("relation", sortedJson["videoInformation.relation"]);
+      if (setting['serie-element-view-active']) createVideoInfo("showType", sortedJson["videoInformation.showType.serie"]);
+      if (setting['source-element-view-active']) createVideoInfo("source", sortedJson["videoInformation.source"]);
+      if (setting['targetGroup-element-view-active']) createVideoInfo("targetGroup", sortedJson["videoInformation.targetGroup"]);
+      if (setting['version-element-view-active']) createVideoInfo("version", sortedJson["videoInformation.version"]);
       createLine();
-      
+    }
+
+    if (setting['rating-block-view-active']) {
       createHeaderField("Rating", 3);
-      createVideoInfo("Notes", sortedJson["videoInformation.rating.notes"]);
-      createVideoInfo("ratingScaleMinValue", sortedJson["videoInformation.rating.ratingScaleMinValue"]);
-      createVideoInfo("ratingScaleMaxValue", sortedJson["videoInformation.rating.ratingScaleMaxValue"]);
-      createVideoInfo("ratingValue", sortedJson["videoInformation.rating.ratingScaleMaxValue"]);
+      if (setting['notes-element-view-active']) createVideoInfo("Notes", sortedJson["videoInformation.rating.notes"]);
+      if (setting['ratingScaleMinValue-element-view-active']) createVideoInfo("ratingScaleMinValue", sortedJson["videoInformation.rating.ratingScaleMinValue"]);
+      if (setting['ratingScaleMaxValue-element-view-active']) createVideoInfo("ratingScaleMaxValue", sortedJson["videoInformation.rating.ratingScaleMaxValue"]);
+      if (setting['ratingValue-element-view-active']) createVideoInfo("ratingValue", sortedJson["videoInformation.rating.ratingValue"]);
       createLine();
-      
+    }
+
+    if (setting['rights-block-view-active']) {
       createHeaderField("Rights", 2);
       createHeaderField("Cobyright", 3);
-      createVideoInfo("rightId", sortedJson["rights.cobyright.rightId"]);
-      createVideoInfo("rightClearanceFlag", sortedJson["rights.cobyright.rightClearanceFlag"]);
-      createVideoInfo("explotationIssues", sortedJson["rights.cobyright.explotationIssues"]);
-      createVideoInfo("disclaimer", sortedJson["rights.cobyright.disclaimer"]);
+      if (setting['cobyrightRightId-element-view-active']) createVideoInfo("rightId", sortedJson["rights.cobyright.rightId"]);
+      if (setting['cobyrightRightClearanceFlag-element-view-active']) createVideoInfo("rightClearanceFlag", sortedJson["rights.cobyright.rightClearanceFlag"]);
+      if (setting['cobyrightExplotationIssues-element-view-active']) createVideoInfo("explotationIssues", sortedJson["rights.cobyright.explotationIssues"]);
+      if (setting['cobyrightDisclaimer-element-view-active']) createVideoInfo("disclaimer", sortedJson["rights.cobyright.disclaimer"]);
       createHeaderField("coverage", 4);
       //createVideoInfo("coverage", sortedJson["rights.cobyright.coverage"]);
+    }
 
-      
 +     createHeaderField("usageRights", 3);
-      createVideoInfo("rightId", sortedJson["rights.usageRights.rightId"]);
-      createVideoInfo("rightClearanceFlag", sortedJson["rights.usageRights.rightClearanceFlag"]);
-      createVideoInfo("explotationIssues", sortedJson["rights.usageRights.explotationIssues"]);
-      createVideoInfo("disclaimer", sortedJson["rights.usageRights.disclaimer"]);
+      if (setting['usageRightsRightId-element-view-active']) createVideoInfo("rightId", sortedJson["rights.usageRights.rightId"]);
+      if (setting['usageRightsRightClearanceFlag-element-view-active']) createVideoInfo("rightClearanceFlag", sortedJson["rights.usageRights.rightClearanceFlag"]);
+      if (setting['usageRightsExplotationIssues-element-view-active']) createVideoInfo("explotationIssues", sortedJson["rights.usageRights.explotationIssues"]);
+      if (setting['usageRightsDisclaimer-element-view-active']) createVideoInfo("disclaimer", sortedJson["rights.usageRights.disclaimer"]);
       createHeaderField("coverage", 4);
       //createVideoInfo("coverage", sortedJson["rights.cobyright.coverage"]);
       createLine();
-      
+     
+    })
     }});
 }
 

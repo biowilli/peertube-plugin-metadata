@@ -1,62 +1,50 @@
-
 async function register({
   registerHook,
   storageManager,
   getRouter,
-  videoCategoryManager,
+  registerSetting
 }) {
-  var { initCreatorController }  = require("./controller/creator.js");
-  var { initGenreController } = require("./controller/genre.js");
-  var { initOrganizationController }  = require("./controller/organization.js");
+    const { initRegisterSettings }  = require("./server/settings.js");
+    const { initCreatorController }  = require("./server/controller/creator.js");
+    const { initGenreController } = require("./server/controller/genre.js");
+    const { initOrganizationController }  = require("./server/controller/organization.js");
+    initRegisterSettings(registerSetting);
 
-  var router = getRouter();
-  initCreatorController(router, storageManager);
-  initGenreController(router, storageManager);
-  initOrganizationController(router, storageManager);
+    var router = getRouter();
+    initCreatorController(router, storageManager);
+    initGenreController(router, storageManager);
+    initOrganizationController(router, storageManager);
 
-  videoCategoryManager.deleteConstant();
-  // Store data associated to this video
-  registerHook({
-    target: "action:api.video.updated",
-    handler: ({ video, body }) => {
-      if (!body.pluginData) return;
-      console.log(body.pluginData);
-      console.log("unflattenJSON");
-
-      storageManager.storeData("metadata-" + video.id, unflattenJSON(body.pluginData));
-    }
-  });
-
-  // Add your custom value to the video, so the client autofill your field using the previously stored value
-  registerHook({
-    target: "filter:api.video.get.result",
-    handler: async (video) => {
-      if (!video) return video;
-      if (!video.pluginData) video.pluginData = {};
-      var storedData = await storageManager.getData(
-        "metadata-" + video.id
-      );
-
-/* 
-      if (ebuField == "title") {
-        video.pluginData[ebuField] = video.dataValues.name;
-        return;
+    // Store data associated to this video
+    registerHook({
+      target: "action:api.video.updated",
+      handler: ({ video, body }) => {
+        if (!body.pluginData) return;
+        storageManager.storeData("metadata-" + video.id, unflattenJSON(body.pluginData));
       }
+    });
 
-      if (ebuField == "duration") {
-        video.pluginData[ebuField] = video.dataValues.duration;
-        return;
-      } */
+    // Add your custom value to the video, so the client autofill your field using the previously stored value
+    registerHook({
+      target: "filter:api.video.get.result",
+      handler: async (video) => {
+        if (!video) return video;
+        console.log("console.log(video2);");
+        console.log(video);
+        
+        if (!video.pluginData) video.pluginData = {};
+        var storedData = await storageManager.getData(
+          "metadata-" + video.id
+        );
 
-      var flattedData = flattenJSON(storedData)
-      console.log(flattedData);
-      
-      video.pluginData = flattedData;
-      
-      return video;
-    },
-  });
-}
+        var flattedData = flattenJSON(storedData)
+        
+        video.pluginData = flattedData;
+        
+        return video;
+      },
+    });
+  }
 
 function getNestedArray(data) {
   // Konvertiere das Objekt in ein JSON-Format
@@ -78,8 +66,6 @@ function getNestedArray(data) {
   console.log('Contributor keys:', sortedKeys.contributorKeys);
   console.log('Organization keys:', sortedKeys.organizationKeys);
 
-
-  
   var tagResult = [];
   var tagResult = data.tags.split(",").map(function(tag) {
     return tag.trim();

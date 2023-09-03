@@ -76,5 +76,4 @@ const initOrganizationController = (router, storageManager) => {
 
 module.exports = {
   initOrganizationController,
-  initOrganizationController,
 };

@@ -1,7 +1,7 @@
-async function register({
-  registerVideoField,
-  peertubeHelpers,
-}) {
+async function register({ registerVideoField, peertubeHelpers }) {
+  //TODO translate('hello');
+  //TODO wird mehrmals aufgerufen
+
   function getData() {
     const fetchUsers = fetch("http://localhost:9000/api/v1/users", {
       method: "GET",
@@ -32,18 +32,22 @@ async function register({
       }
     ).then((response) => response.json());
 
-    Promise.all([fetchCreator, fetchUsers, fetchOrganizations, fetchGenre]).then(
-      ([creatorResponse, usersResponse, organizationsResponse, genreResponse]) => {
+    Promise.all([
+      fetchCreator,
+      fetchUsers,
+      fetchOrganizations,
+      fetchGenre,
+    ]).then(
+      ([
+        creatorResponse,
+        usersResponse,
+        organizationsResponse,
+        genreResponse,
+      ]) => {
         const creators = creatorResponse.data;
         const users = usersResponse.data;
         const organizations = organizationsResponse.data;
         const genre = genreResponse.data;
-
-        const genreOptions = genre.map((x) => {
-          return { label: x.name, value: x.id };
-        });
-
-        console.log(genreOptions);
 
         for (const type of [
           "upload",
@@ -53,7 +57,6 @@ async function register({
           "go-live",
         ]) {
           const videoFormOptions = {
-            // type: 'main' | 'plugin-settings'
             tab: "plugin-settings",
           };
 
@@ -86,7 +89,23 @@ async function register({
               ...videoFormOptions,
             }
           );
-          
+
+          registerVideoField(
+            {
+              name: "title.title.note",
+              label: "Title Note",
+              descriptionHTML: "Title Notiz",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
           registerVideoField(
             {
               name: "title.descriptiveTitle",
@@ -102,6 +121,23 @@ async function register({
               ...videoFormOptions,
             }
           );
+
+          registerVideoField(
+            {
+              name: "title.descriptiveTitle.note",
+              label: "Title Descriptive Note",
+              descriptionHTML: "Beschreibender Titel Notiz",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
           registerVideoField(
             {
               name: "title.discTitle",
@@ -117,6 +153,23 @@ async function register({
               ...videoFormOptions,
             }
           );
+
+          registerVideoField(
+            {
+              name: "title.discTitle.note",
+              label: "Alternative Title Note",
+              descriptionHTML: "Untertitel Notiz",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
           registerVideoField(
             {
               name: "title.note",
@@ -150,7 +203,7 @@ async function register({
             registerVideoField(
               {
                 type: "html",
-                html: "Füge noch in Creator einen Creator hinzu",
+                html: "Add a Creator in creator",
                 default: "",
                 hidden: false,
                 error: false,
@@ -160,25 +213,26 @@ async function register({
                 ...videoFormOptions,
               }
             );
+          } else {
+            creators.map((creator) => {
+              console.log("creator");
+              console.log(creator + "1111:", creator);
+              registerVideoField(
+                {
+                  name: "creator" + "-" + creator.id + "-" + creator.name,
+                  label: creator.name,
+                  type: "input-checkbox",
+                  hidden: false,
+                  error: false,
+                },
+                {
+                  type,
+                  ...videoFormOptions,
+                  value: false,
+                }
+              );
+            });
           }
-          creators.map((creator) => {
-            console.log("creator");
-            console.log(creator + "1111:", creator);
-            registerVideoField(
-              {
-                name: "creator" + "-" + creator.id + "-" + creator.name,
-                label: creator.name,
-                type: "input-checkbox",
-                hidden: false,
-                error: false,
-              },
-              {
-                type,
-                ...videoFormOptions,
-                value: false,
-              }
-            );
-          });
 
           //Headline Contributors
           registerVideoField(
@@ -198,7 +252,7 @@ async function register({
             registerVideoField(
               {
                 type: "html",
-                html: "Füge noch in Creator einen Creator hinzu",
+                html: "Add a contributor in creators",
                 default: "",
                 hidden: false,
                 error: false,
@@ -208,24 +262,24 @@ async function register({
                 ...videoFormOptions,
               }
             );
+          } else {
+            creators.map((creator) => {
+              registerVideoField(
+                {
+                  name: "contributor" + "-" + creator.id + "-" + creator.name,
+                  label: creator.name,
+                  type: "input-checkbox",
+                  hidden: false,
+                  error: false,
+                },
+                {
+                  type,
+                  ...videoFormOptions,
+                  value: false,
+                }
+              );
+            });
           }
-          creators.map((creator) => {
-            registerVideoField(
-              {
-                name: "contributor"+ "-" + creator.id + "-" + creator.name,
-                label: creator.name,
-                type: "input-checkbox",
-                hidden: false,
-                error: false,
-              },
-              {
-                type,
-                ...videoFormOptions,
-                value: false,
-              }
-            );
-          });
-
           //Headline Publisher
           registerVideoField(
             {
@@ -240,37 +294,44 @@ async function register({
               ...videoFormOptions,
             }
           );
-          if (organizations.length === 0) {
-          registerVideoField(
-            {
-              type: "html",
-              html: "Füge noch in Organization einen Publisher hinzu",
-              default: "",
-              hidden: false,
-              error: false,
-            },
-            {
-              type,
-              ...videoFormOptions,
-            }
-          );
-        }
-          organizations.map((organisation) => {
+          if (organizations === undefined || organizations.length === 0) {
             registerVideoField(
               {
-                name: "organization"+ "-" + organisation.id + "-" + organisation.name,
-                label: organisation.name,
-                type: "input-checkbox",
+                type: "html",
+                html: "Füge noch in Organization einen Publisher hinzu",
+                default: "",
                 hidden: false,
                 error: false,
               },
               {
                 type,
                 ...videoFormOptions,
-                value: false,
               }
             );
-          });
+          } else {
+            console.log(organizations);
+            organizations.map((organisation) => {
+              registerVideoField(
+                {
+                  name:
+                    "organization" +
+                    "-" +
+                    organisation.id +
+                    "-" +
+                    organisation.name,
+                  label: organisation.name,
+                  type: "input-checkbox",
+                  hidden: false,
+                  error: false,
+                },
+                {
+                  type,
+                  ...videoFormOptions,
+                  value: false,
+                }
+              );
+            });
+          }
 
           //Headline Description
           registerVideoField(
@@ -377,6 +438,7 @@ async function register({
           );
 
           //TODO set multiple locations
+          /*
           organizations.map((organisation, index) => {
             registerVideoField(
               {
@@ -393,7 +455,7 @@ async function register({
               }
             );
           });
-
+*/
           //Headline Issued
           registerVideoField(
             {
@@ -492,7 +554,8 @@ async function register({
             {
               name: "dates.publicationHistory",
               label: "publicationHistory",
-              descriptionHTML: "Publication History setzen, also eine neue Version der Daten abspeichern",
+              descriptionHTML:
+                "Publication History setzen, also eine neue Version der Daten abspeichern",
               type: "input-checkbox",
               default: "",
               hidden: false,
@@ -567,7 +630,7 @@ async function register({
               ...videoFormOptions,
             }
           );
-          
+
           //Headline Issued
           registerVideoField(
             {
@@ -582,7 +645,7 @@ async function register({
               ...videoFormOptions,
             }
           );
-          
+
           registerVideoField(
             {
               name: "dates.archiveData.filesize",
@@ -646,7 +709,7 @@ async function register({
               ...videoFormOptions,
             }
           );
-          
+
           //Headline Video Information
           registerVideoField(
             {
@@ -729,21 +792,21 @@ async function register({
               ...videoFormOptions,
             }
           );
-          if (genreOptions.length === 0) {
-           registerVideoField(
-            {
-              label: "genre",
-              descriptionHTML: "Genre",
-              type: "html",
-              default: "",
-              hidden: false,
-              error: false,
-            },
-            {
-              type,
-              ...videoFormOptions,
-            }
-          );
+          if (genre === undefined || genre.length === 0) {
+            registerVideoField(
+              {
+                label: "genre",
+                descriptionHTML: "Genre",
+                type: "html",
+                default: "",
+                hidden: false,
+                error: false,
+              },
+              {
+                type,
+                ...videoFormOptions,
+              }
+            );
             registerVideoField(
               {
                 type: "html",
@@ -758,24 +821,28 @@ async function register({
               }
             );
           } else {
-          registerVideoField(
-            {
-              name: "videoInformation.showType.type",
-              label: "genre",
-              descriptionHTML: "genre",
-              type: "select",
-              options: genreOptions,
+            const genreOptions = genre.map((x) => {
+              return { label: x.name, value: x.id };
+            });
 
-              default: "",
-              hidden: false,
-              error: false,
-            },
-            {
-              type,
-              ...videoFormOptions,
-            }
-          );
-        }
+            registerVideoField(
+              {
+                name: "videoInformation.showType.type",
+                label: "genre",
+                descriptionHTML: "genre",
+                type: "select",
+                options: genreOptions,
+
+                default: "",
+                hidden: false,
+                error: false,
+              },
+              {
+                type,
+                ...videoFormOptions,
+              }
+            );
+          }
           registerVideoField(
             {
               name: "videoInformation.parts",
@@ -891,7 +958,6 @@ async function register({
               ...videoFormOptions,
             }
           );
-
 
           registerVideoField(
             {
@@ -1096,7 +1162,6 @@ async function register({
             }
           );
 
-
           registerVideoField(
             {
               name: "rights.cobyright.rightClearanceFlag",
@@ -1287,7 +1352,7 @@ async function register({
             }
           );
 
-            //TODO Technical Data extract
+          //TODO Technical Data extract
 
           registerVideoField(
             {

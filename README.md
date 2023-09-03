@@ -1,4 +1,4 @@
-# EBU PeerTube plugin
+# Metadata PeerTube plugin
 
 This plugin for the PeerTube platform enables the addition of EBU metadata. The metadata should be able to be added during the video upload and then be displayed below the video.
 
@@ -29,4 +29,4 @@ This plugin for the PeerTube platform enables the addition of EBU metadata. The 
   NODE_ENV=dev npm start
 
 - Then, you can install or reinstall your local plugin/theme by running:
-  node ./dist/server/tools/peertube.js plugins install --path /Users/monz/Git/FS1/peertube-plugin-ebu
+  node ./dist/server/tools/peertube.js plugins install --path /Users/monz/Git/FS1/peertube-plugin-metadata
