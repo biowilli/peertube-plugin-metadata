@@ -249,8 +249,14 @@ async function register({ registerClientRoute, peertubeHelpers }) {
           }
           
           h1 {
-            color: blue;
+            color: #4CBDC9;
           }
+
+          input {
+            background-color: #fff;
+            color: #000;
+          }
+
           p {
             font-size: 18px;
           }

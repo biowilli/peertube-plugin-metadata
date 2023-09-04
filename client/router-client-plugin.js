@@ -1,7 +1,4 @@
-async function register({
-  registerHook,
-}) {
-
+async function register({ registerHook }) {
   registerHook({
     target: "filter:left-menu.links.create.result",
     handler: (links) => {
@@ -26,7 +23,7 @@ async function register({
           },
           {
             icon: "home",
-            path: "/admin/plugins/show/peertube-plugin-ebu",
+            path: "/admin/plugins/show/peertube-plugin-metadata",
             shortLabel: "Settings",
           },
         ],
