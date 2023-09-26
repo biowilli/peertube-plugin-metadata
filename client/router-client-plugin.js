@@ -3,6 +3,7 @@ async function register({ registerHook, peertubeHelpers }) {
     target: "filter:left-menu.links.create.result",
     handler: (links) => {
       if (peertubeHelpers.isLoggedIn()) {
+        console.log("peertubeHelpers.role?", peertubeHelpers);
         var newlinksection = {
           key: "metadata",
           title: "Metadata Plugin",

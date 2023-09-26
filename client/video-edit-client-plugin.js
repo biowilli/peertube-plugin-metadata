@@ -221,8 +221,8 @@ async function register({ registerVideoField, peertubeHelpers }) {
             creators.map((creator) => {
               registerVideoField(
                 {
-                  name: "creator" + "-" + creator.id + "-" + creator.name,
-                  label: creator.name,
+                  name: "creator" + "-" + creator.id + "-" + creator.creatorname,
+                  label: creator.creatorname,
                   type: "input-checkbox",
                   hidden: false,
                   error: false,
@@ -268,8 +268,8 @@ async function register({ registerVideoField, peertubeHelpers }) {
             creators.map((creator) => {
               registerVideoField(
                 {
-                  name: "contributor" + "-" + creator.id + "-" + creator.name,
-                  label: creator.name,
+                  name: "contributor" + "-" + creator.id + "-" + creator.creatorname,
+                  label: creator.creatorname,
                   type: "input-checkbox",
                   hidden: false,
                   error: false,
@@ -572,8 +572,8 @@ async function register({ registerVideoField, peertubeHelpers }) {
           registerVideoField(
             {
               name: "dates.publicationHistory.firstPublicationDate",
-              label: "dates.publicationHistory.firstPublicationDate",
-              descriptionHTML: "PfirstPublicationDate",
+              label: "firstPublicationDate",
+              descriptionHTML: "firstPublicationDate",
               type: "input",
               default: "",
               hidden: false,
@@ -588,7 +588,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           registerVideoField(
             {
               name: "dates.publicationHistory.firstPublicationTime",
-              label: "dates.publicationHistory.firstPublicationTime",
+              label: "firstPublicationTime",
               descriptionHTML: "firstPublicationTime",
               type: "input",
               default: "",
@@ -604,7 +604,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           registerVideoField(
             {
               name: "dates.publicationHistory.firstPublicationChannel",
-              label: "dates.publicationHistory.firstPublicationChannel",
+              label: "firstPublicationChannel",
               descriptionHTML: "firstPublicationChannel",
               type: "input",
               default: "",
@@ -620,7 +620,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           registerVideoField(
             {
               name: "dates.publicationHistory.repeatChannel",
-              label: "dates.publicationHistory.repeatChannel",
+              label: "repeatChannel",
               descriptionHTML: "repeatChannel",
               type: "input",
               default: "",
