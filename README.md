@@ -32,3 +32,5 @@ This plugin for the PeerTube platform enables the addition of EBU metadata. The 
   peertube-cli plugins install --path /Users/monz/Git/FS1/peertube-plugin-metadata
   or
   node ./dist/server/tools/peertube.js plugins install --path /Users/monz/Git/FS1/peertube-plugin-metadata
+
+-  export NODE_OPTIONS=--openssl-legacy-provider
