@@ -169,8 +169,8 @@ function initElementViewSettings(registerSetting) {
   });
 
   registerSetting({
-    name: "tags",
-    label: "tags",
+    name: "tags-element-view-active",
+    label: "tags-element-view-active",
     type: "input-checkbox",
     descriptionHTML: "enables/disables tags element view",
     default: "true",

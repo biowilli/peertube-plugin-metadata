@@ -4,16 +4,13 @@ This plugin for the PeerTube platform enables the addition of EBU metadata. The 
 
 ### EBU Metadata list added
 
-1. title
-2. alternativeTitle
-3. dateModified
-4. note
+various fields from the ebu metadata set.
 
 ### How to use
 
 - Login as admin in your PeerTube instance
 - Go to Plugin/Themes in the Administration section
-- Search plugins for 'ebu'
+- Search plugins for 'metadata'
 - Click on Install
 
 ### For Dev

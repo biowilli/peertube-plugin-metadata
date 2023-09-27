@@ -24,7 +24,7 @@ function register({ registerHook, peertubeHelpers }) {
           if (setting["title-element-note-view-active"])
             createVideoInfo(
               "TitleElementNote",
-              turnUndefinedIntoString(sortedJson["title.title.note"])
+              turnUndefinedIntoString(sortedJson["title.titleNote"])
             );
           if (setting["descriptiveTitle-element-view-active"])
             createVideoInfo(
@@ -34,7 +34,7 @@ function register({ registerHook, peertubeHelpers }) {
           if (setting["descriptiveTitle-element-note-view-active"])
             createVideoInfo(
               "descriptiveTitleNote",
-              turnUndefinedIntoString(sortedJson["title.descriptiveTitle.note"])
+              turnUndefinedIntoString(sortedJson["title.descriptiveTitleNote"])
             );
           if (setting["discTitle-element-view-active"])
             createVideoInfo(
@@ -44,7 +44,7 @@ function register({ registerHook, peertubeHelpers }) {
           if (setting["discTitle-element-note-view-active"])
             createVideoInfo(
               "discTitleNote",
-              turnUndefinedIntoString(sortedJson["title.discTitle.note"])
+              turnUndefinedIntoString(sortedJson["title.discTitleNote"])
             );
           createLine();
         }
@@ -96,18 +96,18 @@ function register({ registerHook, peertubeHelpers }) {
           if (setting["videLinks-element-view-active"])
             createVideoInfo(
               "Video Links",
-              turnUndefinedIntoString(sortedJson["dates.videLinks"])
+              turnUndefinedIntoString(sortedJson["dates.videoLinks"])
             ); //TODO stimmt das
           createHeaderField("Issued", 3);
           if (setting["firstIssued-element-view-active"])
             createVideoInfo(
               "First Issued",
-              turnUndefinedIntoString(sortedJson["dates.coverage.firstIssued"])
+              turnUndefinedIntoString(sortedJson["dates.issued.firstIssued"])
             );
           if (setting["lastIssued-element-view-active"])
             createVideoInfo(
               "Last Issued",
-              turnUndefinedIntoString(sortedJson["dates.coverage.lastIssued"])
+              turnUndefinedIntoString(sortedJson["dates.issued.lastIssued"])
             );
 
           createHeaderField("Coverage", 3);
@@ -120,14 +120,7 @@ function register({ registerHook, peertubeHelpers }) {
             createVideoInfo(
               "Location",
               turnUndefinedIntoString(
-                sortedJson["dates.coverage.recordingLocation0"]
-              )
-            );
-          if (setting["recordingLocation1-element-view-active"])
-            createVideoInfo(
-              "Location",
-              turnUndefinedIntoString(
-                sortedJson["dates.coverage.recordingLocation1"]
+                sortedJson["dates.coverage.locations"]
               )
             );
 
@@ -195,7 +188,7 @@ function register({ registerHook, peertubeHelpers }) {
             createVideoInfo(
               "Category",
               turnUndefinedIntoString(
-                sortedJson["dates.videoInformation.category"]
+                sortedJson["videoInformation.category"]
               )
             );
           if (setting["genre-element-view-active"])
@@ -215,31 +208,31 @@ function register({ registerHook, peertubeHelpers }) {
             );
           if (setting["relation-element-view-active"])
             createVideoInfo(
-              "relation",
+              "Relation",
               turnUndefinedIntoString(sortedJson["videoInformation.relation"])
             );
           if (setting["serie-element-view-active"])
             createVideoInfo(
-              "showType",
+              "Show Type",
               turnUndefinedIntoString(
-                sortedJson["videoInformation.showType.serie"]
+                sortedJson["videoInformation.showType.series"]
               )
             );
           if (setting["source-element-view-active"])
             createVideoInfo(
-              "source",
+              "Source",
               turnUndefinedIntoString(sortedJson["videoInformation.source"])
             );
           if (setting["targetGroup-element-view-active"])
             createVideoInfo(
-              "targetGroup",
+              "Target Group",
               turnUndefinedIntoString(
-                sortedJson["videoInformation.targetGroup"]
+                sortedJson["videoInformation.targetgroup"]
               )
             );
           if (setting["version-element-view-active"])
             createVideoInfo(
-              "version",
+              "Version",
               turnUndefinedIntoString(sortedJson["videoInformation.version"])
             );
           createLine();

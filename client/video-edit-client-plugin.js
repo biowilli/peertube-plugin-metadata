@@ -87,7 +87,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "title.title.note",
+              name: "title.titleNote",
               label: "Title Note",
               descriptionHTML: "Title Notiz",
               type: "input",
@@ -119,7 +119,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "title.descriptiveTitle.note",
+              name: "title.descriptiveTitleNote",
               label: "Title Descriptive Note",
               descriptionHTML: "Beschreibender Titel Notiz",
               type: "input",
@@ -151,7 +151,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "title.discTitle.note",
+              name: "title.discTitleNote",
               label: "Alternative Title Note",
               descriptionHTML: "Untertitel Notiz",
               type: "input",
@@ -737,7 +737,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           registerVideoField(
             {
               name: "videoInformation.targetgroup",
-              label: "videoInformation.targetgroup",
+              label: "Target Group",
               descriptionHTML: "Zielgruppe",
               type: "input",
               default: "",
@@ -969,9 +969,9 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "videoInformation.rating.ratingScaleMaxValue",
-              label: "ratingValue",
-              descriptionHTML: "ratingValue",
+              name: "videoInformation.rating.ratingScaleMinValue",
+              label: "ratingScaleMinValue",
+              descriptionHTML: "ratingScaleMinValue",
               type: "input",
               default: "",
               hidden: false,
@@ -985,9 +985,9 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "videoInformation.rating.ratingScaleMinValue",
-              label: "ratingScaleMinValue",
-              descriptionHTML: "ratingScaleMinValue",
+              name: "videoInformation.rating.ratingScaleMaxValue",
+              label: "ratingScaleMaxValue",
+              descriptionHTML: "ratingScaleMaxValue",
               type: "input",
               default: "",
               hidden: false,
