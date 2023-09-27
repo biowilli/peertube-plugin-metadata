@@ -3,6 +3,14 @@ async function register({ registerVideoField, peertubeHelpers }) {
   //TODO wird mehrmals aufgerufen
 
   function getData() {
+    const fetchCreator = fetch(
+      peertubeHelpers.getBaseRouterRoute() + "/creator/all",
+      {
+        method: "GET",
+        headers: peertubeHelpers.getAuthHeader(),
+      }
+    ).then((response) => response.json());
+
     const fetchOrganizations = fetch(
       peertubeHelpers.getBaseRouterRoute() + "/organization/all",
       {
