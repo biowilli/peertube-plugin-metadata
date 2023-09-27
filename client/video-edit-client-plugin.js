@@ -3,19 +3,6 @@ async function register({ registerVideoField, peertubeHelpers }) {
   //TODO wird mehrmals aufgerufen
 
   function getData() {
-    const fetchUsers = fetch("http://localhost:9000/api/v1/users", {
-      method: "GET",
-      headers: peertubeHelpers.getAuthHeader(),
-    }).then((response) => response.json());
-
-    const fetchCreator = fetch(
-      peertubeHelpers.getBaseRouterRoute() + "/creator/all",
-      {
-        method: "GET",
-        headers: peertubeHelpers.getAuthHeader(),
-      }
-    ).then((response) => response.json());
-
     const fetchOrganizations = fetch(
       peertubeHelpers.getBaseRouterRoute() + "/organization/all",
       {
@@ -34,23 +21,19 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
     Promise.all([
       fetchCreator,
-      fetchUsers,
       fetchOrganizations,
       fetchGenre,
     ]).then(
       ([
         creatorResponse,
-        usersResponse,
         organizationsResponse,
         genreResponse,
       ]) => {
         const creators = creatorResponse.data;
-        //const users = usersResponse.data; user not needed now
         const organizations = organizationsResponse.data;
         const genre = genreResponse.data;
 
         console.log("creators:", creators);
-        //console.log("users:", users);
         console.log("organizations:", organizations);
         console.log("genre:", genre);
         for (const type of [
