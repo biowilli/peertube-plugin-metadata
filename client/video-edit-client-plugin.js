@@ -194,7 +194,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               ...videoFormOptions,
             }
           );
-          if (creators.length == 0 || creators == undefined) {
+          if (creators == undefined || creators.length == 0) {
             registerVideoField(
               {
                 type: "html",
@@ -241,7 +241,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               ...videoFormOptions,
             }
           );
-          if (creators.length == 0 || creators == undefined) {
+          if (creators == undefined || creators.length == 0) {
             registerVideoField(
               {
                 type: "html",
