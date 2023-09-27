@@ -1,7 +1,7 @@
 {
   "name": "peertube-plugin-metadata",
   "description": "Enables the addition of metadata",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "biowilli",
   "repository": {
     "type": "git",
@@ -87,7 +87,6 @@
     "de": "./languages/de.json"
   },
   "dependencies": {
-    "peertube-plugin-metadata": "^1.0.4",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

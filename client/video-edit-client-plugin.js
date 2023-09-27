@@ -203,7 +203,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               ...videoFormOptions,
             }
           );
-          if (creators.length === 0) {
+          if (creators.length == 0 || creators == undefined) {
             registerVideoField(
               {
                 type: "html",
@@ -250,7 +250,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               ...videoFormOptions,
             }
           );
-          if (creators.length === 0) {
+          if (creators.length == 0 || creators == undefined) {
             registerVideoField(
               {
                 type: "html",
@@ -1337,7 +1337,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           );
 
           //TODO Metadata Provider
-
+          //TODO Technical Data extract
           //Headline Technical data
           registerVideoField(
             {
@@ -1353,7 +1353,6 @@ async function register({ registerVideoField, peertubeHelpers }) {
             }
           );
 
-          //TODO Technical Data extract
 
           registerVideoField(
             {
