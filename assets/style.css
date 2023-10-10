@@ -19,3 +19,31 @@
 .attribute-privacy{
   display: none !important;
 }
+
+.col-md-12 {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 1rem;
+}
+
+.col-xl-8 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.form-group h2 {
+  width: 6000px;
+}
+
+.form-group h3 {
+  width: 6000px;
+}
+
+.form-group h4 {
+  width: 6000px;
+}
+
+/*
+Make further customizations using the nth selector
+*/
