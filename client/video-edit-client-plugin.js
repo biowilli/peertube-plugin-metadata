@@ -1,8 +1,13 @@
 async function register({ registerVideoField, peertubeHelpers }) {
-  //TODO translate('hello');
   //TODO wird mehrmals aufgerufen
+  //TODO error Promise
+  //Feld Dedinition Hardcoded 4 testing:
+
+  console.log(" i need peertubeHelpers for form design:", peertubeHelpers);
 
   function getData() {
+    const fetchSettings = peertubeHelpers.getSettings();
+
     const fetchCreator = fetch(
       peertubeHelpers.getBaseRouterRoute() + "/creator/all",
       {
@@ -28,19 +33,26 @@ async function register({ registerVideoField, peertubeHelpers }) {
     ).then((response) => response.json());
 
     Promise.all([
+      fetchSettings,
       fetchCreator,
       fetchOrganizations,
       fetchGenre,
     ]).then(
       ([
+        settingsResponse,
         creatorResponse,
         organizationsResponse,
         genreResponse,
       ]) => {
+
         const creators = creatorResponse.data;
         const organizations = organizationsResponse.data;
         const genre = genreResponse.data;
-
+//TODO get form from settings: 
+        console.log("settingsResponse:", settingsResponse);
+        console.log("settingsResponseForm:", settingsResponse.form);
+        console.log("settingsResponseFormObject:", );
+        //console.log("settingsResponseFormObject:", JSON.parse(settingsResponse.form));
         console.log("creators:", creators);
         console.log("organizations:", organizations);
         console.log("genre:", genre);
@@ -52,9 +64,260 @@ async function register({ registerVideoField, peertubeHelpers }) {
           "go-live",
         ]) {
           const videoFormOptions = {
-            tab: "plugin-settings",
-          };
+            tab: "plugin-settings" 
+          }; //"main",
 
+          //TODO set multiple locations
+          //TODO Location nach dates.coverage.recordingLocation
+          //TODO Issued recordingLocations
+          //TODO Video Information Genre
+          //TODO Location
+          //TODO rights.usageRights.coverage ???
+          var form = JSON.parse(settingsResponse.form);
+          
+          for (var i = 0; i < form.length; i++) {
+            var field = form[i];
+            console.log(field);
+
+            if (field.visibleVideoEdit == false){
+              continue;
+            } 
+
+            if (field.type === "line"){ //only frontend
+              continue;
+            } 
+
+            if (field.type == "entity") {
+              if (field.mappingname == "videoInformation.showType.type") {
+                if (genre === undefined || genre.length === 0) {
+                  registerVideoField(
+                    {
+                      type: "Add a Genre",
+                      default: "",
+                      hidden: false,
+                      error: false,
+                    },
+                    {
+                      type,
+                      ...videoFormOptions,
+                    }
+                  );
+                  continue;
+                } else {
+                  const genreOptions = genre.map((x) => {
+                    return { label: x.name, value: x.id };
+                  });
+
+                  registerVideoField(
+                    {
+
+                      label: `${field.label}`,
+                      descriptionHTML: `${field.caption}`,
+                      type: "select",
+                      options: genreOptions,
+                      default: "",
+                      hidden: false,
+                      error: false,
+                    },
+                    {
+                      type,
+                      ...videoFormOptions,
+                    }
+                  );
+                continue;
+              }
+            }
+
+              if (field.mappingname == "creator") {
+                if (creators == undefined || creators.length == 0) {
+                  registerVideoField(
+                    {
+                      type: "html",
+                      html: "Add a Creator",
+                      default: "",
+                      hidden: false,
+                      error: false,
+                    },
+                    {
+                      type,
+                      ...videoFormOptions,
+                    }
+                  );
+                  continue;
+                }
+                if (creators !== undefined || creators.length > 0) {
+                creators.map((creator) => {
+                  registerVideoField(
+                    {
+                      name: "creator" + "-" + creator.id + "-" + creator.creatorname,
+                      label: creator.creatorname,
+                      type: "input-checkbox",
+                      hidden: false,
+                      error: false,
+                    },
+                    {
+                        type,
+                      ...videoFormOptions,
+                      value: false,
+                    }
+                  );
+                });
+                continue;
+              }
+            }
+            
+              if (field.mappingname == 'contributor') {
+                if (creators == undefined || creators.length == 0) {
+                  registerVideoField(
+                    {
+                      type: "html",
+                      html: "Add a contributor",
+                      default: "",
+                      hidden: false,
+                      error: false,
+                    },
+                    {
+                      type,
+                    ...videoFormOptions,
+                    }
+                  );
+                  continue;
+                } 
+
+                if (creators !== undefined || creators.length > 0) {
+                  creators.map((creator) => {
+                    registerVideoField(
+                      {
+                        name: "contributor" + "-" + creator.id + "-" + creator.creatorname,
+                        label: creator.creatorname,
+                        type: "input-checkbox",
+                        hidden: false,
+                        error: false,
+                      },
+                      {
+                        type,
+                        ...videoFormOptions,
+                        value: false,
+                      }
+                    );
+                  });
+                  continue;
+                }
+              }
+
+              if (field.mappingname == 'organization') {
+                if (organizations === undefined || organizations.length === 0) {
+                  registerVideoField(
+                    {
+                      type: "html",
+                      html: "Add a organization",
+                      default: "",
+                      hidden: false,
+                      error: false,
+                    },
+                    {
+                      type,
+                      ...videoFormOptions,
+                    }
+                  );
+                  continue;
+                }
+
+                if (organizations !== undefined || organizations.length > 0) {
+                  organizations.map((organisation) => {
+                    registerVideoField(
+                      {
+                        name:"organization-" + organisation.id + "-" + organisation.name,
+                        label: organisation.name,
+                        type: "input-checkbox",
+                        hidden: false,
+                        error: false,
+                      },
+                      {
+                        type,
+                        ...videoFormOptions,
+                        value: false,
+                      }
+                    );
+                  });
+                }
+                continue;
+              }
+            }
+
+            if (field.visibleVideoEdit && field.type === 'checkbox') {
+              registerVideoField(
+                {
+                  name: `${field.mappingname}`,
+                  label: `${field.label}`,
+                  descriptionHTML: `${field.caption}`,
+                  type: "input-checkbox",
+                  default: "",
+                  hidden: false,
+                  error: false,
+                },
+                {
+                  type,
+                  ...videoFormOptions,
+                }
+              );;
+            }
+            if (field.visibleVideoEdit && field.type === 'select') {
+              registerVideoField(
+                {
+                  name: `${field.mappingname}`,
+                  label: `${field.label}`,
+                  descriptionHTML: `${field.caption}`,
+                  type: "select",
+                  options: field.options,
+                  default: "",
+                  hidden: false,
+                  error: false,
+                },
+                {
+                  type,
+                  ...videoFormOptions,
+                }
+              );;
+            }
+            if (field.visibleVideoEdit && field.type === "header") {
+              registerVideoField(
+                {
+                  type: "html",
+                  html: `<h${field.size}>${field.label}</h${field.size}>`,
+                  default: "",
+                  hidden: false,
+                  error: false,
+                },
+                {
+                  type,
+                  ...videoFormOptions,
+                }
+              );
+              continue;
+            } 
+
+            if (field.visibleVideoEdit && field.type == "input") {
+              registerVideoField(
+                {
+                  name: `${field.mappingname}`,
+                  label: `${field.label}`,
+                  descriptionHTML: `${field.caption}`,
+                  type: "input",
+                  default: "",
+                  error: ({ formValues, value }) => {
+                    if (!field.required || value !== "") return { error: false }
+                    if (field.required && value == "") return { error: true, text: 'This Field ist required' }
+                  },
+                },
+                {
+                  type,
+                  ...videoFormOptions,
+                }
+              );
+            }
+          }
+/*
           registerVideoField(
             {
               type: "html",
@@ -76,8 +339,21 @@ async function register({ registerVideoField, peertubeHelpers }) {
               descriptionHTML: "Title",
               type: "input",
               default: "",
-              hidden: false,
-              error: false,
+              hidden: (options) => {
+                console.log("hidden:", options);
+                //TODO 
+
+                return false;
+              },
+              error: async (options) => {
+                console.log("options:", options);
+                //TODO 
+                //return
+                //null | undefined
+                //string error message,
+                //error Promise
+                return "true";
+              },
             },
             {
               type,
@@ -180,52 +456,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               ...videoFormOptions,
             }
           );
-          //Headline Creator
-          registerVideoField(
-            {
-              type: "html",
-              html: "<h2>Creator</h2>",
-              default: "",
-              hidden: false,
-              error: false,
-            },
-            {
-              type,
-              ...videoFormOptions,
-            }
-          );
-          if (creators == undefined || creators.length == 0) {
-            registerVideoField(
-              {
-                type: "html",
-                html: "Add a Creator in creator",
-                default: "",
-                hidden: false,
-                error: false,
-              },
-              {
-                type,
-                ...videoFormOptions,
-              }
-            );
-          } else {
-            creators.map((creator) => {
-              registerVideoField(
-                {
-                  name: "creator" + "-" + creator.id + "-" + creator.creatorname,
-                  label: creator.creatorname,
-                  type: "input-checkbox",
-                  hidden: false,
-                  error: false,
-                },
-                {
-                  type,
-                  ...videoFormOptions,
-                  value: false,
-                }
-              );
-            });
-          }
+
 
           //Headline Contributors
           registerVideoField(
@@ -241,38 +472,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               ...videoFormOptions,
             }
           );
-          if (creators == undefined || creators.length == 0) {
-            registerVideoField(
-              {
-                type: "html",
-                html: "Add a contributor in creators",
-                default: "",
-                hidden: false,
-                error: false,
-              },
-              {
-                type,
-                ...videoFormOptions,
-              }
-            );
-          } else {
-            creators.map((creator) => {
-              registerVideoField(
-                {
-                  name: "contributor" + "-" + creator.id + "-" + creator.creatorname,
-                  label: creator.creatorname,
-                  type: "input-checkbox",
-                  hidden: false,
-                  error: false,
-                },
-                {
-                  type,
-                  ...videoFormOptions,
-                  value: false,
-                }
-              );
-            });
-          }
+          
           //Headline Publisher
           registerVideoField(
             {
@@ -287,44 +487,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               ...videoFormOptions,
             }
           );
-          if (organizations === undefined || organizations.length === 0) {
-            registerVideoField(
-              {
-                type: "html",
-                html: "Füge noch in Organization einen Publisher hinzu",
-                default: "",
-                hidden: false,
-                error: false,
-              },
-              {
-                type,
-                ...videoFormOptions,
-              }
-            );
-          } else {
-            console.log(organizations);
-            organizations.map((organisation) => {
-              registerVideoField(
-                {
-                  name:
-                    "organization" +
-                    "-" +
-                    organisation.id +
-                    "-" +
-                    organisation.name,
-                  label: organisation.name,
-                  type: "input-checkbox",
-                  hidden: false,
-                  error: false,
-                },
-                {
-                  type,
-                  ...videoFormOptions,
-                  value: false,
-                }
-              );
-            });
-          }
+          
 
           //Headline Description
           registerVideoField(
@@ -431,7 +594,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           );
 
           //TODO set multiple locations
-          /*
+          
           organizations.map((organisation, index) => {
             registerVideoField(
               {
@@ -448,7 +611,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               }
             );
           });
-*/
+
           //Headline Issued
           registerVideoField(
             {
@@ -468,7 +631,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
             {
               name: "dates.issued.firstIssued",
               label: "First issued",
-              descriptionHTML: "First Issued",
+              descriptionHTML: "First issued",
               type: "input",
               default: "",
               hidden: false,
@@ -1060,7 +1223,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "rights.cobyright.coverage.startDate",
+              name: "rights.copyright.coverage.startDate",
               label: "startDate",
               descriptionHTML: "Start Datum",
               type: "input",
@@ -1076,7 +1239,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "rights.cobyright.coverage.endDate",
+              name: "rights.copyright.coverage.endDate",
               label: "endDate",
               descriptionHTML: "End Datum",
               type: "input",
@@ -1092,7 +1255,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           //TODO Locations
           registerVideoField(
             {
-              name: "rights.cobyright.coverage.locations",
+              name: "rights.copyright.coverage.locations",
               label: "locations",
               descriptionHTML: "locations",
               type: "input",
@@ -1124,7 +1287,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "rights.cobyright.explotationIssues",
+              name: "rights.copyright.explotationIssues",
               label: "explotationIssues",
               descriptionHTML: "explotationIssues",
               type: "input",
@@ -1140,7 +1303,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "rights.cobyright.disclaimer",
+              name: "rights.copyright.disclaimer",
               label: "disclaimer",
               descriptionHTML: "disclaimer",
               type: "input",
@@ -1156,7 +1319,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "rights.cobyright.rightClearanceFlag",
+              name: "rights.copyright.rightClearanceFlag",
               label: "Right Clearance Flag?",
               descriptionHTML: "disclaimer",
               type: "input",
@@ -1172,7 +1335,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
           registerVideoField(
             {
-              name: "rights.cobyright.rightId",
+              name: "rights.copyright.rightId",
               label: "Right ID?",
               descriptionHTML: "rightId",
               type: "input",
@@ -1360,12 +1523,13 @@ async function register({ registerVideoField, peertubeHelpers }) {
               ...videoFormOptions,
             }
           );
+          */
         }
       }
     );
   }
-
   getData();
 }
 
 export { register };
+

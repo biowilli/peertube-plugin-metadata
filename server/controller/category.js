@@ -1,0 +1,21 @@
+const { v4: uuidv4 } = require('uuid');
+
+const initCategoryController = (router, videoCategoryManager) => {
+  router.get("/category/all", async (req, res) => {
+      try {
+        var storedData = videoCategoryManager.getConstants();
+        if (storedData == null) {
+          res.send({});
+          return;
+        }
+        res.send(storedData);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+      }
+    });
+}
+
+module.exports = {
+  initCategoryController
+};

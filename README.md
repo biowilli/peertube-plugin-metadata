@@ -31,3 +31,41 @@ various fields from the ebu metadata set.
   node ./dist/server/tools/peertube.js plugins install --path /Users/monz/Git/FS1/peertube-plugin-metadata
 
 -  export NODE_OPTIONS=--openssl-legacy-provider
+
+TODO: 
+- Sync Common Data check!
+
+- Licence vorlage Category: https://gitlab.mim-libre.fr/extensions-peertube/categories-management-plugin/
+- Required: + Error Message:
+
+EBU Defaults Object....
+{
+    "name": 'mappingname',
+    "type": 'typename',
+    "value": '',
+    "changedBy": '',
+    "lastModified": '',
+}
+
+
+Formfield Object.... // array because reihnen
+{
+  [
+    "name": 'mappingname',
+    "label": 'labelname',
+    "required": true,
+    "visibleBackend": true,
+    "visibleFrontend": true+//vlt groupierung
+  ],
+  [
+    "name": 'mappingname',
+    "label": 'labelname',
+    "required": true,
+    "visibleBackend": true,
+    "visibleFrontend": true+//vlt groupierung
+  ],
+}
+
+
+
+

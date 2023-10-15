@@ -1,7 +1,7 @@
 {
   "name": "peertube-plugin-metadata",
   "description": "Enables the addition of metadata",
-  "version": "1.1.2",
+  "version": "1.1.5",
   "author": "biowilli",
   "repository": {
     "type": "git",
@@ -83,8 +83,6 @@
     "ebudata": "ebudata"
   },
   "translations": {
-    "en": "./languages/en.json",
-    "de": "./languages/de.json"
   },
   "dependencies": {
     "uuid": "^9.0.0"

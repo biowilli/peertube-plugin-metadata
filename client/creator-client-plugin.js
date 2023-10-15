@@ -122,7 +122,6 @@ async function register({ registerClientRoute, peertubeHelpers }) {
                 <th>Role</th> 
                 `;
             newTableBody.appendChild(tableHeaderRow);
-            console.log("creator111qweqwe11", creator);
             creator.forEach((creator) => {
               const tableRow = document.createElement("tr");
               tableRow.innerHTML = `
