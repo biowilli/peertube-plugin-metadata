@@ -1,5 +1,3 @@
-const { v4: uuidv4 } = require('uuid');
-
 const initCategoryController = (router, videoCategoryManager) => {
   router.get("/category/all", async (req, res) => {
       try {

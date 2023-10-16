@@ -19,7 +19,7 @@ const initCreatorController = (router, storageManager) => {
     try {
       var existingCreator = await storageManager.getData("creator");
       const body = await req.body;
-      console.log(body);
+
       const creatorname = await req.body.name;
       const creatorfamilyname = await req.body.familyname;
       const creatorusername = await req.body.username;

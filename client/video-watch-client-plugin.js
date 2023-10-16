@@ -2,47 +2,62 @@ function register({ registerHook, peertubeHelpers}) {
   registerHook({
     target: "action:video-watch.player.loaded",
     handler: ({ videojs, video, playlist }) => {
-      console.log("mach was ");
-      console.log(video.pluginData);
-      //require is not defined! const { Form }  = require("./model/Form.js");
-      peertubeHelpers.getSettings().then((setting) => {
-        var extractIdData = extractIds(video.pluginData);
-          //TODO get Category and other Consts.
-          //see other video-edit-client-plugin.js
+      function getData(){
+      const fetchCategory = fetch(
+        peertubeHelpers.getBaseRouterRoute() + "/category/all",
+        {
+          method: "GET",
+          headers: peertubeHelpers.getAuthHeader(),
+        }
+      ).then((response) => response.json());
 
-          const fetchCategory = fetch(
-            peertubeHelpers.getBaseRouterRoute() + "/category/all",
-            {
-              method: "GET",
-              headers: peertubeHelpers.getAuthHeader(),
-            }
-          ).then((response) => console.log("categories", response));
-          
-        if (setting["form"]){
-          console.log(setting["form"].replace(/'/g, "\""));
-          var form = JSON.parse(setting["form"].replace(/'/g, "\""));
+      Promise.all([
+        fetchCategory,
+      ]).then(
+        ([
+          categoryResponse,
+        ]) => {
+  
+          const categoriesData = categoryResponse;
+        peertubeHelpers.getSettings().then((setting) => {
+          var extractIdData = extractIds(video.pluginData);
+          if (setting["form"]){
+            var form = JSON.parse(setting["form"].replace(/'/g, "\""));
 
-          for (var i = 0; i < form.length; i++) {
-            var field = form[i];
-
-            if (field.visibleVideoWatch == false){
-              continue;
-            } else if  (field.mappingname == 'creator' || field.mappingname == 'organization' || field.mappingname == 'contributor'){
-              createList(field.mappingname, extractIdData[field.mappingname]);
-            } else if (field.type === "header") {
-              createHeaderField(field.label, field.size);
-            } else if ((field.type === "line")) {
-              createLine();
-            }  else if (field.visibleVideoWatch) {
-              createVideoInfo(
-                field.label,
-                turnUndefinedIntoString(video.pluginData[field.mappingname])
-              );
+            for (var i = 0; i < form.length; i++) {
+              var field = form[i];
+              if (field.visibleVideoWatch == false){
+                continue;
+              } else if (field.mappingname == 'videoInformation.category'){
+                var categoryId = video.pluginData[field.mappingname]; 
+                var matchedCategory = categoriesData[categoryId];
+                if (matchedCategory) {
+                  createVideoInfo(field.label, turnUndefinedIntoString(matchedCategory));
+                } else {
+                  console.log("No match found for category ID: " + categoryId);
+                }
+              }else if (field.mappingname == 'creator' || field.mappingname == 'organization' || field.mappingname == 'contributor'){
+                createList(field.mappingname, extractIdData[field.mappingname]);
+              } else if (field.type === "header") {
+                createHeaderField(field.label, field.size);
+              } else if ((field.type === "line")) {
+                createLine();
+              }  else if (field.visibleVideoWatch) {
+                createVideoInfo(
+                  field.label,
+                  turnUndefinedIntoString(video.pluginData[field.mappingname])
+                );
+              }
             }
           }
-        }
+        })
+      })
 
-  })}})};
+    }
+    getData();
+  }
+  })
+};
       
 function extractIds(flatJson) {
   // Extract keys starting with prefixes and store them in a separate JSON
@@ -65,30 +80,6 @@ function extractIds(flatJson) {
   return flatJson;
 }
 
-function sortedData(pluginData) {
-  const order = [
-    "title",
-    "creator",
-    "contributor",
-    "organization",
-    "description",
-    "dates",
-    "videoInformation",
-    "rights",
-    "metadataProvider",
-    "technicalData",
-  ];
-  let sortedJson = {};
-  order.forEach((key) => {
-    Object.keys(pluginData).forEach((dataKey) => {
-      if (dataKey.toLowerCase().startsWith(key.toLowerCase())) {
-        sortedJson[dataKey] = pluginData[dataKey];
-      }
-    });
-  });
-  return sortedJson;
-}
-
 function extractKeysStartingWithPrefixesAndIsTrue(flatJson, prefix) {
   const extractedJson = {};
 
@@ -106,9 +97,7 @@ function extractKeysStartingWithPrefixesAndIsTrue(flatJson, prefix) {
 
 function extractValues(keys) {
   const result = [];
-  console.log(keys);
   for (const key in keys) {
-    console.log(key);
     if (keys.hasOwnProperty(key)) {
       const id = extractId(key);
       const name = extractName(key);

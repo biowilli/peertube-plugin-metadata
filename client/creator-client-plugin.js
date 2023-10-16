@@ -5,54 +5,73 @@ async function register({ registerClientRoute, peertubeHelpers }) {
       rootEl.innerHTML = `
           <div id="plugincontainer">
           <h1>Creator</h1>
-          <label for="creatorname">Name</label><br>
-          <input type="text" id="creatorname" name="creatorname"><br>
-          
-          <label for="creatorfamilyname">Familyname</label><br>
-          <input type="text" id="creatorfamilyname" name="creatorfamilyname"><br>
-          
-          <label for="creatorusername">Username</label><br>
-          <input type="text" id="creatorusername" name="creatorusername"><br>
-          
-          <label for="creatoroccupation">Occupation</label><br>
-          <input type="text" id="creatoroccupation" name="creatoroccupation"><br>
-          
-          <label for="creatoremail">E-Mail</label><br>
-          <input type="text" id="creatoremail" name="creatoremail"><br>
-          
-          <label for="creatorurl">URL</label><br>
-          <input type="text" id="creatorurl" name="creatorurl"><br>
-          
-          <label for="creatoraddress">Address</label><br>
-          <input type="text" id="creatoraddress" name="creatoraddress"><br>
-          
-          <label for="creatordeliverycode">Delivery Code</label><br>
-          <input type="text" id="creatordeliverycode" name="creatordeliverycode"><br>
-
-          <label for="creatorcity">City</label><br>
-          <input type="text" id="creatorcity" name="creatorcity"><br>
-          
-          <label for="creatorstate">State</label><br>
-          <input type="text" id="creatorstate" name="creatorstate"><br>
-          
-          <label for="creatorcountry">Country</label><br>
-          <input type="text" id="creatorcountry" name="creatorcountry"><br>
-
-          <label for="creatortelephone">Telephone</label><br>
-          <input type="text" id="creatortelephone" name="creatortelephone"><br>
-
-          <label for="creatormobile">Mobile Phone</label><br>
-          <input type="text" id="creatormobile" name="creatormobile"><br>
-
-          <label for="creatorstage">Stage</label><br>
-          <input type="text" id="creatorstage" name="creatorstage"><br>
-
-          <label for="creatorcontacts">Related Contact</label><br>
-          <input type="text" id="creatorcontacts" name="creatorcontacts"><br>        
-          
-          <label for="creatorrole">Role</label><br>
-          <input type="text" id="creatorrole" name="creatorrole"><br>       
-
+          <div id="formcontainer">
+          <div>
+          <label for="creatorname">Name</label></br>
+          <input type="text" id="creatorname" name="creatorname">
+          </div>
+          <div>
+          <label for="creatorfamilyname">Familyname</label></br>
+          <input type="text" id="creatorfamilyname" name="creatorfamilyname">
+          </div>
+          <div>
+          <label for="creatorusername">Username</label></br>
+          <input type="text" id="creatorusername" name="creatorusername">
+          </div>
+          <div>
+          <label for="creatoroccupation">Occupation</label></br>
+          <input type="text" id="creatoroccupation" name="creatoroccupation">
+          </div>
+          <div>
+          <label for="creatoremail">E-Mail</label></br>
+          <input type="text" id="creatoremail" name="creatoremail">
+          </div>
+          <div>
+          <label for="creatorurl">URL</label></br>
+          <input type="text" id="creatorurl" name="creatorurl">
+          </div>
+          <div>
+          <label for="creatoraddress">Address</label></br>
+          <input type="text" id="creatoraddress" name="creatoraddress">
+          </div>
+          <div>
+          <label for="creatordeliverycode">Delivery Code</label></br>
+          <input type="text" id="creatordeliverycode" name="creatordeliverycode">
+          </div>
+          <div>
+          <label for="creatorcity">City</label></br>
+          <input type="text" id="creatorcity" name="creatorcity">
+          </div>
+          <div>
+          <label for="creatorstate">State</label></br>
+          <input type="text" id="creatorstate" name="creatorstate">
+          </div>
+          <div>
+          <label for="creatorcountry">Country</label></br>
+          <input type="text" id="creatorcountry" name="creatorcountry">
+          </div>
+          <div>
+          <label for="creatortelephone">Telephone</label></br>
+          <input type="text" id="creatortelephone" name="creatortelephone">
+          </div>
+          <div>
+          <label for="creatormobile">Mobile Phone</label></br>
+          <input type="text" id="creatormobile" name="creatormobile">
+          </div>
+          <div>
+          <label for="creatorstage">Stage</label></br>
+          <input type="text" id="creatorstage" name="creatorstage">
+          </div>
+          <div>
+          <label for="creatorcontacts">Related Contact</label></br>
+          <input type="text" id="creatorcontacts" name="creatorcontacts">        
+          </div>
+          <div>
+          <label for="creatorrole">Role</label></br>
+          <input type="text" id="creatorrole" name="creatorrole">       
+          </div>
+          </div>
+          </br>
           <button id="myButton">Add Creator</button>
           <div id="creatorContainer"></div>
           <table id="myTable">
@@ -243,10 +262,11 @@ async function register({ registerClientRoute, peertubeHelpers }) {
       // CSS-Stile der Seite
       const style = document.createElement("style");
       style.innerHTML = `
-          #plugincontainer {
-            width: fit-content;
+          #formcontainer{
+            display: flex;
+            flex-wrap: wrap;
           }
-          
+
           h1 {
             color: #4CBDC9;
           }

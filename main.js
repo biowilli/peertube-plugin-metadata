@@ -1,10 +1,13 @@
+//TODO createdby
 async function register({
   registerHook,
   storageManager,
   getRouter,
+  videoCategoryManager,
   registerSetting
 }) {
     const { initRegisterSettings }  = require("./server/settings.js");
+    const { initCategoryController }  = require("./server/controller/category.js");
     const { initCreatorController }  = require("./server/controller/creator.js");
     const { initGenreController } = require("./server/controller/genre.js");
     const { initOrganizationController }  = require("./server/controller/organization.js");
@@ -12,6 +15,7 @@ async function register({
     initRegisterSettings(registerSetting);
 
     var router = getRouter();
+    initCategoryController(router, videoCategoryManager);
     initCreatorController(router, storageManager);
     initGenreController(router, storageManager);
     initOrganizationController(router, storageManager);

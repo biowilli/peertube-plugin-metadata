@@ -5,7 +5,13 @@ async function register({ registerClientRoute, peertubeHelpers }) {
       rootEl.innerHTML = `
           <div id="plugincontainer">
           <h1>Organization</h1>
+          <div id="formcontainer">
+          <div>
+          <label for="organizationname">Name</label></br>
           <input type="text" id="organizationname" name="organizationname"></input>
+          </div>
+          </div>
+          </br>
           <button id="myButton">Organization hinzufügen</button>
           <div id="organizationContainer"></div>
           <table id="myTable">
@@ -121,8 +127,9 @@ async function register({ registerClientRoute, peertubeHelpers }) {
       // CSS-Stile der Seite
       const style = document.createElement("style");
       style.innerHTML = `
-          #plugincontainer {
-            width: fit-content;
+          #formcontainer{
+            display: flex;
+            flex-wrap: wrap;
           }
           
           h1 {
