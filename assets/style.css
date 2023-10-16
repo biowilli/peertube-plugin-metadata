@@ -33,17 +33,18 @@
 }
 
 .form-group h2 {
-  width: 6000px;
+  width: 3000px;
 }
 
 .form-group h3 {
-  width: 6000px;
+  width: 3000px;
 }
 
 .form-group h4 {
-  width: 6000px;
+  width: 3000px;
 }
 
 /*
+TODO:something else instead width: 3000px;, of width vw breaks it   
 Make further customizations using the nth selector
 */

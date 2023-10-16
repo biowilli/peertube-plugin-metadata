@@ -74,7 +74,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           //TODO Location
           //TODO rights.usageRights.coverage ???
           var form = JSON.parse(settingsResponse.form);
-          
+
           for (var i = 0; i < form.length; i++) {
             var field = form[i];
             console.log(field);
@@ -105,12 +105,12 @@ async function register({ registerVideoField, peertubeHelpers }) {
                   continue;
                 } else {
                   const genreOptions = genre.map((x) => {
-                    return { label: x.name, value: x.id };
+                    return { "label": x.name, "value": x.id };
                   });
 
                   registerVideoField(
                     {
-
+                      name: "videoInformation.showType.type",
                       label: `${field.label}`,
                       descriptionHTML: `${field.caption}`,
                       type: "select",

@@ -28,15 +28,16 @@ async function register({
         var pluginData = syncStandardVideoEditDataToPluginData(body);
         var videoEBUData = mergeFormDataToEbuDefaults(pluginData, EBUDefaults.values)
         console.log("asgdasfxasdcvsadv.result", videoEBUData);
-        
         console.log("pluginData will be be stored:", videoEBUData);
 
-        storageManager.storeData("metadata-" + video.id, videoEBUData); //unflattenJSON
+        if(body.pluginData['dates.publicationHistory'] === "true"){      
+           storageManager.storeData("metadata-" + video.id, videoEBUData); //TODO: OM dort eine Versionsnummer anführen? Wie dann die Versionsnummer suchen?
+           return;
+        }
+
+        storageManager.storeData("metadata-" + video.id, videoEBUData);
       }
     });
-
-
-
 
     // Add your custom value to the video, so the client autofill your field using the previously stored value
     registerHook({
@@ -46,31 +47,38 @@ async function register({
         console.log("result video id", video.id);
 
         if (!video.pluginData) video.pluginData = {};
-        var storedData = await storageManager.getData(
-          "metadata-" + video.id
-        );
-
+        var storedData = await storageManager.getData("metadata-" + video.id);
+        if (storedData === null || undefined){
+          return video; 
+        }
 
         result = {};
         for (let key in storedData) {
+          console.log(key);
           if (key == 'creator'){
+            var existingCreators = await storageManager.getData("creator");
+            if (existingCreators === null || existingCreators ===  undefined || existingCreators.data === null || existingCreators.data ===  undefined){
+              continue;
+            }
             storedData[key].map(async id => {
-              var existingCreators = await storageManager.getData("creator");
               var creator = existingCreators.data.filter(creator => creator.id === id);
               if (creator.length > 0){
                 var creatorKey = 'creator-' + creator[0].id + '-' + creator[0].creatorname;
-                result[creatorKey] = "true";
+                result[creatorKey] = 'true';
               }
             })
             continue;
           }
 
           if (key == 'contributor'){
+            var existingContributors = await storageManager.getData("creator");
+            if (existingContributors === null || existingContributors === undefined || existingContributors.data === null || existingContributors.data === undefined){
+              continue;
+            }
             storedData[key].map(async id => {
-              var existingContributors = await storageManager.getData("organization");
               var contributor = existingContributors.data.filter(contributor => contributor.id === id);
               if (contributor.length > 0){
-                var contributorKey = 'contributor-' + contributor[0].id + '-' + contributor[0].name;
+                var contributorKey = 'contributor-' + contributor[0].id + '-' + contributor[0].creatorname;
                 result[contributorKey] = 'true';
               }
             })
@@ -78,22 +86,23 @@ async function register({
           }
 
           if (key == 'organization'){
-
+            var existingOrganizations = await storageManager.getData("organization");
+            if (existingOrganizations === null || existingOrganizations === undefined || existingOrganizations.data === null || existingOrganizations.data === undefined ){
+              continue;
+            }
             storedData[key].map(async id => {
-              var existingOrganizations = await storageManager.getData("organization");
               var organization = existingOrganizations.data.filter(organization => organization.id === id);
-              console.log(organization);
               if (organization.length > 0){
                 var organizationKey = 'organization-' + organization[0].id + '-' + organization[0].name;
+                console.log(organizationKey);
                 result[organizationKey] = 'true';
               }
             })
             continue;
           }
+
           result[key] = storedData[key].value || '';
         };
-
-
         video.pluginData = result;
         
         return video;
@@ -133,9 +142,13 @@ async function register({
   }
 
   function mergeFormDataToEbuDefaults(formData, EBUDefaults) {
+    // Reset
+    EBUDefaults['creator'] = [];
+    EBUDefaults['contributor'] = [];
+    EBUDefaults['organization'] = [];
+
     // Get the current date and time in ISO format
     const currentDate = new Date().toISOString();
-  
     // Iterate through the form data
     for (const key in formData) {
       // Check if the key exists in the formData object and it is not undefined
@@ -155,7 +168,7 @@ async function register({
 
           if (key.startsWith('creator-')){
               var creatorId = extractId(key);
-              if (!EBUDefaults['creator'].includes(creatorId)) {
+              if (!EBUDefaults['creator'].includes(creatorId) && formData[key] == 'true') {
                 EBUDefaults['creator'].push(creatorId);
             
             }
@@ -163,16 +176,15 @@ async function register({
 
           if (key.startsWith('contributor-')){
             var contributorId = extractId(key);
-            if (!EBUDefaults['contributor'].includes(contributorId)) {
+            if (!EBUDefaults['contributor'].includes(contributorId) && formData[key] == 'true') {
               EBUDefaults['contributor'].push(contributorId);      
           }
         }
 
           if (key.startsWith('organization-')){
             var organizationId = extractId(key);
-            if (!EBUDefaults['organization'].includes(organizationId)) {
+            if (!EBUDefaults['organization'].includes(organizationId) && formData[key] == 'true') {
               EBUDefaults['organization'].push(organizationId);
-          
           }
         }
           console.log(key, "Property does not exist, in ebuDefaults:");
