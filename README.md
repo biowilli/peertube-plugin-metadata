@@ -32,11 +32,28 @@ various fields from the ebu metadata set.
 
 -  export NODE_OPTIONS=--openssl-legacy-provider
 
+
+- compatibel with the ffprobe plugin:
+
 TODO: 
-- Sync Common Data check!
+
 
 - Licence vorlage Category: https://gitlab.mim-libre.fr/extensions-peertube/categories-management-plugin/
 - Required: + Error Message:
+
+- Wenn die Formeinstellungen verändert werden muss die Seite neu geladen werden 
+- Es werden bestimmte von Standard Peertube in die Metadata gesynct. Dazu gehören:
+
+| Peertube Standard data   |:fast_forward:| Plugin metadata mappingname |
+|:-------------            |:---------------:| -------------:|
+| videoEditData.name       | :fast_forward:   | title.title        |
+| videoEditData.description| :fast_forward:   | description .text      |
+| videoEditData.tags       | :fast_forward:   | description.tags         |
+| videoEditData.language   | :fast_forward:   | videoInformation.language    |
+| videoEditData.category   | :fast_forward:   | videoInformation.category        |
+| videoEditData.licence    | :fast_forward:   | rights.copyright.rightId       |
+
+- wenn gesynced wird dann sollte es nicht dargestellt werden. weil es sonst zu verwirrungen führen kann.
 
 EBU Defaults Object....
 {
@@ -48,7 +65,7 @@ EBU Defaults Object....
 }
 
 
-Formfield Object.... // array because reihnen
+Formfield Object...
 {
   [
     "name": 'mappingname',
@@ -62,10 +79,6 @@ Formfield Object.... // array because reihnen
     "label": 'labelname',
     "required": true,
     "visibleBackend": true,
-    "visibleFrontend": true+//vlt groupierung
+    "visibleFrontend": true
   ],
 }
-
-
-
-

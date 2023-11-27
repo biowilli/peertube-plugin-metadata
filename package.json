@@ -1,7 +1,7 @@
 {
   "name": "peertube-plugin-metadata",
   "description": "Enables the addition of metadata",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "author": "biowilli",
   "repository": {
     "type": "git",
@@ -11,13 +11,19 @@
   "bugs": "https://github.com/biowilli/peertube-plugin-metadata/issues",
   "clientScripts": [
     {
-      "script": "client/video-edit-client-plugin.js",
+      "script": "client/router-client-plugin.js",
       "scopes": [
         "common"
       ]
     },
+      {
+        "script": "client/video-edit-client-plugin.js",
+        "scopes": [
+          "common"
+        ]
+      },
     {
-      "script": "client/router-client-plugin.js",
+      "script": "client/video-client-plugin.js",
       "scopes": [
         "common"
       ]

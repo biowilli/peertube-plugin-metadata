@@ -4,15 +4,17 @@ async function register({ registerClientRoute, peertubeHelpers }) {
     onMount: ({ rootEl }) => {
       rootEl.innerHTML = `
           <div id="plugincontainer">
-          <h1>Organization</h1>
+          <h1>Herausgeber</h1>
           <div id="formcontainer">
           <div>
           <label for="organizationname">Name</label></br>
-          <input type="text" id="organizationname" name="organizationname"></input>
+          <input type="text" id="organizationname" name="organizationname"></input></br>
+          <label for="organizationabbrev">Herausgeberabkürzung</label></br>
+          <input type="text" id="organizationabbrev" name="organizationabbrev"></input>
           </div>
           </div>
           </br>
-          <button id="myButton">Organization hinzufügen</button>
+          <button id="myButton">Herausgeber hinzufügen</button>
           <div id="organizationContainer"></div>
           <table id="myTable">
             <tr>
@@ -30,7 +32,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
           tableBody.remove();
         }
 
-        fetch(peertubeHelpers.getBaseRouterRoute() + "/organization/all", {
+        fetch(peertubeHelpers.getBaseRouterRoute() + "/organization/", {
           method: "GET",
           headers: peertubeHelpers.getAuthHeader(),
         })
@@ -42,7 +44,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
             );
             if (organization.length == 0) {
               organizationContainer.textContent =
-                "Noch keine Organization vorhanden";
+                "Noch keine Herausgeber vorhanden";
               return;
             } else {
               organizationContainer.textContent = "";
@@ -52,6 +54,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
             tableHeaderRow.innerHTML = `
                   <th>ID</th>
                   <th>Name</th>
+                  <th>Herausgeberabkürzung</th>
                   <th></th>
                 `;
             newTableBody.appendChild(tableHeaderRow);
@@ -61,6 +64,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
               tableRow.innerHTML = `
                     <td>${organization.id}</td>
                     <td>${organization.name}</td>
+                    <td>${organization.abbrev}</td>
                     <td>
                       <button class="deleteButton" data-id="${organization.id}">Löschen</button>
                     </td>
@@ -74,11 +78,11 @@ async function register({ registerClientRoute, peertubeHelpers }) {
             deleteButtons.forEach((button) => {
               button.addEventListener("click", () => {
                 const organizationId = button.dataset.id;
-                console.log("Löschen der Organization mit ID:", organizationId);
+                console.log("Löschen der Herausgeber mit ID:", organizationId);
 
                 fetch(
                   peertubeHelpers.getBaseRouterRoute() +
-                    "/organization/delete/" +
+                    "/organization//" +
                     organizationId,
                   {
                     method: "DELETE",
@@ -105,14 +109,17 @@ async function register({ registerClientRoute, peertubeHelpers }) {
       button.addEventListener("click", () => {
         const organizationNameInput = rootEl.querySelector("#organizationname");
         const organizationsName = organizationNameInput.value;
+        const organizationAbbrevInput = rootEl.querySelector("#organizationabbrev");
+        const organizationAbbrev = organizationAbbrevInput.value;
         console.log(organizationsName);
-        fetch(peertubeHelpers.getBaseRouterRoute() + "/organization/create", {
+        console.log(organizationAbbrev);
+        fetch(peertubeHelpers.getBaseRouterRoute() + "/organization/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             ...peertubeHelpers.getAuthHeader(),
           },
-          body: JSON.stringify({ name: organizationsName }),
+          body: JSON.stringify({ name: organizationsName, abbrev: organizationAbbrev}),
         })
           .then((res) => res.json())
           .then((data) => {

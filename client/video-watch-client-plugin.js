@@ -1,4 +1,5 @@
 function register({ registerHook, peertubeHelpers}) {
+
   registerHook({
     target: "action:video-watch.player.loaded",
     handler: ({ videojs, video, playlist }) => {
@@ -11,14 +12,37 @@ function register({ registerHook, peertubeHelpers}) {
         }
       ).then((response) => response.json());
 
+      const fetchLanguages = fetch(
+        peertubeHelpers.getBaseRouterRoute() + "/language/",
+        {
+          method: "GET",
+          headers: peertubeHelpers.getAuthHeader(),
+        }
+      ).then((response) => response.json());
+
+      const fetchLicences = fetch(
+        peertubeHelpers.getBaseRouterRoute() + "/licence/",
+        {
+          method: "GET",
+          headers: peertubeHelpers.getAuthHeader(),
+        }
+      ).then((response) => response.json());
+
       Promise.all([
         fetchCategory,
+        fetchLanguages,
+        fetchLicences
       ]).then(
         ([
           categoryResponse,
+          languagesResponse,
+          licencesResponse
         ]) => {
   
           const categoriesData = categoryResponse;
+          const languagesData = languagesResponse;
+          const licencesData = licencesResponse;
+          console.log("licencesData",licencesData);
         peertubeHelpers.getSettings().then((setting) => {
           var extractIdData = extractIds(video.pluginData);
           if (setting["form"]){
@@ -29,14 +53,22 @@ function register({ registerHook, peertubeHelpers}) {
               if (field.visibleVideoWatch == false){
                 continue;
               } else if (field.mappingname == 'videoInformation.category'){
-                var categoryId = video.pluginData[field.mappingname]; 
-                var matchedCategory = categoriesData[categoryId];
-                if (matchedCategory) {
-                  createVideoInfo(field.label, turnUndefinedIntoString(matchedCategory));
-                } else {
-                  console.log("No match found for category ID: " + categoryId);
-                }
-              }else if (field.mappingname == 'creator' || field.mappingname == 'organization' || field.mappingname == 'contributor'){
+                createVideoInfo(
+                  field.label,
+                  turnUndefinedIntoString(extractReadablInfo(video.pluginData[field.mappingname], categoriesData))
+                );
+              } else if (field.mappingname === 'videoInformation.language') {
+                createVideoInfo(
+                  field.label,
+                  turnUndefinedIntoString(extractReadablInfo(video.pluginData[field.mappingname], languagesData))
+                );
+              } else if (field.mappingname === 'rights.copyright.rightId') {
+                createVideoInfo(
+                  field.label,
+                  turnUndefinedIntoString(extractReadablInfo(video.pluginData[field.mappingname], licencesData))
+                );
+              } 
+              else if (field.mappingname == 'creator' || field.mappingname == 'organization' || field.mappingname == 'contributor'){
                 createList(field.mappingname, extractIdData[field.mappingname]);
               } else if (field.type === "header") {
                 createHeaderField(field.label, field.size);
@@ -58,6 +90,15 @@ function register({ registerHook, peertubeHelpers}) {
   }
   })
 };
+function extractReadablInfo(id, dataStore) {
+  var info = dataStore[id];
+  console.log("extractReadablInfo:", info, "from id", id);
+  if (info) {
+    return info;
+  } else {
+    return id;
+  }
+} 
       
 function extractIds(flatJson) {
   // Extract keys starting with prefixes and store them in a separate JSON

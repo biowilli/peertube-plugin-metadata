@@ -2,6 +2,7 @@ const path = require('path')
 const esbuild = require('esbuild')
 
 const clientFiles = [
+  'video-client-plugin.js',
   'video-edit-client-plugin.js',
   'video-watch-client-plugin.js',
   'router-client-plugin',

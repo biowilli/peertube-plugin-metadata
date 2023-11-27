@@ -33,18 +33,13 @@
 }
 
 .form-group h2 {
-  width: 3000px;
+  width: calc(100vw - 240px);
 }
 
 .form-group h3 {
-  width: 3000px;
+  width: calc(100vw - 240px);
 }
 
 .form-group h4 {
-  width: 3000px;
+  width: calc(100vw - 240px);
 }
-
-/*
-TODO:something else instead width: 3000px;, of width vw breaks it   
-Make further customizations using the nth selector
-*/

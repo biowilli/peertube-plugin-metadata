@@ -1,3 +1,21 @@
+// English form names
+// Name
+// Familyname
+// Username
+// Occupation
+// E-Mail
+// URL
+// Address
+// Delivery Code
+// City
+// State
+// Country
+// Telephone
+// Mobile Phone
+// Stage
+// Related Contact
+// Role
+
 async function register({ registerClientRoute, peertubeHelpers }) {
   registerClientRoute({
     route: "metadata/creators",
@@ -7,19 +25,19 @@ async function register({ registerClientRoute, peertubeHelpers }) {
           <h1>Creator</h1>
           <div id="formcontainer">
           <div>
-          <label for="creatorname">Name</label></br>
+          <label for="creatorname">Vorname</label></br>
           <input type="text" id="creatorname" name="creatorname">
           </div>
           <div>
-          <label for="creatorfamilyname">Familyname</label></br>
+          <label for="creatorfamilyname">Nachname</label></br>
           <input type="text" id="creatorfamilyname" name="creatorfamilyname">
           </div>
           <div>
-          <label for="creatorusername">Username</label></br>
+          <label for="creatorusername">Sendungsmacher Kürzel</label></br>
           <input type="text" id="creatorusername" name="creatorusername">
           </div>
           <div>
-          <label for="creatoroccupation">Occupation</label></br>
+          <label for="creatoroccupation">Beruf</label></br>
           <input type="text" id="creatoroccupation" name="creatoroccupation">
           </div>
           <div>
@@ -27,43 +45,43 @@ async function register({ registerClientRoute, peertubeHelpers }) {
           <input type="text" id="creatoremail" name="creatoremail">
           </div>
           <div>
-          <label for="creatorurl">URL</label></br>
+          <label for="creatorurl">Website URL</label></br>
           <input type="text" id="creatorurl" name="creatorurl">
           </div>
           <div>
-          <label for="creatoraddress">Address</label></br>
+          <label for="creatoraddress">Adresse</label></br>
           <input type="text" id="creatoraddress" name="creatoraddress">
           </div>
           <div>
-          <label for="creatordeliverycode">Delivery Code</label></br>
+          <label for="creatordeliverycode">Postleitzahl</label></br>
           <input type="text" id="creatordeliverycode" name="creatordeliverycode">
           </div>
           <div>
-          <label for="creatorcity">City</label></br>
+          <label for="creatorcity">Stadt</label></br>
           <input type="text" id="creatorcity" name="creatorcity">
           </div>
           <div>
-          <label for="creatorstate">State</label></br>
+          <label for="creatorstate">Bundesland</label></br>
           <input type="text" id="creatorstate" name="creatorstate">
           </div>
           <div>
-          <label for="creatorcountry">Country</label></br>
+          <label for="creatorcountry">Land</label></br>
           <input type="text" id="creatorcountry" name="creatorcountry">
           </div>
           <div>
-          <label for="creatortelephone">Telephone</label></br>
+          <label for="creatortelephone">Telefonnummer</label></br>
           <input type="text" id="creatortelephone" name="creatortelephone">
           </div>
           <div>
-          <label for="creatormobile">Mobile Phone</label></br>
+          <label for="creatormobile">Mobiltelefonnummer</label></br>
           <input type="text" id="creatormobile" name="creatormobile">
           </div>
           <div>
-          <label for="creatorstage">Stage</label></br>
+          <label for="creatorstage">Bühnenname</label></br>
           <input type="text" id="creatorstage" name="creatorstage">
           </div>
           <div>
-          <label for="creatorcontacts">Related Contact</label></br>
+          <label for="creatorcontacts">Vernetzter Kontakt</label></br>
           <input type="text" id="creatorcontacts" name="creatorcontacts">        
           </div>
           <div>
@@ -73,30 +91,31 @@ async function register({ registerClientRoute, peertubeHelpers }) {
           </div>
           </br>
           <button id="myButton">Add Creator</button>
+          <span id="errorMessage" style='color:red;'></span>
           <div id="creatorContainer"></div>
           <table id="myTable">
             <tr>
               <th>ID</th>
-              <th>Given name</th>
-              <th>Family name</th>
-              <th>Username</th>
-              <th>Occupation</th>
-              <th>Email</th>  
-              <th>Url</th>  
-              <th>Address</th>
-              <th>Delivery Code</th>    
-              <th>City</th>  
-              <th>State</th>  
-              <th>Country</th>  
-              <th>Telephone Number</th>  
-              <th>Mobile Telephone Number</th>  
-              <th>Stage name</th>  
-              <th>Related contacts</th>  
+              <th>Vorname</th>
+              <th>Nachname</th>
+              <th>Sendungsmacher Kürzel</th>
+              <th>Beruf</th>
+              <th>E-Mail</th>  
+              <th>Website URL</th>  
+              <th>Adresse</th>
+              <th>Postleitzahl</th>    
+              <th>Stadt</th>  
+              <th>Bundesland</th>  
+              <th>Land</th>  
+              <th>Telefonnummer</th>  
+              <th>Mobiltelefonnummer</th>  
+              <th>Bühnenname</th>  
+              <th>Vernetzter Kontakt</th>  
               <th>Role</th>  
             </tr>
           </table>
           <div>
-        `;
+        `;    
 
       function getCreator() {
         const table = rootEl.querySelector("#myTable");
@@ -104,8 +123,11 @@ async function register({ registerClientRoute, peertubeHelpers }) {
         if (tableBody) {
           tableBody.remove();
         }
+        console.log("getAuthHeader");
+        console.log("");
+        console.log(peertubeHelpers.getAuthHeader());
 
-        fetch(peertubeHelpers.getBaseRouterRoute() + "/creator/all", {
+        fetch(peertubeHelpers.getBaseRouterRoute() + "/creator/", {
           method: "GET",
           headers: peertubeHelpers.getAuthHeader(),
         })
@@ -178,7 +200,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
 
                 fetch(
                   peertubeHelpers.getBaseRouterRoute() +
-                    "/creator/delete/" +
+                    "/creator/" +
                     creatorId,
                   {
                     method: "DELETE",
@@ -203,6 +225,8 @@ async function register({ registerClientRoute, peertubeHelpers }) {
       getCreator();
       const button = rootEl.querySelector("#myButton");
       button.addEventListener("click", () => {
+        var errorMessage = rootEl.querySelector("#errorMessage");
+        errorMessage.textContent = "";
         var creatorNameInput = rootEl.querySelector("#creatorname");
         var creatorFamilynameInput = rootEl.querySelector("#creatorfamilyname");
         var creatorUsernameInput = rootEl.querySelector("#creatorusername");
@@ -221,6 +245,13 @@ async function register({ registerClientRoute, peertubeHelpers }) {
         var creatorStageInput = rootEl.querySelector("#creatorstage");
         var creatorContactsInput = rootEl.querySelector("#creatorcontacts");
         var creatorRoleInput = rootEl.querySelector("#creatorrole");
+
+        //required
+        console.log(creatorusername);
+        if (creatorusername.value == ""){
+          errorMessage.textContent = "Sendungskürzel ist ein Pflichtfeld";
+          return;
+        }
 
         const creatorsData = {
           name: creatorNameInput.value,
@@ -241,7 +272,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
           role: creatorRoleInput.value,
         };
 
-        fetch(peertubeHelpers.getBaseRouterRoute() + "/creator/create", {
+        fetch(peertubeHelpers.getBaseRouterRoute() + "/creator", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

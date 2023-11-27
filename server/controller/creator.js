@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 
 const initCreatorController = (router, storageManager) => {
-  router.get("/creator/all", async (req, res) => {
+  router.get("/creator/", async (req, res) => {
     try {
       var storedData = await storageManager.getData("creator");
       if (storedData == null) {
@@ -15,10 +15,9 @@ const initCreatorController = (router, storageManager) => {
     }
   });
 
-  router.post("/creator/create", async (req, res) => {
+  router.post("/creator/", async (req, res) => {
     try {
       var existingCreator = await storageManager.getData("creator");
-      const body = await req.body;
 
       const creatorname = await req.body.name;
       const creatorfamilyname = await req.body.familyname;
@@ -36,25 +35,30 @@ const initCreatorController = (router, storageManager) => {
       const creatorstage = await req.body.creatorstage;
       const creatorcontacts = await req.body.contacts;
       const creatorrole = await req.body.role;
+      //required
+      if (!creatorusername){
+        res.status(400).send("The 'username' field must be set.");
+        return;
+      }
 
       var newData = {
-        id: uuidv4(),
-        creatorname: creatorname,
-        creatorfamilyname: creatorfamilyname,
-        creatorusername: creatorusername,
-        creatoroccupation: creatoroccupation,
-        creatoremail: creatoremail,
-        creatorurl: creatorurl,
-        creatoraddress: creatoraddress,
-        creatordeliverycode: creatordeliverycode,
-        creatorcity: creatorcity,
-        creatorstate: creatorstate,
-        creatorcountry: creatorcountry,
-        creatortelephone: creatortelephone,
-        creatormobile: creatormobile,
-        creatorstage: creatorstage,
-        creatorcontacts: creatorcontacts,
-        creatorrole: creatorrole,
+        "id": uuidv4(),
+        "creatorname": creatorname,
+        "creatorfamilyname": creatorfamilyname,
+        "creatorusername": creatorusername,
+        "creatoroccupation": creatoroccupation,
+        "creatoremail": creatoremail,
+        "creatorurl": creatorurl,
+        "creatoraddress": creatoraddress,
+        "creatordeliverycode": creatordeliverycode,
+        "creatorcity": creatorcity,
+        "creatorstate": creatorstate,
+        "creatorcountry": creatorcountry,
+        "creatortelephone": creatortelephone,
+        "creatormobile": creatormobile,
+        "creatorstage": creatorstage,
+        "creatorcontacts": creatorcontacts,
+        "creatorrole": creatorrole,
       };
 
       if (existingCreator == undefined) {
@@ -76,7 +80,7 @@ const initCreatorController = (router, storageManager) => {
     }
   });
 
-  router.delete("/creator/delete/:id", async (req, res) => {
+  router.delete("/creator/:id", async (req, res) => {
     try {
       var existingCreator = await storageManager.getData("creator");
       var creatorId = req.params.id;

@@ -25,6 +25,11 @@ async function register({ registerHook, peertubeHelpers }) {
             },
             {
               icon: "home",
+              path: "/p/metadata/videos",
+              shortLabel: "Publication History",
+            },
+            {
+              icon: "home",
               path: "/admin/plugins/show/peertube-plugin-metadata",
               shortLabel: "Settings",
             },

@@ -1,24 +1,39 @@
 //TODO createdby
+//TODO check if Standard Video Data require works: language, Beschreibung
+
 async function register({
   registerHook,
   storageManager,
   getRouter,
+  videoLanguageManager,
+  videoLicenceManager,
   videoCategoryManager,
+  peertubeHelpers,
   registerSetting
 }) {
     const { initRegisterSettings }  = require("./server/settings.js");
     const { initCategoryController }  = require("./server/controller/category.js");
+    const { initLanguageController }  = require("./server/controller/language.js");
+    const { initLicenceController }  = require("./server/controller/licence.js");
+    
     const { initCreatorController }  = require("./server/controller/creator.js");
     const { initGenreController } = require("./server/controller/genre.js");
     const { initOrganizationController }  = require("./server/controller/organization.js");
+    const { initVideoController }  = require("./server/controller/video.js");
+    const { initMetadataController }  = require("./server/controller/metadata.js");
     const { EBUDefaults }  = require("./model/EbuDefaults.js");
     initRegisterSettings(registerSetting);
+    const host = peertubeHelpers.config.getWebserverUrl();
 
     var router = getRouter();
+    initLanguageController(router, videoLanguageManager);
+    initLicenceController(router, videoLicenceManager);
     initCategoryController(router, videoCategoryManager);
     initCreatorController(router, storageManager);
     initGenreController(router, storageManager);
     initOrganizationController(router, storageManager);
+    initVideoController(router, storageManager);
+    initMetadataController(router, storageManager);
 
     // Store data associated to this video
     registerHook({
@@ -26,114 +41,196 @@ async function register({
       handler: ({ video, body }) => {
         if (!body.pluginData) return;
 
-        console.log("bodyData", body);
-        console.log("should be mapped to", body.pluginData);
+        
+//body bekommt man die standard video data
+        var synchronizedStandardVideoData = syncStandardVideoEditDataToPluginData(body);
+        console.log("synchronizedStandardVideoData", synchronizedStandardVideoData);
 
-        var pluginData = syncStandardVideoEditDataToPluginData(body);
-        var videoEBUData = mergeFormDataToEbuDefaults(pluginData, EBUDefaults.values)
+        var synchronizedffprobeData = syncffprobeDataToPluginData(synchronizedStandardVideoData, video.dataValues.id, storageManager);
+        console.log("synchronizedffprobeData", synchronizedffprobeData);
+        var videoEBUData = mergeFormDataToEbuDefaults(synchronizedffprobeData, EBUDefaults.values);
+        console.log("videoEBUData", videoEBUData);
+
         console.log("asgdasfxasdcvsadv.result", videoEBUData);
         console.log("pluginData will be be stored:", videoEBUData);
+        var videoId = video.id;
+   
+            fetch(`${host}/plugins/metadata/1.1.9/router/video/${videoId}`)
+              .then(response => {
 
-        if(body.pluginData['dates.publicationHistory'] === "true"){      
-           storageManager.storeData("metadata-" + video.id, videoEBUData); //TODO: OM dort eine Versionsnummer anführen? Wie dann die Versionsnummer suchen?
-           return;
-        }
+                if (!response.ok) {
+                  console.error('Fehler beim Abrufen der publicationHistoryVersion');
+                }
 
-        storageManager.storeData("metadata-" + video.id, videoEBUData);
+                return response.json()
+              })
+              .then(publicationHistoryVersion => {
+                var newVersion = publicationHistoryVersion.value;
+                if (!isNaN(newVersion)) {
+
+                  if (body.pluginData['dates.publicationHistory'].value === "true"){
+                    newVersion = publicationHistoryVersion.value + 1;
+                  }
+
+                  setVideoMetadata(videoId, newVersion, videoEBUData, storageManager);
+                  setVideoVersion(videoId, newVersion, host)
+
+                } else {
+                    var newVersion = 0;
+                    console.log("last publicationHistoryVersion was ", publicationHistoryVersion.value,  ". Setting newVersion to 0.");
+                    setVideoMetadata(videoId, newVersion, videoEBUData, storageManager);
+                    setVideoVersion(videoId, newVersion, host)
+                }
+                })
+                .catch(error => {
+                  console.error('Error setting video version2:', error);
+                }); 
       }
     });
+
+    async function setVideoMetadata(videoId, newVersion, metadata, storageManager){
+      console.log("will set video metadata");
+      await storageManager.storeData("metadata-" + videoId + "-" + newVersion, metadata);
+      console.log("video metadata stored");
+    }
+
+    function setVideoVersion(videoId, newVersion, host){
+      fetch(`${host}/plugins/metadata/1.1.9/router/video/${videoId}/version`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({value: newVersion}),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log("Video version successfully set:", data.message);
+        })
+        .catch(error => {
+          console.error('Error setting video version1:', error);
+        });
+    }
 
     // Add your custom value to the video, so the client autofill your field using the previously stored value
     registerHook({
       target: "filter:api.video.get.result",
       handler: async (video) => {
-        if (!video) return video;
-        console.log("result video id", video.id);
+        await fetch(`${host}/plugins/metadata/1.1.9/router/video/${video.dataValues.id}/version`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then(response => response.json())
+          .then(async data => {
+            if (!video) return video;
+            if (!video.pluginData) video.pluginData = {};
 
-        if (!video.pluginData) video.pluginData = {};
-        var storedData = await storageManager.getData("metadata-" + video.id);
-        if (storedData === null || undefined){
-          return video; 
-        }
+            var currentPublicationHistoryVersion = data.version;
 
-        result = {};
-        for (let key in storedData) {
-          console.log(key);
-          if (key == 'creator'){
-            var existingCreators = await storageManager.getData("creator");
-            if (existingCreators === null || existingCreators ===  undefined || existingCreators.data === null || existingCreators.data ===  undefined){
-              continue;
+            //wenn  passiert wenn latest aufgewählt wurde
+            if (currentPublicationHistoryVersion == -1){}
+
+            console.log("welche version wird geladen:", currentPublicationHistoryVersion);
+
+            var storedData = await storageManager.getData("metadata-" + video.dataValues.id + '-' + currentPublicationHistoryVersion);
+            if (storedData === null || undefined){
+              return video; 
             }
-            storedData[key].map(async id => {
-              var creator = existingCreators.data.filter(creator => creator.id === id);
-              if (creator.length > 0){
-                var creatorKey = 'creator-' + creator[0].id + '-' + creator[0].creatorname;
-                result[creatorKey] = 'true';
+    
+            result = {};
+            for (let key in storedData) {
+              console.log(key);
+              if (key == 'creator'){
+                var existingCreators = await storageManager.getData("creator");
+                if (existingCreators === null || existingCreators ===  undefined || existingCreators.data === null || existingCreators.data ===  undefined){
+                  continue;
+                }
+                storedData[key].map(async id => {
+                  var creator = existingCreators.data.filter(creator => creator.id === id);
+                  if (creator.length > 0){
+                    var creatorKey = 'creator-' + creator[0].id + '-' + creator[0].creatorname;
+                    result[creatorKey] = 'true';
+                  }
+                })
+                continue;
               }
-            })
-            continue;
-          }
-
-          if (key == 'contributor'){
-            var existingContributors = await storageManager.getData("creator");
-            if (existingContributors === null || existingContributors === undefined || existingContributors.data === null || existingContributors.data === undefined){
-              continue;
-            }
-            storedData[key].map(async id => {
-              var contributor = existingContributors.data.filter(contributor => contributor.id === id);
-              if (contributor.length > 0){
-                var contributorKey = 'contributor-' + contributor[0].id + '-' + contributor[0].creatorname;
-                result[contributorKey] = 'true';
+    
+              if (key == 'contributor'){
+                var existingContributors = await storageManager.getData("creator");
+                if (existingContributors === null || existingContributors === undefined || existingContributors.data === null || existingContributors.data === undefined){
+                  continue;
+                }
+                storedData[key].map(async id => {
+                  var contributor = existingContributors.data.filter(contributor => contributor.id === id);
+                  if (contributor.length > 0){
+                    var contributorKey = 'contributor-' + contributor[0].id + '-' + contributor[0].creatorname;
+                    result[contributorKey] = 'true';
+                  }
+                })
+                continue;
               }
-            })
-            continue;
-          }
-
-          if (key == 'organization'){
-            var existingOrganizations = await storageManager.getData("organization");
-            if (existingOrganizations === null || existingOrganizations === undefined || existingOrganizations.data === null || existingOrganizations.data === undefined ){
-              continue;
-            }
-            storedData[key].map(async id => {
-              var organization = existingOrganizations.data.filter(organization => organization.id === id);
-              if (organization.length > 0){
-                var organizationKey = 'organization-' + organization[0].id + '-' + organization[0].name;
-                console.log(organizationKey);
-                result[organizationKey] = 'true';
+    
+              if (key == 'organization'){
+                var existingOrganizations = await storageManager.getData("organization");
+                if (existingOrganizations === null || existingOrganizations === undefined || existingOrganizations.data === null || existingOrganizations.data === undefined ){
+                  continue;
+                }
+                storedData[key].map(async id => {
+                  var organization = existingOrganizations.data.filter(organization => organization.id === id);
+                  if (organization.length > 0){
+                    var organizationKey = 'organization-' + organization[0].id + '-' + organization[0].name;
+                    console.log(organizationKey);
+                    result[organizationKey] = 'true';
+                  }
+                })
+                continue;
               }
-            })
-            continue;
-          }
+    
+              result[key] = storedData[key].value || '';
+            };
+            video.pluginData = result;
+            
+            return video;
+          })
+          .catch(error => {
+            console.error('Fehler beim Bekommen der Videoversion:', error);
+          });
 
-          result[key] = storedData[key].value || '';
-        };
-        video.pluginData = result;
-        
-        return video;
+          return video;
       },
     });
   }
-
   function syncStandardVideoEditDataToPluginData(body) {
 
     var videoEditData = body;
     var metadataPlugin = body.pluginData;
-    
-    // Check if the required data is present
-    if (!videoEditData || !metadataPlugin) {
-      console.error("Invalid input: Video Edit data or Metadata Plugin is missing.");
+    console.log("metadataPlugin123123123", metadataPlugin);
+
+    if (!videoEditData) {
+      console.error("Invalid input: Video Edit Data is missing.");
       return;
     }
-  
+
+    if (!metadataPlugin) {
+      console.error("Invalid input: Metadata Plugin is missing.");
+      return;
+    }
+
     // Synchronize the data
+    console.log("Synchronize the standard VideoData", metadataPlugin)
     metadataPlugin['title.title'] = videoEditData.name;
     metadataPlugin['description.text'] = videoEditData.description;
     metadataPlugin['description.tags'] = videoEditData.tags;
+
     metadataPlugin['videoInformation.language'] = videoEditData.language;
     metadataPlugin['videoInformation.category'] = videoEditData.category;
+
+    metadataPlugin['rights.copyright.rightId'] = videoEditData.licence;
+
+    //TODO metadataPlugin['rights.copyright.rightId'] = videoEditData.licence;
   
     //noch keine Zuordnung
-    //videoEditData.licence
     //videoEditData.support 
     //videoEditData.channelId
     //videoEditData.privacy
@@ -143,6 +240,56 @@ async function register({
     //videoEditData.downloadEnabled
   
     return metadataPlugin;
+  }
+
+  function syncffprobeDataToPluginData(synchronizeData, videoId, storageManager) {
+    console.log(synchronizeData);
+
+    var ffprobeData = storageManager.getData("ffprobe-" + videoId);
+
+    if (!synchronizeData) {
+      console.error("Invalid input: ffprobe data or Metadata Plugin is missing.");
+      return;
+    }
+
+    if (!ffprobeData) {
+      console.error("Invalid input: ffprobe is missing.");
+      return;
+    }
+
+    console.log("Synchronize this ffprobe Data", ffprobeData);
+ 
+    // Synchronize the data
+    synchronizeData['technicaldata.videoFormat'] = "*";
+    synchronizeData['technicaldata.videoFormat.definition'] = "*";
+    synchronizeData['technicaldata.videoFormat.aspectratio'] = "*";
+    synchronizeData['technicaldata.videoFormat.width'] = "*";
+    synchronizeData['technicaldata.videoFormat.height'] = "*";
+    synchronizeData['technicaldata.videoFormat.videoEncoding'] = "*";
+    synchronizeData['technicaldata.videoFormat.frameRate'] = "*";
+    synchronizeData['technicaldata.videoFormat.colorSpace'] = "*";
+    synchronizeData['technicaldata.videoFormat.chromaSubsampling'] = "*";
+    synchronizeData['technicaldata.videoFormat.encoderProfile'] = "*";
+    synchronizeData['technicaldata.videoFormat.bitrate'] = "*";
+    synchronizeData['technicaldata.videoFormat.bframes'] = "*";
+    synchronizeData['technicaldata.videoFormat.trackId'] = "*";
+    synchronizeData['technicaldata.videoFormat.trackName'] = "*";
+    synchronizeData['technicaldata.audioFormat'] = "*";
+    synchronizeData['technicaldata.audioFormat.encoding'] = "*";
+    synchronizeData['technicaldata.audioFormat.trackConfiguration'] = "*";
+    synchronizeData['technicaldata.audioFormat.audioChannels'] = "*";
+    synchronizeData['technicaldata.audioFormat.trackId'] = "*";
+    synchronizeData['technicaldata.audioFormat.trackName'] = "*";
+    synchronizeData['technicaldata.audioFormat.encoderProfile'] = "*";
+    synchronizeData['technicaldata.audioFormat.bitrate'] = "*";
+    synchronizeData['technicaldata.audioFormat.samplingRate'] = "*";
+    synchronizeData['technical.datacontainer'] = "*";
+    synchronizeData['technicaldata.startDate'] = "*";
+    synchronizeData['technicaldata.endDate'] = "*";
+    synchronizeData['technicaldata.duration'] = "*";
+    synchronizeData['technicaldata.created'] = "*";
+
+    return synchronizeData;
   }
 
   function mergeFormDataToEbuDefaults(formData, EBUDefaults) {
@@ -226,56 +373,7 @@ async function register({
   }  
 
 
-// Umwandlung in eindimensionales JSON
-function flattenJSON(obj, prefix = '') {
-  let result = {};
-
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      let newKey = prefix ? `${prefix}.${key}` : key;
-
-      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
-        let flattenedObj = flattenJSON(obj[key], newKey);
-        result = { ...result, ...flattenedObj };
-      } else {
-        result[newKey] = obj[key];
-      }
-    }
-  }
-  console.log("result flattenJSON in flattenJSON", result);
-  return result;
-}
-
-// Umwandlung in nested JSON
-function unflattenJSON(flatJson) {
-  console.log("flattenJSON in unflattenJSON", flatJson);
-  const nestedJson = {};
-
-  for (const key in flatJson) {
-    if (key.includes(".")) {
-      const nestedKeys = key.split(".");
-      let currentNestedJson = nestedJson;
-
-      for (let i = 0; i < nestedKeys.length - 1; i++) {
-        const nestedKey = nestedKeys[i];
-
-        if (!currentNestedJson[nestedKey]) {
-          currentNestedJson[nestedKey] = {};
-        }
-
-        currentNestedJson = currentNestedJson[nestedKey];
-      }
-
-      currentNestedJson[nestedKeys[nestedKeys.length - 1]] =
-        flatJson[key] !== undefined ? flatJson[key] : "";
-    } else {
-      nestedJson[key] = flatJson[key] !== undefined ? flatJson[key] : "";
-    }
-  }
-  console.log("result flattenJSON in unflattenJSON", nestedJson);
-  return nestedJson;
-}
-
+  
 module.exports = {
   register,
   unregister,

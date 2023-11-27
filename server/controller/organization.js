@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 
 const initOrganizationController = (router, storageManager) => {
-  router.get("/organization/all", async (req, res) => {
+  router.get("/organization/", async (req, res) => {
       try {
         var storedData = await storageManager.getData("organization");
         if (storedData == null) {
@@ -15,13 +15,15 @@ const initOrganizationController = (router, storageManager) => {
       }
     });
 
-  router.post("/organization/create", async (req, res) => {
+  router.post("/organization/", async (req, res) => {
     try {
       var existingOrganization = await storageManager.getData("organization");
       var organizationname = await req.body.name;
+      var organizationabbrev = await req.body.abbrev;
       var newData = {
         id: uuidv4(),
         name: organizationname,
+        abbrev: organizationabbrev
       };
       if (existingOrganization == undefined) {
         await storageManager.storeData("organization", {
@@ -42,7 +44,7 @@ const initOrganizationController = (router, storageManager) => {
     }
   });
 
-  router.delete("/organization/delete/:id", async (req, res) => {
+  router.delete("/organization/:id", async (req, res) => {
     try {
       var existingOrganization = await storageManager.getData("organization");
       var organizationId = req.params.id;

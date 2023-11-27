@@ -1,0 +1,636 @@
+[
+    {
+        "type": "header",
+        "label": "Titel",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "title.title",
+        "label": "Titel *",
+        "caption": "",
+        "required": true,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "title.titleNote",
+        "label": "Notiz zum Titel",
+        "caption": "Das ist der Erklärungstext für die Notiz",
+        "required": false,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": false
+    },
+    {
+        "type": "input",
+        "mappingname": "title.descriptiveTitle",
+        "label": "Beschreibender Titel",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": false
+    },
+    {
+        "type": "input",
+        "mappingname": "title.descriptiveTitleNote",
+        "label": "Notiz zum beschreibenden Titel",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": false
+    },
+    {
+        "type": "input",
+        "mappingname": "title.alternativeTitle",
+        "label": "Sendungsname *",
+        "caption": "",
+        "required": true,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "title.alternativeTitleNote",
+        "label": "Notiz zum Sendungsnamen",
+        "caption": "",
+        "required": true,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "title.note",
+        "label": "Sendungskürzel",
+        "caption": "z.B ROC",
+        "required": true,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "line"
+    },
+    {
+        "type": "header",
+        "label": "Creator",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "entity",
+        "mappingname": "creator",
+        "label": "Creator",
+        "caption": "Entityfield",
+        "required": true,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Beteiligte Personen",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "entity",
+        "mappingname": "contributor",
+        "label": "KooperationspartnerInnen",
+        "caption": "Entityfield",
+        "required": true,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Herausgeber",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "entity",
+        "mappingname": "organization",
+        "label": "Herausgeber",
+        "caption": "Entityfield",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "line"
+    },
+    {
+        "type": "header",
+        "label": "Beschreibung",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "description.text",
+        "label": "Beschreibung",
+        "caption": "Synced with Standard Video Data",
+        "required": true,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "description.tags",
+        "label": "Tags",
+        "caption": "",
+        "required": true,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "description.subject",
+        "label": "Thema",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": false
+    },
+    {
+        "type": "header",
+        "label": "Daten",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Reichweite",
+        "size": 3,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.coverage.daterecorded",
+        "label": "Produktionsdatum",
+        "caption": "Bsp. 27.01.23",
+        "required": true,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Herausgabedatum",
+        "size": 3,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.issued.firstIssued",
+        "label": "Erstausgabedatum",
+        "caption": "First issued",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.issued.lastIssued",
+        "label": "Zuletzts ausgestrahlt",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.dateDigitalised",
+        "label": "Upload Datum",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.videoLinks",
+        "label": "Video Link",
+        "caption": "Video Link(s)",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Herausgabehistorie",
+        "size": 2,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "checkbox",
+        "mappingname": "dates.publicationHistory",
+        "label": "Herausgabehistorie",
+        "caption": "Herausgabehistorie setzen, also eine neue Version der Daten abspeichern - eventuell immer abspeichern ohne Hacken",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.publicationHistory.firstPublicationDate",
+        "label": "Erstausstrahlungsdatum",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.publicationHistory.firstPublicationTime",
+        "label": "Zeit der ersten Ausstrahlung",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.publicationHistory.firstPublicationChannel",
+        "label": "Kanal der Erstausstrahlung",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.publicationHistory.repeatChannel",
+        "label": "Wiederholungskanal",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Archiv",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.archiveData.filesize",
+        "label": "Dateigröße im Archive",
+        "caption": "filesize",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.archiveData.filename",
+        "label": "Dateiname im Archive",
+        "caption": "Filename",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.archiveData.archiveLocation",
+        "label": "Archivierungsort",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "dates.archiveData.archiveFilePath",
+        "label": "archiveFilePath",
+        "caption": "Dateipfad im Archive",
+        "required": true,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Videoinformationen",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.genre",
+        "label": "Kategorie",
+        "caption": "davor Genre",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.targetgroup",
+        "label": "Zielgruppe",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Sendungstyp",
+        "size": 3,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.showType.series",
+        "label": "Serie",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.showType.season",
+        "label": "Staffel",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.showType.episode",
+        "label": "Folge",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "entity",
+        "mappingname": "videoInformation.showType.type",
+        "label": "Sendungstyp",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": false
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.parts",
+        "label": "Teil",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.version",
+        "label": "Version",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.language",
+        "label": "Sprache",
+        "caption": "Synced with Standard Video Data",
+        "required": true,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.relation",
+        "label": "Serienzugehörigkeit",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.source",
+        "label": "Quellenangaben",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.category",
+        "label": "Kategory",
+        "caption": "Synced with Standard Video Data",
+        "required": true,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Bewertung",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.rating.ratingValue",
+        "label": "Bewertungswert",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.rating.ratingScaleMinValue",
+        "label": "Bewertungsskala Minimum",
+        "caption": "ratingScaleMinValue",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.rating.ratingScaleMaxValue",
+        "label": "Bewertungsskala Maximum",
+        "caption": "ratingScaleMaxValue",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "videoInformation.rating.notes",
+        "label": "Notizen zur Bewertung",
+        "caption": "z.B Schlechter Ton",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Rechte",
+        "size": 2,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Copyright",
+        "size": 3,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.copyright.rightId",
+        "label": "Right ID / Copyright",
+        "caption": "Synced with Standard Video Data",
+        "required": false,
+        "visibleVideoEdit": false,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Abdeckung",
+        "size": 4,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.copyright.coverage.startDate",
+        "label": "Startdatum des Copyrights",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.copyright.coverage.endDate",
+        "label": "Enddatum des Copyrights",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.copyright.coverage.locations",
+        "label": "Geltungszonen des Copyrights",
+        "caption": "Locations",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Rechtehalter",
+        "size": 4,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.copyright.exploitationIssues",
+        "label": "Aspekte der kommerziellen Verwertung",
+        "caption": "exploitationIssues",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.copyright.disclaimer",
+        "label": "Disclaimer",
+        "caption": "Disclaimer",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.copyright.rightClearanceFlag",
+        "label": "Right Clearance Flag",
+        "caption": "Right Clearance Flag",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Nutzungsrechte",
+        "size": 3,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.usageRights.coverage",
+        "label": "Abdeckung",
+        "caption": "Coverage",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "header",
+        "label": "Rechtehalter",
+        "size": 4,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.usageRights.exploitationIssues",
+        "label": "Aspekte der kommerziellen Verwertung",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.usageRights.disclaimer",
+        "label": "Disclaimer",
+        "caption": "",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.usageRights.rightClearanceFlag",
+        "label": "Right Clearance Flag",
+        "caption": "Right Clearance Flag",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    },
+    {
+        "type": "input",
+        "mappingname": "rights.usageRights.rightId",
+        "label": "Right ID / von wo kommt die?",
+        "caption": "rightId",
+        "required": false,
+        "visibleVideoEdit": true,
+        "visibleVideoWatch": true
+    }
+]
