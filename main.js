@@ -55,7 +55,7 @@ async function register({
         console.log("pluginData will be be stored:", videoEBUData);
         var videoId = video.id;
    
-            fetch(`${host}/plugins/metadata/1.1.9/router/video/${videoId}`)
+            fetch(`${host}/plugins/metadata/1.2.1/router/video/${videoId}`)
               .then(response => {
 
                 if (!response.ok) {
@@ -95,7 +95,7 @@ async function register({
     }
 
     function setVideoVersion(videoId, newVersion, host){
-      fetch(`${host}/plugins/metadata/1.1.9/router/video/${videoId}/version`, {
+      fetch(`${host}/plugins/metadata/1.2.1/router/video/${videoId}/version`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ async function register({
     registerHook({
       target: "filter:api.video.get.result",
       handler: async (video) => {
-        await fetch(`${host}/plugins/metadata/1.1.9/router/video/${video.dataValues.id}/version`, {
+        await fetch(`${host}/plugins/metadata/1.2.1/router/video/${video.dataValues.id}/version`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

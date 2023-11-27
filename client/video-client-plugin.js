@@ -66,7 +66,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
               const tableRow = document.createElement("tr");
               const videoData = videos[key];
               
-              fetch(`${host}/plugins/metadata/1.1.9/router/video/${key}/version`, {
+              fetch(`${host}/plugins/metadata/1.2.1/router/video/${key}/version`, {
                     method: 'GET',
                     headers: {
                       'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
                               const intValue = parseInt(selectedOption, 10);
                               console.log(`Die ausgewählte Option ist: ${selectedOption} und soll die videoId ${key} ändern`);
 
-                              fetch(`${host}/plugins/metadata/1.1.9/router/video/${key}/version`, {
+                              fetch(`${host}/plugins/metadata/1.2.1/router/video/${key}/version`, {
                                 method: 'POST',
                                 headers: {
                                   'Content-Type': 'application/json',
