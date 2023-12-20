@@ -19,46 +19,46 @@ const initCreatorController = (router, storageManager) => {
     try {
       var existingCreator = await storageManager.getData("creator");
 
-      const creatorname = await req.body.name;
-      const creatorfamilyname = await req.body.familyname;
-      const creatorusername = await req.body.username;
-      const creatoroccupation = await req.body.occupation;
-      const creatoremail = await req.body.email;
-      const creatorurl = await req.body.url;
-      const creatoraddress = await req.body.address;
-      const creatorcity = await req.body.city;
-      const creatorstate = await req.body.state;
-      const creatorcountry = await req.body.country;
-      const creatordeliverycode = await req.body.deliverycode;
-      const creatortelephone = await req.body.telephone;
-      const creatormobile = await req.body.mobile;
-      const creatorstage = await req.body.creatorstage;
-      const creatorcontacts = await req.body.contacts;
-      const creatorrole = await req.body.role;
+      const name = await req.body.name;
+      const familyname = await req.body.familyname;
+      const username = await req.body.username;
+      const occupation = await req.body.occupation;
+      const email = await req.body.email;
+      const url = await req.body.url;
+      const address = await req.body.address;
+      const city = await req.body.city;
+      const state = await req.body.state;
+      const country = await req.body.country;
+      const deliverycode = await req.body.deliverycode;
+      const telephone = await req.body.telephone;
+      const mobile = await req.body.mobile;
+      const stage = await req.body.stage;
+      const contacts = await req.body.contacts;
+      const role = await req.body.role;
       //required
-      if (!creatorusername){
+      if (!username) {
         res.status(400).send("The 'username' field must be set.");
         return;
       }
 
       var newData = {
-        "id": uuidv4(),
-        "creatorname": creatorname,
-        "creatorfamilyname": creatorfamilyname,
-        "creatorusername": creatorusername,
-        "creatoroccupation": creatoroccupation,
-        "creatoremail": creatoremail,
-        "creatorurl": creatorurl,
-        "creatoraddress": creatoraddress,
-        "creatordeliverycode": creatordeliverycode,
-        "creatorcity": creatorcity,
-        "creatorstate": creatorstate,
-        "creatorcountry": creatorcountry,
-        "creatortelephone": creatortelephone,
-        "creatormobile": creatormobile,
-        "creatorstage": creatorstage,
-        "creatorcontacts": creatorcontacts,
-        "creatorrole": creatorrole,
+        id: uuidv4(),
+        name: name,
+        familyname: familyname,
+        username: username,
+        occupation: occupation,
+        email: email,
+        url: url,
+        address: address,
+        deliverycode: deliverycode,
+        city: city,
+        state: state,
+        country: country,
+        telephone: telephone,
+        mobile: mobile,
+        stage: stage,
+        contacts: contacts,
+        role: role,
       };
 
       if (existingCreator == undefined) {

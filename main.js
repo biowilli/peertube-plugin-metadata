@@ -215,7 +215,7 @@ async function register({
                 );
                 if (creator.length > 0) {
                   var creatorKey =
-                    "creator-" + creator[0].id + "-" + creator[0].creatorname;
+                    "creator-" + creator[0].id + "-" + creator[0].name;
                   result[creatorKey] = "true";
                 }
               });
@@ -243,7 +243,7 @@ async function register({
                     "contributor-" +
                     contributor[0].id +
                     "-" +
-                    contributor[0].creatorname;
+                    contributor[0].name;
                   result[contributorKey] = "true";
                 }
               });

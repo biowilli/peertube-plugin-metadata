@@ -25,68 +25,68 @@ async function register({ registerClientRoute, peertubeHelpers }) {
           <h1>Creator</h1>
           <div id="formcontainer">
           <div>
-          <label for="creatorname">Vorname</label></br>
-          <input type="text" id="creatorname" name="creatorname">
+          <label for="name">Vorname</label></br>
+          <input type="text" id="name" name="name">
           </div>
           <div>
-          <label for="creatorfamilyname">Nachname</label></br>
-          <input type="text" id="creatorfamilyname" name="creatorfamilyname">
+          <label for="familyname">Nachname</label></br>
+          <input type="text" id="familyname" name="familyname">
           </div>
           <div>
-          <label for="creatorusername">Sendungsmacher Kürzel</label></br>
-          <input type="text" id="creatorusername" name="creatorusername">
+          <label for="username">Sendungsmacher Kürzel</label></br>
+          <input type="text" id="username" name="username">
           </div>
           <div>
-          <label for="creatoroccupation">Beruf</label></br>
-          <input type="text" id="creatoroccupation" name="creatoroccupation">
+          <label for="occupation">Beruf</label></br>
+          <input type="text" id="occupation" name="occupation">
           </div>
           <div>
-          <label for="creatoremail">E-Mail</label></br>
-          <input type="text" id="creatoremail" name="creatoremail">
+          <label for="email">E-Mail</label></br>
+          <input type="text" id="email" name="email">
           </div>
           <div>
-          <label for="creatorurl">Website URL</label></br>
-          <input type="text" id="creatorurl" name="creatorurl">
+          <label for="url">Website URL</label></br>
+          <input type="text" id="url" name="url">
           </div>
           <div>
-          <label for="creatoraddress">Adresse</label></br>
-          <input type="text" id="creatoraddress" name="creatoraddress">
+          <label for="address">Adresse</label></br>
+          <input type="text" id="address" name="address">
           </div>
           <div>
-          <label for="creatordeliverycode">Postleitzahl</label></br>
-          <input type="text" id="creatordeliverycode" name="creatordeliverycode">
+          <label for="deliverycode">Postleitzahl</label></br>
+          <input type="text" id="deliverycode" name="deliverycode">
           </div>
           <div>
-          <label for="creatorcity">Stadt</label></br>
-          <input type="text" id="creatorcity" name="creatorcity">
+          <label for="city">Stadt</label></br>
+          <input type="text" id="city" name="city">
           </div>
           <div>
-          <label for="creatorstate">Bundesland</label></br>
-          <input type="text" id="creatorstate" name="creatorstate">
+          <label for="state">Bundesland</label></br>
+          <input type="text" id="state" name="state">
           </div>
           <div>
-          <label for="creatorcountry">Land</label></br>
-          <input type="text" id="creatorcountry" name="creatorcountry">
+          <label for="country">Land</label></br>
+          <input type="text" id="country" name="country">
           </div>
           <div>
-          <label for="creatortelephone">Telefonnummer</label></br>
-          <input type="text" id="creatortelephone" name="creatortelephone">
+          <label for="telephone">Telefonnummer</label></br>
+          <input type="text" id="telephone" name="telephone">
           </div>
           <div>
-          <label for="creatormobile">Mobiltelefonnummer</label></br>
-          <input type="text" id="creatormobile" name="creatormobile">
+          <label for="mobile">Mobiltelefonnummer</label></br>
+          <input type="text" id="mobile" name="mobile">
           </div>
           <div>
-          <label for="creatorstage">Bühnenname</label></br>
-          <input type="text" id="creatorstage" name="creatorstage">
+          <label for="stage">Bühnenname</label></br>
+          <input type="text" id="stage" name="stage">
           </div>
           <div>
-          <label for="creatorcontacts">Vernetzter Kontakt</label></br>
-          <input type="text" id="creatorcontacts" name="creatorcontacts">        
+          <label for="contacts">Vernetzter Kontakt</label></br>
+          <input type="text" id="contacts" name="contacts">        
           </div>
           <div>
-          <label for="creatorrole">Role</label></br>
-          <input type="text" id="creatorrole" name="creatorrole">       
+          <label for="role">Role</label></br>
+          <input type="text" id="role" name="role">       
           </div>
           </div>
           </br>
@@ -115,7 +115,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
             </tr>
           </table>
           <div>
-        `;    
+        `;
 
       function getCreator() {
         const table = rootEl.querySelector("#myTable");
@@ -123,10 +123,6 @@ async function register({ registerClientRoute, peertubeHelpers }) {
         if (tableBody) {
           tableBody.remove();
         }
-        console.log("getAuthHeader");
-        console.log("");
-        console.log(peertubeHelpers.getAuthHeader());
-
         fetch(peertubeHelpers.getBaseRouterRoute() + "/creator/", {
           method: "GET",
           headers: peertubeHelpers.getAuthHeader(),
@@ -145,44 +141,44 @@ async function register({ registerClientRoute, peertubeHelpers }) {
             const tableHeaderRow = document.createElement("tr");
             tableHeaderRow.innerHTML = `
                 <th>ID</th>
-                <th>Given name</th>
-                <th>Family name</th>
-                <th>Username</th>
-                <th>Occupation</th>
-                <th>Email</th>  
-                <th>Url</th>  
-                <th>Address</th>
-                <th>Delivery Code</th>    
-                <th>City</th>  
-                <th>State</th>  
-                <th>Country</th>  
-                <th>Telephone Number</th>  
-                <th>Mobile Telephone Number</th>  
-                <th>Stage name</th>  
-                <th>Related contacts</th> 
-                <th>Role</th> 
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Sendungsmacher Kürzel</th>
+                <th>Beruf</th>
+                <th>E-Mail</th>  
+                <th>Website URL</th>  
+                <th>Adresse</th>
+                <th>Postleitzahl</th>    
+                <th>Stadt</th>  
+                <th>Bundesland</th>  
+                <th>Land</th>  
+                <th>Telefonnummer</th>  
+                <th>Mobiltelefonnummer</th>  
+                <th>Bühnenname</th>  
+                <th>Vernetzter Kontakt</th>  
+                <th>Role</th>  
                 `;
             newTableBody.appendChild(tableHeaderRow);
             creator.forEach((creator) => {
               const tableRow = document.createElement("tr");
               tableRow.innerHTML = `
                     <td>${creator.id}</td>
-                    <td>${creator.creatorname}</td>
-                    <td>${creator.creatorfamilyname}</td>
-                    <td>${creator.creatorusername}</td>
-                    <td>${creator.creatoroccupation}</td>
-                    <td>${creator.creatoremail}</td>
-                    <td>${creator.creatorurl}</td>
-                    <td>${creator.creatoraddress}</td>
-                    <td>${creator.creatordeliverycode}</td>      
-                    <td>${creator.creatorcity}</td>
-                    <td>${creator.creatorstate}</td>
-                    <td>${creator.creatorcountry}</td>
-                    <td>${creator.creatortelephone}</td>
-                    <td>${creator.creatormobile}</td>
-                    <td>${creator.creatorstage}</td>
-                    <td>${creator.creatorcontacts}</td>
-                    <td>${creator.creatorrole}</td>
+                    <td>${creator.name}</td>
+                    <td>${creator.familyname}</td>
+                    <td>${creator.username}</td>
+                    <td>${creator.occupation}</td>
+                    <td>${creator.email}</td>
+                    <td>${creator.url}</td>
+                    <td>${creator.address}</td>
+                    <td>${creator.deliverycode}</td>      
+                    <td>${creator.city}</td>
+                    <td>${creator.state}</td>
+                    <td>${creator.country}</td>
+                    <td>${creator.telephone}</td>
+                    <td>${creator.mobile}</td>
+                    <td>${creator.stage}</td>
+                    <td>${creator.contacts}</td>
+                    <td>${creator.role}</td>
                     <td>
                       <button class="deleteButton" data-id="${creator.id}">Löschen</button>
                     </td>
@@ -227,49 +223,47 @@ async function register({ registerClientRoute, peertubeHelpers }) {
       button.addEventListener("click", () => {
         var errorMessage = rootEl.querySelector("#errorMessage");
         errorMessage.textContent = "";
-        var creatorNameInput = rootEl.querySelector("#creatorname");
-        var creatorFamilynameInput = rootEl.querySelector("#creatorfamilyname");
-        var creatorUsernameInput = rootEl.querySelector("#creatorusername");
-        var creatorOccupationInput = rootEl.querySelector("#creatoroccupation");
-        var creatorEmailInput = rootEl.querySelector("#creatoremail");
-        var creatorURLInput = rootEl.querySelector("#creatorurl");
-        var creatorAddressInput = rootEl.querySelector("#creatoraddress");
-        var creatorCityInput = rootEl.querySelector("#creatorcity");
-        var creatorStateInput = rootEl.querySelector("#creatorstate");
-        var creatorCountryInput = rootEl.querySelector("#creatorcountry");
-        var creatorDeliveryCodeInput = rootEl.querySelector(
-          "#creatordeliverycode"
-        );
-        var creatorTelephoneInput = rootEl.querySelector("#creatortelephone");
-        var creatorMobileInput = rootEl.querySelector("#creatormobile");
-        var creatorStageInput = rootEl.querySelector("#creatorstage");
-        var creatorContactsInput = rootEl.querySelector("#creatorcontacts");
-        var creatorRoleInput = rootEl.querySelector("#creatorrole");
+        var nameInput = rootEl.querySelector("#name");
+        var familynameInput = rootEl.querySelector("#familyname");
+        var usernameInput = rootEl.querySelector("#username");
+        var occupationInput = rootEl.querySelector("#occupation");
+        var emailInput = rootEl.querySelector("#email");
+        var urlInput = rootEl.querySelector("#url");
+        var addressInput = rootEl.querySelector("#address");
+        var cityInput = rootEl.querySelector("#city");
+        var stateInput = rootEl.querySelector("#state");
+        var countryInput = rootEl.querySelector("#country");
+        var deliverycodeInput = rootEl.querySelector("#deliverycode");
+        var telephoneInput = rootEl.querySelector("#telephone");
+        var mobileInput = rootEl.querySelector("#mobile");
+        var stageInput = rootEl.querySelector("#stage");
+        var contactsInput = rootEl.querySelector("#contacts");
+        var roleInput = rootEl.querySelector("#role");
 
         //required
-        console.log(creatorusername);
-        if (creatorusername.value == ""){
+        console.log(username);
+        if (username.value == "") {
           errorMessage.textContent = "Sendungskürzel ist ein Pflichtfeld";
           return;
         }
 
         const creatorsData = {
-          name: creatorNameInput.value,
-          familyname: creatorFamilynameInput.value,
-          username: creatorUsernameInput.value,
-          occupation: creatorOccupationInput.value,
-          email: creatorEmailInput.value,
-          url: creatorURLInput.value,
-          address: creatorAddressInput.value,
-          city: creatorCityInput.value,
-          state: creatorStateInput.value,
-          country: creatorCountryInput.value,
-          deliverycode: creatorDeliveryCodeInput.value,
-          telephone: creatorTelephoneInput.value,
-          mobile: creatorMobileInput.value,
-          creatorstage: creatorStageInput.value,
-          contacts: creatorContactsInput.value,
-          role: creatorRoleInput.value,
+          name: nameInput.value,
+          familyname: familynameInput.value,
+          username: usernameInput.value,
+          occupation: occupationInput.value,
+          email: emailInput.value,
+          url: urlInput.value,
+          address: addressInput.value,
+          city: cityInput.value,
+          state: stateInput.value,
+          country: countryInput.value,
+          deliverycode: deliverycodeInput.value,
+          telephone: telephoneInput.value,
+          mobile: mobileInput.value,
+          stage: stageInput.value,
+          contacts: contactsInput.value,
+          role: roleInput.value,
         };
 
         fetch(peertubeHelpers.getBaseRouterRoute() + "/creator", {

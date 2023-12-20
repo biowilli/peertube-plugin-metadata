@@ -42,7 +42,6 @@ async function register({ registerVideoField, peertubeHelpers }) {
         organizationsResponse,
         genreResponse,
       ]) => {
-
         const creators = creatorResponse.data;
         const organizations = organizationsResponse.data;
         const genre = genreResponse.data;
@@ -55,7 +54,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
           "go-live",
         ]) {
           const videoFormOptions = {
-            tab: "plugin-settings" 
+            tab: "plugin-settings",
           }; //"main",
 
           //TODO set multiple locations
@@ -70,13 +69,14 @@ async function register({ registerVideoField, peertubeHelpers }) {
             var field = form[i];
             console.log(field);
 
-            if (field.visibleVideoEdit == false){
+            if (field.visibleVideoEdit == false) {
               continue;
-            } 
+            }
 
-            if (field.type === "line"){ //only frontend
+            if (field.type === "line") {
+              //only frontend
               continue;
-            } 
+            }
 
             if (field.type == "entity") {
               if (field.mappingname == "videoInformation.showType.type") {
@@ -96,7 +96,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
                   continue;
                 } else {
                   const genreOptions = genre.map((x) => {
-                    return { "label": x.name, "value": x.id };
+                    return { label: x.name, value: x.id };
                   });
 
                   registerVideoField(
@@ -115,9 +115,9 @@ async function register({ registerVideoField, peertubeHelpers }) {
                       ...videoFormOptions,
                     }
                   );
-                continue;
+                  continue;
+                }
               }
-            }
 
               if (field.mappingname == "creator") {
                 if (creators == undefined || creators.length == 0) {
@@ -137,50 +137,11 @@ async function register({ registerVideoField, peertubeHelpers }) {
                   continue;
                 }
                 if (creators !== undefined || creators.length > 0) {
-                creators.map((creator) => {
-                  registerVideoField(
-                    {
-                      name: "creator" + "-" + creator.id + "-" + creator.creatorname,
-                      label: creator.creatorname,
-                      type: "input-checkbox",
-                      hidden: false,
-                      error: false,
-                    },
-                    {
-                        type,
-                      ...videoFormOptions,
-                      value: false,
-                    }
-                  );
-                });
-                continue;
-              }
-            }
-            
-              if (field.mappingname == 'contributor') {
-                if (creators == undefined || creators.length == 0) {
-                  registerVideoField(
-                    {
-                      type: "html",
-                      html: "Add a contributor",
-                      default: "",
-                      hidden: false,
-                      error: false,
-                    },
-                    {
-                      type,
-                    ...videoFormOptions,
-                    }
-                  );
-                  continue;
-                } 
-
-                if (creators !== undefined || creators.length > 0) {
                   creators.map((creator) => {
                     registerVideoField(
                       {
-                        name: "contributor" + "-" + creator.id + "-" + creator.creatorname,
-                        label: creator.creatorname,
+                        name: "creator" + "-" + creator.id + "-" + creator.name,
+                        label: creator.name,
                         type: "input-checkbox",
                         hidden: false,
                         error: false,
@@ -196,7 +157,47 @@ async function register({ registerVideoField, peertubeHelpers }) {
                 }
               }
 
-              if (field.mappingname == 'organization') {
+              if (field.mappingname == "contributor") {
+                if (creators == undefined || creators.length == 0) {
+                  registerVideoField(
+                    {
+                      type: "html",
+                      html: "Add a contributor",
+                      default: "",
+                      hidden: false,
+                      error: false,
+                    },
+                    {
+                      type,
+                      ...videoFormOptions,
+                    }
+                  );
+                  continue;
+                }
+
+                if (creators !== undefined || creators.length > 0) {
+                  creators.map((creator) => {
+                    registerVideoField(
+                      {
+                        name:
+                          "contributor" + "-" + creator.id + "-" + creator.name,
+                        label: creator.name,
+                        type: "input-checkbox",
+                        hidden: false,
+                        error: false,
+                      },
+                      {
+                        type,
+                        ...videoFormOptions,
+                        value: false,
+                      }
+                    );
+                  });
+                  continue;
+                }
+              }
+
+              if (field.mappingname == "organization") {
                 if (organizations === undefined || organizations.length === 0) {
                   registerVideoField(
                     {
@@ -218,7 +219,11 @@ async function register({ registerVideoField, peertubeHelpers }) {
                   organizations.map((organisation) => {
                     registerVideoField(
                       {
-                        name:"organization-" + organisation.id + "-" + organisation.name,
+                        name:
+                          "organization-" +
+                          organisation.id +
+                          "-" +
+                          organisation.name,
                         label: organisation.name,
                         type: "input-checkbox",
                         hidden: false,
@@ -236,7 +241,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
               }
             }
 
-            if (field.visibleVideoEdit && field.type === 'checkbox') {
+            if (field.visibleVideoEdit && field.type === "checkbox") {
               registerVideoField(
                 {
                   name: `${field.mappingname}`,
@@ -251,9 +256,9 @@ async function register({ registerVideoField, peertubeHelpers }) {
                   type,
                   ...videoFormOptions,
                 }
-              );;
+              );
             }
-            if (field.visibleVideoEdit && field.type === 'select') {
+            if (field.visibleVideoEdit && field.type === "select") {
               registerVideoField(
                 {
                   name: `${field.mappingname}`,
@@ -269,7 +274,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
                   type,
                   ...videoFormOptions,
                 }
-              );;
+              );
             }
             if (field.visibleVideoEdit && field.type === "header") {
               registerVideoField(
@@ -286,19 +291,23 @@ async function register({ registerVideoField, peertubeHelpers }) {
                 }
               );
               continue;
-            } 
+            }
 
             if (field.visibleVideoEdit && field.type == "input") {
               registerVideoField(
                 {
                   name: `${field.mappingname}`,
                   label: `${field.label}`,
-                  descriptionHTML: `${field.caption != "" ? field.caption : "-"}`,
+                  descriptionHTML: `${
+                    field.caption != "" ? field.caption : "-"
+                  }`,
                   type: "input",
                   default: "",
                   error: ({ formValues, value }) => {
-                    if (!field.required || value !== "") return { error: false }
-                    if (field.required && value == "") return { error: true, text: 'This Field ist required' }
+                    if (!field.required || value !== "")
+                      return { error: false };
+                    if (field.required && value == "")
+                      return { error: true, text: "This Field ist required" };
                   },
                 },
                 {
@@ -316,4 +325,3 @@ async function register({ registerVideoField, peertubeHelpers }) {
 }
 
 export { register };
-
