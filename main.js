@@ -15,8 +15,6 @@ async function register({
     "peertubeHelpers.config.getServerListeningConfig",
     peertubeHelpers.config.getServerListeningConfig()
   );
-  //console.log("peertubeHelpers.config.getServerConfig", await peertubeHelpers.config.getServerConfig());
-
   console.log(
     "plugin.getBaseStaticRoute",
     peertubeHelpers.plugin.getBaseStaticRoute()
@@ -50,7 +48,22 @@ async function register({
   initRegisterSettings(registerSetting);
   const host = peertubeHelpers.config.getWebserverUrl();
 
-  console.log("peertubeHelpers look for ffprobe", peertubeHelpers);
+  // Beispiel für die Erstellung einer Tabelle in PostgreSQL
+  /*   const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS example_table (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255),
+      age INT
+    )
+  `;
+    peertubeHelpers.database
+      .query(createTableQuery)
+      .then((result) => {
+        console.log("Table created successfully:", result);
+      })
+      .catch((error) => {
+        console.error("Error creating table:", error);
+      }); */
 
   var router = getRouter();
   initLanguageController(router, videoLanguageManager);
@@ -75,21 +88,25 @@ async function register({
         "synchronizedStandardVideoData",
         synchronizedStandardVideoData
       );
-
+      /* TODO: Sync the different data from the tools:
       var synchronizedffprobeData = syncffprobeDataToPluginData(
         synchronizedStandardVideoData,
         video.dataValues.id,
         host
       );
-      console.log("synchronizedffprobeData", await synchronizedffprobeData);
+
+      //console.log("synchronizedffprobeData", await synchronizedffprobeData);
       var videoEBUData = mergeFormDataToEbuDefaults(
         synchronizedffprobeData,
         EBUDefaults.values
       );
+            */
+      var videoEBUData = mergeFormDataToEbuDefaults(
+        synchronizedStandardVideoData,
+        EBUDefaults.values
+      );
       console.log("videoEBUData", videoEBUData);
 
-      console.log("asgdasfxasdcvsadv.result", videoEBUData);
-      console.log("pluginData will be be stored:", videoEBUData);
       var videoId = video.id;
 
       fetch(`${host}/plugins/metadata/1.2.1/router/video/${videoId}`)
@@ -101,10 +118,10 @@ async function register({
           return response.json();
         })
         .then((publicationHistoryVersion) => {
-          var newVersion = publicationHistoryVersion.value;
+          var newVersion = publicationHistoryVersion;
           if (!isNaN(newVersion)) {
-            if (body.pluginData["dates.publicationHistory"].value === "true") {
-              newVersion = publicationHistoryVersion.value + 1;
+            if (body.pluginData["dates.publicationHistory"] === "true") {
+              newVersion = publicationHistoryVersion + 1;
             }
 
             setVideoMetadata(videoId, newVersion, videoEBUData, storageManager);
@@ -113,7 +130,7 @@ async function register({
             var newVersion = 0;
             console.log(
               "last publicationHistoryVersion was ",
-              publicationHistoryVersion.value,
+              publicationHistoryVersion,
               ". Setting newVersion to 0."
             );
             setVideoMetadata(videoId, newVersion, videoEBUData, storageManager);
@@ -279,7 +296,7 @@ async function register({
               continue;
             }
 
-            result[key] = storedData[key].value || "";
+            result[key] = storedData[key] || "";
           }
           video.pluginData = result;
 
@@ -456,7 +473,7 @@ function findStreamByCodecType(streams, codecType) {
       return stream;
     }
   }
-  return null; // Rückgabe, wenn nichts gefunden wurde
+  return null;
 }
 
 function mergeFormDataToEbuDefaults(formData, EBUDefaults) {
@@ -465,20 +482,20 @@ function mergeFormDataToEbuDefaults(formData, EBUDefaults) {
   EBUDefaults["contributor"] = [];
   EBUDefaults["organization"] = [];
 
+  // TODO: Get the user in peertube
   // Get the current date and time in ISO format
   const currentDate = new Date().toISOString();
+  EBUDefaults["lastModified"] = currentDate;
+  // Get the user in peertube
+  const peertubeUser = "exampleUser";
+  EBUDefaults["changedBy"] = peertubeUser;
   // Iterate through the form data
   for (const key in formData) {
     // Check if the key exists in the formData object and it is not undefined
     if (key in formData && formData[key] !== undefined) {
-      if (EBUDefaults.hasOwnProperty(key)) {
-        // Check if the value in the form data has changed
-        if (formData[key] !== EBUDefaults[key].value) {
-          // Update the value in EBUDefaults
-          EBUDefaults[key].value = formData[key];
-          // Set the last modified date to the current date and time
-          EBUDefaults[key].lastModified = currentDate;
-        }
+      if (EBUDefaults[key] != null || EBUDefaults[key] != undefined) {
+        console.log(formData[key]);
+        EBUDefaults[key] = formData[key];
       } else {
         if (key.startsWith("creator-")) {
           var creatorId = extractId(key);
@@ -514,11 +531,11 @@ function mergeFormDataToEbuDefaults(formData, EBUDefaults) {
     }
   }
 
-  console.log("not set EBUDefaults values:");
+  console.log("234234234234not set EBUDefaults values:");
   console.log("");
   for (const key in EBUDefaults.values) {
     const item = EBUDefaults.values[key];
-    if (typeof item === "object" && "value" in item && item.value === "") {
+    if (typeof item === "object" && "value" in item && item === "") {
       console.log(`${key}' does not have a value set in EBUDefaults key '.`);
     } else if (Array.isArray(item) && item.length === 0) {
       console.log(`${key}' does not have a value set in EBUDefaults key '.`);
