@@ -1,49 +1,49 @@
-const { v4: uuidv4 } = require('uuid');
-
 const initVideoController = (router, storageManager, host) => {
   router.get("/videos/all", async (req, res) => {
-      fetch(`${host}/api/v1/videos`)
-        .then(response => {
-          if (!response.ok) {
-            throw console.error('Fehler beim Abrufen der Videoinformationen');
+    fetch(`${host}/api/v1/videos`)
+      .then((response) => {
+        if (!response.ok) {
+          throw console.error("Fehler beim Abrufen der Videoinformationen");
+        }
+        return response.json();
+      })
+      .then(async (data) => {
+        const videos = data.data;
+        const total = data.total;
+
+        var videoIds = [];
+        for (let i = 0; i < total; i++) {
+          videoIds.push(videos[i].id);
+        }
+
+        console.log("videoIds", videoIds);
+
+        const videoData = {};
+
+        for (const videoId of videoIds) {
+          console.log("current processed videoId:", videoId);
+          var metaDataObjects = await getMetdataVersions(
+            videoId,
+            storageManager
+          );
+
+          if (metaDataObjects != null) {
+            videoData[videoId] = metaDataObjects;
           }
-          return response.json();
-        })
-        .then(async data => {
-          const videos = data.data;
-          const total = data.total;
+        }
 
-          var videoIds = [];
-          for (let i = 0; i < total; i++) {
-            videoIds.push(videos[i].id);
-          }
-      
-          console.log("videoIds", videoIds);
+        console.log("videoData object:", videoData);
 
-          const videoData = {};
-
-          for (const videoId of videoIds) {
-            console.log("current processed videoId:", videoId);
-            var metaDataObjects = await getMetdataVersions(videoId, storageManager);
-
-            if (metaDataObjects != null){
-              videoData[videoId] = metaDataObjects;
-            }
-          }
-
-          console.log("videoData object:", videoData);
-
-          if (videoData == null) {
-            res.send({});
-            return;
-          }
-          res.send(videoData);
+        if (videoData == null) {
+          res.send({});
           return;
-        })
-        .catch(error => {
-          console.error('Fehler beim Abrufen der Videoinformationen:', error);
-        });
-
+        }
+        res.send(videoData);
+        return;
+      })
+      .catch((error) => {
+        console.error("Fehler beim Abrufen der Videoinformationen:", error);
+      });
   });
 
   // latestVersion metadata
@@ -51,25 +51,25 @@ const initVideoController = (router, storageManager, host) => {
     var videoId = req.params.id;
 
     const latestVersion = await getLatestVersion(videoId, storageManager);
-    console.log("latestVersion of metadata", latestVersion)
+    console.log("latestVersion of metadata", latestVersion);
     if (!latestVersion) {
-      res.json({value: undefined});
+      res.json({ value: undefined });
     } else {
-      res.json({value: latestVersion});
+      res.json({ value: latestVersion });
     }
-});
+  });
 
   router.post("/video/:id/version", async (req, res) => {
     const videoId = req.params.id;
     const version = req.body.value;
     try {
-      console.log("Kommte es hier AnalyserNode", videoId, version)
+      console.log("Kommte es hier AnalyserNode", videoId, version);
       await setVideoVersion(videoId, version, storageManager);
       res.json({ message: "Version metadata updated successfully" });
-  } catch (error) {
+    } catch (error) {
       console.error("Error:", error);
       res.status(500).json({ error: "Internal Server Error" });
-  }
+    }
   });
 
   router.get("/video/:id/version", async (req, res) => {
@@ -88,16 +88,16 @@ const initVideoController = (router, storageManager, host) => {
 async function setVideoVersion(videoId, version, storageManager) {
   console.log("setVideoVersion");
   const key = `version-metadata-${videoId}`;
-  await storageManager.storeData(key, {version});
+  await storageManager.storeData(key, { version });
 }
 
 async function getVideoVersion(videoId, storageManager) {
   console.log("getVideoVersion");
   const key = `version-metadata-${videoId}`;
-  return  await storageManager.getData(key);;
+  return await storageManager.getData(key);
 }
 
-async function getMetdataVersions(videoId, storageManager){
+async function getMetdataVersions(videoId, storageManager) {
   const versionsData = {};
   for (let version = 0; version < 100; version++) {
     console.log("version number:", version);
@@ -106,17 +106,18 @@ async function getMetdataVersions(videoId, storageManager){
     const currentProcessedStoredData = await storageManager.getData(key);
 
     if (currentProcessedStoredData == null) {
-      if (version == 0){
+      if (version == 0) {
         return null;
       }
 
       return {
-      totalVersions: version,
-      ...versionsData,
-    };}
+        totalVersions: version,
+        ...versionsData,
+      };
+    }
 
     versionsData[version] = currentProcessedStoredData;
-  }  
+  }
 }
 
 async function getLatestVersion(videoId, storageManager) {
@@ -137,7 +138,7 @@ async function getLatestVersion(videoId, storageManager) {
     return null;
   }
 
-  return latestVersion
+  return latestVersion;
 }
 
 module.exports = {

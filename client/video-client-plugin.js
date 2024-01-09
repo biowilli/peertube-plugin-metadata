@@ -1,6 +1,7 @@
 async function register({ registerClientRoute, peertubeHelpers }) {
-  //TODO Video ID sortieren
-  //
+  //TODO: Video ID sortieren
+  //TODO: CHANGE Entitiy Data
+
   registerClientRoute({
     route: "metadata/videos",
     onMount: ({ rootEl }) => {
@@ -27,6 +28,8 @@ async function register({ registerClientRoute, peertubeHelpers }) {
 
       function getVideos() {
         const host = peertubeHelpers.getWebserverUrl();
+        const baseRouterRoute = plugin.getBaseRouterRoute();
+        const domain = host + baseRouterRoute;
         const table = rootEl.querySelector("#myTable");
         const tableBody = table.querySelector("tbody");
         if (tableBody) {
@@ -43,12 +46,9 @@ async function register({ registerClientRoute, peertubeHelpers }) {
             var videos = data;
             console.log("videos:", videos);
 
-            const videosContainer = rootEl.querySelector(
-              "#videosContainer"
-            );
+            const videosContainer = rootEl.querySelector("#videosContainer");
             if (videos.length == 0) {
-              videosContainer.textContent =
-                "Noch keine Videos vorhanden";
+              videosContainer.textContent = "Noch keine Videos vorhanden";
               return;
             } else {
               videosContainer.textContent = "";
@@ -65,26 +65,28 @@ async function register({ registerClientRoute, peertubeHelpers }) {
             for (const key in videos) {
               const tableRow = document.createElement("tr");
               const videoData = videos[key];
-              
-              fetch(`${host}/plugins/metadata/1.2.1/router/video/${key}/version`, {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  })
-                    .then(response => response.json())
-                    .then(data => {
-                      console.log("current Version get",data);
-                      var indexOptionSelected = data.version;
 
-                      var optionsHTML = `<option value="-1" ${-1 === indexOptionSelected ? 'selected' : ''}>Latest</option>`;
-                      for (let i = 0; i < videoData.totalVersions; i++) {
+              fetch(`${domain}video/${key}/version`, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log("current Version get", data);
+                  var indexOptionSelected = data.version;
 
-                        optionsHTML += `<option value="${i}" ${i === indexOptionSelected ? 'selected' : ''}>${i}</option>`;
-                    }
-        
-                    
-                      tableRow.innerHTML = `
+                  var optionsHTML = `<option value="-1" ${
+                    -1 === indexOptionSelected ? "selected" : ""
+                  }>Latest</option>`;
+                  for (let i = 0; i < videoData.totalVersions; i++) {
+                    optionsHTML += `<option value="${i}" ${
+                      i === indexOptionSelected ? "selected" : ""
+                    }>${i}</option>`;
+                  }
+
+                  tableRow.innerHTML = `
                             <td>${key}</td>
                             <td>
                             <select>
@@ -94,66 +96,70 @@ async function register({ registerClientRoute, peertubeHelpers }) {
                             <td>${videoData.totalVersions}</td>
                           `;
 
-                          const selectElement = tableRow.querySelector('select');
+                  const selectElement = tableRow.querySelector("select");
 
-                          selectElement.addEventListener('change', function() {
-                              const selectedOption = selectElement.value;
-                              const intValue = parseInt(selectedOption, 10);
-                              console.log(`Die ausgewählte Option ist: ${selectedOption} und soll die videoId ${key} ändern`);
+                  selectElement.addEventListener("change", function () {
+                    const selectedOption = selectElement.value;
+                    const intValue = parseInt(selectedOption, 10);
+                    console.log(
+                      `Die ausgewählte Option ist: ${selectedOption} und soll die videoId ${key} ändern`
+                    );
 
-                              fetch(`${host}/plugins/metadata/1.2.1/router/video/${key}/version`, {
-                                method: 'POST',
-                                headers: {
-                                  'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({value: intValue}),
-                              })
-                                .then(response => response.json())
-                                .then(data => {
-                                  console.log("abgespeichert nun als",data);
-                                })
-                                .catch(error => {
-                                  console.error('Fehler beim Setzen der Videoversion:', error);
-                                });
-                          });
-        
-                          const newRowArray = []; // Create an array to store all new rows
-                          tableRow.addEventListener("click", function() {
-                            newRowArray.forEach((row) => {
-                              if (row.style.display === "none") {
-                                row.style.display = "table-row";
-                              } else {
-                                row.style.display = "none";
-                              }
-                            });
-                          });
-        
-                          newTableBody.appendChild(tableRow); 
-        
-                          for (let i = 0; i < videoData.totalVersions; i++) {
-                            const newRow = document.createElement("tr");
-                            newRow.style.display = "none"; // Initially hide the versions row
+                    fetch(`${domain}video/${key}/version`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ value: intValue }),
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
+                        console.log("abgespeichert nun als", data);
+                      })
+                      .catch((error) => {
+                        console.error(
+                          "Fehler beim Setzen der Videoversion:",
+                          error
+                        );
+                      });
+                  });
 
-                            var newtable = document.createElement("table");
-                            var newtableBody = document.createElement("tbody");
-                            
-                            for (var videoDataKey in videoData[i]) {
-                              if (videoData[i].hasOwnProperty(videoDataKey)) {
-                                var value = videoData[i][videoDataKey].value;
-                                
-                                var row = newtableBody.insertRow();
-                                var keyCell = row.insertCell(0);
-                                var valueCell = row.insertCell(1);
-                            
-                                keyCell.textContent = videoDataKey;
-                                valueCell.textContent = value;
-                              }
-                            }
-                            
-                            newtable.appendChild(newtableBody);
+                  const newRowArray = []; // Create an array to store all new rows
+                  tableRow.addEventListener("click", function () {
+                    newRowArray.forEach((row) => {
+                      if (row.style.display === "none") {
+                        row.style.display = "table-row";
+                      } else {
+                        row.style.display = "none";
+                      }
+                    });
+                  });
 
+                  newTableBody.appendChild(tableRow);
 
-                            newRow.innerHTML = `
+                  for (let i = 0; i < videoData.totalVersions; i++) {
+                    const newRow = document.createElement("tr");
+                    newRow.style.display = "none"; // Initially hide the versions row
+
+                    var newtable = document.createElement("table");
+                    var newtableBody = document.createElement("tbody");
+
+                    for (var videoDataKey in videoData[i]) {
+                      if (videoData[i].hasOwnProperty(videoDataKey)) {
+                        var value = videoData[i][videoDataKey].value;
+
+                        var row = newtableBody.insertRow();
+                        var keyCell = row.insertCell(0);
+                        var valueCell = row.insertCell(1);
+
+                        keyCell.textContent = videoDataKey;
+                        valueCell.textContent = value;
+                      }
+                    }
+
+                    newtable.appendChild(newtableBody);
+
+                    newRow.innerHTML = `
                               <td>
                                 <table style="width: 100%;">
                                   <tr>
@@ -167,32 +173,35 @@ async function register({ registerClientRoute, peertubeHelpers }) {
                               </td>
                             `;
 
-                            // Now, append the newtable to the cell with an empty <td>
-                            const tableCell = newRow.querySelector('td:nth-child(2)');
-                            tableCell.appendChild(newtable);
+                    // Now, append the newtable to the cell with an empty <td>
+                    const tableCell = newRow.querySelector("td:nth-child(2)");
+                    tableCell.appendChild(newtable);
 
-                            newRow.style.border = "1px solid #000"; // Add borders to the entire row
-                            newRow.querySelector("td:first-child").colSpan = 4; // Merge the first cell to span 3 columns
-        
-                            newRowArray.push(newRow); // Add the newRow to the array
-                            newTableBody.appendChild(newRow); 
-                          }
-                    table.appendChild(newTableBody);
-                      
-                    })
-                    .catch(error => {
-                      console.error('Fehler beim Bekommen der Videoversion:', error);
-                    });
-      }})
+                    newRow.style.border = "1px solid #000"; // Add borders to the entire row
+                    newRow.querySelector("td:first-child").colSpan = 4; // Merge the first cell to span 3 columns
+
+                    newRowArray.push(newRow); // Add the newRow to the array
+                    newTableBody.appendChild(newRow);
+                  }
+                  table.appendChild(newTableBody);
+                })
+                .catch((error) => {
+                  console.error(
+                    "Fehler beim Bekommen der Videoversion:",
+                    error
+                  );
+                });
+            }
+          })
           .catch((error) => {
             console.log("Error:", error);
           });
       }
 
       getVideos();
-            // CSS-Stile der Seite
-            const style = document.createElement("style");
-            style.innerHTML = `
+      // CSS-Stile der Seite
+      const style = document.createElement("style");
+      style.innerHTML = `
                 #formcontainer{
                   display: flex;
                   flex-wrap: wrap;
@@ -229,12 +238,9 @@ async function register({ registerClientRoute, peertubeHelpers }) {
               padding: 12px 15px;
           }
               `;
-            rootEl.appendChild(style);
-          } 
-    }
-)};
-
-
-
+      rootEl.appendChild(style);
+    },
+  });
+}
 
 export { register };

@@ -1,14 +1,26 @@
-const { v4: uuidv4 } = require("uuid");
-
-const initCreatorController = (router, storageManager) => {
+const initCreatorController = (creatorDAO, router) => {
   router.get("/creator/", async (req, res) => {
     try {
-      var storedData = await storageManager.getData("creator");
-      if (storedData == null) {
-        res.send({});
-        return;
+      const allCreators = await creatorDAO.getAllCreators();
+      res.send(allCreators);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
+  router.get("/creator/:id", async (req, res) => {
+    try {
+      const creatorId = req.params.id;
+      const foundCreator = await creatorDAO.findCreator(creatorId);
+
+      if (foundCreator) {
+        res.send(foundCreator);
+      } else {
+        res
+          .status(404)
+          .json({ success: false, message: "Creator nicht gefunden." });
       }
-      res.send(storedData);
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");
@@ -17,32 +29,32 @@ const initCreatorController = (router, storageManager) => {
 
   router.post("/creator/", async (req, res) => {
     try {
-      var existingCreator = await storageManager.getData("creator");
+      const {
+        name,
+        familyname,
+        username,
+        occupation,
+        email,
+        url,
+        address,
+        city,
+        state,
+        country,
+        deliverycode,
+        telephone,
+        mobile,
+        stage,
+        contacts,
+        role,
+      } = req.body;
 
-      const name = await req.body.name;
-      const familyname = await req.body.familyname;
-      const username = await req.body.username;
-      const occupation = await req.body.occupation;
-      const email = await req.body.email;
-      const url = await req.body.url;
-      const address = await req.body.address;
-      const city = await req.body.city;
-      const state = await req.body.state;
-      const country = await req.body.country;
-      const deliverycode = await req.body.deliverycode;
-      const telephone = await req.body.telephone;
-      const mobile = await req.body.mobile;
-      const stage = await req.body.stage;
-      const contacts = await req.body.contacts;
-      const role = await req.body.role;
-      //required
+      // required
       if (!username) {
         res.status(400).send("The 'username' field must be set.");
         return;
       }
 
-      var newData = {
-        id: uuidv4(),
+      const newCreator = {
         name: name,
         familyname: familyname,
         username: username,
@@ -61,19 +73,24 @@ const initCreatorController = (router, storageManager) => {
         role: role,
       };
 
-      if (existingCreator == undefined) {
-        await storageManager.storeData("creator", {
-          data: [newData],
-        });
+      const addedCreator = await creatorDAO.addCreator(newCreator);
+      res.send(addedCreator);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
 
-        res.send(newData);
-        return;
-      }
-
-      existingCreator.data.push(newData);
-      await storageManager.storeData("creator", existingCreator);
-
-      res.send(newData);
+  router.put("/creator/:id", async (req, res) => {
+    try {
+      const creatorId = req.params.id;
+      const updatedData = await req.body;
+      console.log("req", updatedData);
+      const modifiedCreator = await creatorDAO.modifyCreator(
+        creatorId,
+        updatedData
+      );
+      res.send(modifiedCreator);
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");
@@ -82,31 +99,12 @@ const initCreatorController = (router, storageManager) => {
 
   router.delete("/creator/:id", async (req, res) => {
     try {
-      var existingCreator = await storageManager.getData("creator");
-      var creatorId = req.params.id;
-
-      if (existingCreator == undefined) {
-        res
-          .status(404)
-          .json({ success: false, message: "Creator nicht gefunden." });
-        return;
-      }
-
-      var creatorIndex = existingCreator.data.findIndex(
-        (org) => org.id == creatorId
-      );
-      if (creatorIndex !== -1) {
-        existingCreator.data.splice(creatorIndex, 1);
-        await storageManager.storeData("creator", existingCreator);
-        res.status(200).json({
-          success: true,
-          message: "Creator erfolgreich gelöscht.",
-        });
-      } else {
-        res
-          .status(404)
-          .json({ success: false, message: "Creator nicht gefunden." });
-      }
+      const creatorId = req.params.id;
+      await creatorDAO.deleteCreator(creatorId);
+      res.status(200).json({
+        success: true,
+        message: "Creator erfolgreich gelöscht.",
+      });
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");

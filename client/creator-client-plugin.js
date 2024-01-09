@@ -1,226 +1,78 @@
-// TODO: English form names
-// Name
-// Familyname
-// Username
-// Occupation
-// E-Mail
-// URL
-// Address
-// Delivery Code
-// City
-// State
-// Country
-// Telephone
-// Mobile Phone
-// Stage
-// Related Contact
-// Role
-
 async function register({ registerClientRoute, peertubeHelpers }) {
   registerClientRoute({
     route: "metadata/creators",
     onMount: ({ rootEl }) => {
-      rootEl.innerHTML = `
-          <div id="plugincontainer">
-          <h1>Creator</h1>
-          <div id="formcontainer">
-          <div>
-          <label for="name">Vorname</label></br>
-          <input type="text" id="name" name="name">
-          </div>
-          <div>
-          <label for="familyname">Nachname</label></br>
-          <input type="text" id="familyname" name="familyname">
-          </div>
-          <div>
-          <label for="username">Sendungsmacher Kürzel</label></br>
-          <input type="text" id="username" name="username">
-          </div>
-          <div>
-          <label for="occupation">Beruf</label></br>
-          <input type="text" id="occupation" name="occupation">
-          </div>
-          <div>
-          <label for="email">E-Mail</label></br>
-          <input type="text" id="email" name="email">
-          </div>
-          <div>
-          <label for="url">Website URL</label></br>
-          <input type="text" id="url" name="url">
-          </div>
-          <div>
-          <label for="address">Adresse</label></br>
-          <input type="text" id="address" name="address">
-          </div>
-          <div>
-          <label for="deliverycode">Postleitzahl</label></br>
-          <input type="text" id="deliverycode" name="deliverycode">
-          </div>
-          <div>
-          <label for="city">Stadt</label></br>
-          <input type="text" id="city" name="city">
-          </div>
-          <div>
-          <label for="state">Bundesland</label></br>
-          <input type="text" id="state" name="state">
-          </div>
-          <div>
-          <label for="country">Land</label></br>
-          <input type="text" id="country" name="country">
-          </div>
-          <div>
-          <label for="telephone">Telefonnummer</label></br>
-          <input type="text" id="telephone" name="telephone">
-          </div>
-          <div>
-          <label for="mobile">Mobiltelefonnummer</label></br>
-          <input type="text" id="mobile" name="mobile">
-          </div>
-          <div>
-          <label for="stage">Bühnenname</label></br>
-          <input type="text" id="stage" name="stage">
-          </div>
-          <div>
-          <label for="contacts">Vernetzter Kontakt</label></br>
-          <input type="text" id="contacts" name="contacts">        
-          </div>
-          <div>
-          <label for="role">Role</label></br>
-          <input type="text" id="role" name="role">       
-          </div>
-          </div>
-          </br>
-          <button id="myButton">Add Creator</button>
-          <span id="errorMessage" style='color:red;'></span>
-          <div id="creatorContainer"></div>
-          <table id="myTable">
-            <tr>
-              <th>ID</th>
-              <th>Vorname</th>
-              <th>Nachname</th>
-              <th>Sendungsmacher Kürzel</th>
-              <th>Beruf</th>
-              <th>E-Mail</th>  
-              <th>Website URL</th>  
-              <th>Adresse</th>
-              <th>Postleitzahl</th>    
-              <th>Stadt</th>  
-              <th>Bundesland</th>  
-              <th>Land</th>  
-              <th>Telefonnummer</th>  
-              <th>Mobiltelefonnummer</th>  
-              <th>Bühnenname</th>  
-              <th>Vernetzter Kontakt</th>  
-              <th>Role</th>  
-            </tr>
-          </table>
-          <div>
-        `;
+      rootEl.innerHTML = getPluginContainerHTML();
 
-      function getCreator() {
-        const table = rootEl.querySelector("#myTable");
-        const tableBody = table.querySelector("tbody");
-        if (tableBody) {
-          tableBody.remove();
-        }
-        fetch(peertubeHelpers.getBaseRouterRoute() + "/creator/", {
-          method: "GET",
-          headers: peertubeHelpers.getAuthHeader(),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            var creator = data.data;
-            const creatorContainer = rootEl.querySelector("#creatorContainer");
-            if (creator.length == 0) {
-              creatorContainer.textContent = "No Creator yet";
-              return;
-            } else {
-              creatorContainer.textContent = "";
-            }
-            const newTableBody = document.createElement("tbody");
-            const tableHeaderRow = document.createElement("tr");
-            tableHeaderRow.innerHTML = `
+      const button = rootEl.querySelector("#myButton");
+      button.addEventListener("click", onAddCreatorClick);
+
+      function getPluginContainerHTML() {
+        return `
+          <div id="plugincontainer">
+            <h1>Creator</h1>
+            <div id="formcontainer">
+              ${generateInputField("Vorname", "name")}
+              ${generateInputField("Nachname", "familyname")}
+              ${generateInputField("Sendungsmacher Kürzel", "username")}
+              ${generateInputField("Beruf", "occupation")}
+              ${generateInputField("E-Mail", "email")}
+              ${generateInputField("Website URL", "url")}
+              ${generateInputField("Adresse", "address")}
+              ${generateInputField("Postleitzahl", "deliverycode")}
+              ${generateInputField("Stadt", "city")}
+              ${generateInputField("Bundesland", "state")}
+              ${generateInputField("Land", "country")}
+              ${generateInputField("Telefonnummer", "telephone")}
+              ${generateInputField("Mobiltelefonnummer", "mobile")}
+              ${generateInputField("Bühnenname", "stage")}
+              ${generateInputField("Vernetzter Kontakt", "contacts")}
+              ${generateInputField("Role", "role")}
+            </div>
+            <br>
+            <button id="myButton" class="iconButton" title="Add Creator">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M12 5l0 14" />
+                <path d="M5 12l14 0" />
+              </svg>
+            </button>
+            <span id="errorMessage" style='color:red;'></span>
+            <div id="creatorContainer"></div>
+            <table id="myTable">
+              <tr>
                 <th>ID</th>
                 <th>Vorname</th>
                 <th>Nachname</th>
                 <th>Sendungsmacher Kürzel</th>
                 <th>Beruf</th>
-                <th>E-Mail</th>  
-                <th>Website URL</th>  
+                <th>E-Mail</th>
+                <th>Website URL</th>
                 <th>Adresse</th>
-                <th>Postleitzahl</th>    
-                <th>Stadt</th>  
-                <th>Bundesland</th>  
-                <th>Land</th>  
-                <th>Telefonnummer</th>  
-                <th>Mobiltelefonnummer</th>  
-                <th>Bühnenname</th>  
-                <th>Vernetzter Kontakt</th>  
-                <th>Role</th>  
-                `;
-            newTableBody.appendChild(tableHeaderRow);
-            creator.forEach((creator) => {
-              const tableRow = document.createElement("tr");
-              tableRow.innerHTML = `
-                    <td>${creator.id}</td>
-                    <td>${creator.name}</td>
-                    <td>${creator.familyname}</td>
-                    <td>${creator.username}</td>
-                    <td>${creator.occupation}</td>
-                    <td>${creator.email}</td>
-                    <td>${creator.url}</td>
-                    <td>${creator.address}</td>
-                    <td>${creator.deliverycode}</td>      
-                    <td>${creator.city}</td>
-                    <td>${creator.state}</td>
-                    <td>${creator.country}</td>
-                    <td>${creator.telephone}</td>
-                    <td>${creator.mobile}</td>
-                    <td>${creator.stage}</td>
-                    <td>${creator.contacts}</td>
-                    <td>${creator.role}</td>
-                    <td>
-                      <button class="deleteButton" data-id="${creator.id}">Löschen</button>
-                    </td>
-                  `;
-              newTableBody.appendChild(tableRow);
-            });
-
-            table.appendChild(newTableBody);
-
-            const deleteButtons = rootEl.querySelectorAll(".deleteButton");
-            deleteButtons.forEach((button) => {
-              button.addEventListener("click", () => {
-                const creatorId = button.dataset.id;
-                console.log("Löschen der Creator mit ID:", creatorId);
-
-                fetch(
-                  peertubeHelpers.getBaseRouterRoute() +
-                    "/creator/" +
-                    creatorId,
-                  {
-                    method: "DELETE",
-                    headers: peertubeHelpers.getAuthHeader(),
-                  }
-                )
-                  .then((res) => res.json())
-                  .then((data) => {
-                    console.log("Erfolgreich gelöscht:", data);
-                    getCreator();
-                  })
-                  .catch((error) => {
-                    console.log("Fehler beim Löschen:", error);
-                  });
-              });
-            });
-          })
-          .catch((error) => {
-            console.log("Error:", error);
-          });
+                <th>Postleitzahl</th>
+                <th>Stadt</th>
+                <th>Bundesland</th>
+                <th>Land</th>
+                <th>Telefonnummer</th>
+                <th>Mobiltelefonnummer</th>
+                <th>Bühnenname</th>
+                <th>Vernetzter Kontakt</th>
+                <th>Role</th>
+              </tr>
+            </table>
+          </div>
+        `;
       }
-      getCreator();
-      const button = rootEl.querySelector("#myButton");
-      button.addEventListener("click", () => {
+
+      function generateInputField(label, id) {
+        return `
+          <div>
+            <label for="${id}">${label}</label><br>
+            <input type="text" id="${id}" name="${id}">
+          </div>`;
+      }
+
+      function onAddCreatorClick() {
         var errorMessage = rootEl.querySelector("#errorMessage");
         errorMessage.textContent = "";
         var nameInput = rootEl.querySelector("#name");
@@ -240,9 +92,7 @@ async function register({ registerClientRoute, peertubeHelpers }) {
         var contactsInput = rootEl.querySelector("#contacts");
         var roleInput = rootEl.querySelector("#role");
 
-        //required
-        console.log(username);
-        if (username.value == "") {
+        if (usernameInput.value == "") {
           errorMessage.textContent = "Sendungskürzel ist ein Pflichtfeld";
           return;
         }
@@ -282,48 +132,276 @@ async function register({ registerClientRoute, peertubeHelpers }) {
           .catch((error) => {
             console.log("Fehler beim Erstellen:", error);
           });
-      });
-
-      // CSS-Stile der Seite
-      const style = document.createElement("style");
-      style.innerHTML = `
-          #formcontainer{
-            display: flex;
-            flex-wrap: wrap;
-          }
-
-          h1 {
-            color: #4CBDC9;
-          }
-
-          input {
-            background-color: #fff;
-            color: #000;
-          }
-
-          p {
-            font-size: 18px;
-          }
-    
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 0.9em;
-            font-family: sans-serif;
-            min-width: 400px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-        }
-    
-        table tr {
-          text-align: left;
       }
-      table th,
-      table td {
-        padding: 12px 15px;
-    }
+
+      function updateTableRowToEditable(tableRow) {
+        const cells = tableRow.querySelectorAll("td");
+
+        cells.forEach((cell, index) => {
+          if (index !== 0 && index !== cells.length - 2) {
+            const cellValue = cell.textContent.trim();
+            const input = document.createElement("input");
+            input.value = cellValue;
+            input.id = `${tableRow.cells[index].id}Input`;
+            cell.innerHTML = "";
+            cell.appendChild(input);
+          }
+        });
+
+        cells[cells.length - 1].innerHTML = "";
+        cells[cells.length - 2].innerHTML = "";
+
+        const saveButton = document.createElement("div");
+        saveButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-floppy" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" />
+              <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+              <path d="M14 4l0 4l-6 0l0 -4" />
+            </svg>
         `;
-      rootEl.appendChild(style);
+        saveButton.title = "save";
+        saveButton.classList.add("saveButton");
+        saveButton.addEventListener("click", () =>
+          saveTableRowChanges(tableRow)
+        );
+        cells[cells.length - 2].appendChild(saveButton);
+
+        const cancelButton = document.createElement("div");
+        cancelButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M18 6l-12 12" />
+              <path d="M6 6l12 12" />
+            </svg>
+        `;
+        cancelButton.title = "cancel";
+        cancelButton.classList.add("cancelButton");
+        cancelButton.addEventListener("click", () => getCreator());
+        cells[cells.length - 1].appendChild(cancelButton);
+      }
+
+      function saveTableRowChanges(tableRow) {
+        const inputs = tableRow.querySelectorAll("input");
+        const updatedData = Array.from(inputs).reduce((data, input) => {
+          const key = input.id.replace("CellInput", "");
+          data[key] = input.value;
+          return data;
+        }, {});
+
+        const creatorId = tableRow.querySelector("#idCell").textContent;
+        console.log(updatedData);
+        fetch(`${peertubeHelpers.getBaseRouterRoute()}/creator/${creatorId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            ...peertubeHelpers.getAuthHeader(),
+          },
+          body: JSON.stringify(updatedData),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Successfully updated:", data);
+            getCreator();
+          })
+          .catch((error) => {
+            console.log("Error updating:", error);
+          });
+      }
+
+      function getCreator() {
+        const table = rootEl.querySelector("#myTable");
+        const tableBody = table.querySelector("tbody");
+        if (tableBody) {
+          tableBody.remove();
+        }
+
+        fetch(peertubeHelpers.getBaseRouterRoute() + "/creator/", {
+          method: "GET",
+          headers: peertubeHelpers.getAuthHeader(),
+        })
+          .then((res) => res.json())
+          .then((creators) => {
+            const creatorContainer = rootEl.querySelector("#creatorContainer");
+            if (creators.length == 0) {
+              creatorContainer.textContent = "No Creator yet";
+              return;
+            } else {
+              creatorContainer.textContent = "";
+            }
+            const newTableBody = document.createElement("tbody");
+            const tableHeaderRow = document.createElement("tr");
+            tableHeaderRow.innerHTML = `
+                <th>ID</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Sendungsmacher Kürzel</th>
+                <th>Beruf</th>
+                <th>E-Mail</th>
+                <th>Website URL</th>
+                <th>Adresse</th>
+                <th>Postleitzahl</th>
+                <th>Stadt</th>
+                <th>Bundesland</th>
+                <th>Land</th>
+                <th>Telefonnummer</th>
+                <th>Mobiltelefonnummer</th>
+                <th>Bühnenname</th>
+                <th>Vernetzter Kontakt</th>
+                <th>Role</th>
+              `;
+            newTableBody.appendChild(tableHeaderRow);
+            creators.forEach((creator) => {
+              const tableRow = document.createElement("tr");
+              tableRow.innerHTML = `
+              <td id="idCell">${creator.id}</td>
+                    <td id="nameCell">${creator.name}</td>
+                    <td id="familynameCell">${creator.familyname}</td>
+                    <td id="usernameCell">${creator.username}</td>
+                    <td id="occupationCell">${creator.occupation}</td>
+                    <td id="emailCell">${creator.email}</td>
+                    <td id="urlCell">${creator.url}</td>
+                    <td id="addressCell">${creator.address}</td>
+                    <td id="deliverycodeCell">${creator.deliverycode}</td>
+                    <td id="cityCell">${creator.city}</td>
+                    <td id="stateCell">${creator.state}</td>
+                    <td id="countryCell">${creator.country}</td>
+                    <td id="telephoneCell">${creator.telephone}</td>
+                    <td id="mobileCell">${creator.mobile}</td>
+                    <td id="stageCell">${creator.stage}</td>
+                    <td id="contactsCell">${creator.contacts}</td>
+                    <td id="roleCell">${creator.role}</td>
+                    <td>
+                      <div class="modifyButton" data-id="${creator.id}" title="edit">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                          <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                          <path d="M16 5l3 3" />
+                        </svg>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="deleteButton" data-id="${creator.id}" title="delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M4 7l16 0" />
+                          <path d="M10 11l0 6" />
+                          <path d="M14 11l0 6" />
+                          <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                          <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                        </svg>
+                      </div>
+                    </td>
+                  `;
+              newTableBody.appendChild(tableRow);
+            });
+
+            table.appendChild(newTableBody);
+
+            const modifyButtons = rootEl.querySelectorAll(".modifyButton");
+            modifyButtons.forEach((button) => {
+              button.addEventListener("click", () => {
+                const creatorId = button.dataset.id;
+                console.log("Modify der Creator mit ID:", creatorId);
+                const tableRow = button.closest("tr");
+                updateTableRowToEditable(tableRow);
+              });
+            });
+
+            const deleteButtons = rootEl.querySelectorAll(".deleteButton");
+            deleteButtons.forEach((button) => {
+              button.addEventListener("click", () => {
+                const creatorId = button.dataset.id;
+                console.log("Löschen der Creator mit ID:", creatorId);
+
+                fetch(
+                  peertubeHelpers.getBaseRouterRoute() +
+                    "/creator/" +
+                    creatorId,
+                  {
+                    method: "DELETE",
+                    headers: peertubeHelpers.getAuthHeader(),
+                  }
+                )
+                  .then((res) => res.json())
+                  .then((data) => {
+                    console.log("Erfolgreich gelöscht:", data);
+                    getCreator();
+                  })
+                  .catch((error) => {
+                    console.log("Fehler beim Löschen:", error);
+                  });
+              });
+            });
+          })
+          .catch((error) => {
+            console.log("Error:", error);
+          });
+      }
+
+      function initialize() {
+        getCreator();
+
+        const style = document.createElement("style");
+        style.innerHTML = `
+                #plugincontainer {
+                  max-width: 100%;
+                  padding: 5px;
+                } 
+      
+                #formcontainer {
+                  display: flex;
+                  flex-wrap: wrap;
+                }
+
+                h1 {
+                  color: #4CBDC9;
+                }
+
+                .modifyButton, .saveButton, .cancelButton, .deleteButton {
+                  cursor: pointer;
+                  padding: 20px;
+                }
+      
+                input {
+                  background-color: #fff;
+                  color: #000;
+                }
+                
+                p {
+                  font-size: 18px;
+                }
+      
+                table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin: 25px 0;
+                  font-size: 0.9em;
+                  font-family: sans-serif;
+                  min-width: 400px;
+                  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+                }
+      
+                table tr {
+                  text-align: left;
+                }
+      
+                table th,
+                table td {
+                  padding: 12px 15px;
+                }
+
+                table td:nth-last-child(-n+2) {
+                  width: 50px;
+                  padding: 12px;
+                  text-align: center;
+                }
+              `;
+        rootEl.appendChild(style);
+      }
+
+      initialize();
     },
   });
 }

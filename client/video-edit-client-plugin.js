@@ -1,8 +1,43 @@
 async function register({ registerVideoField, peertubeHelpers }) {
-  //TODO wird mehrmals aufgerufen
-  //TODO error Promise
-  //Feld Dedinition Hardcoded 4 testing:
-  //TODO Fetch Language id instead nice to have
+  //TODO: error Promise for
+  //TODO: Fetch Language id instead nice to have
+
+  console.log("check how often this is called");
+  for (const type of ["import-url", "import-torrent", "update", "go-live"]) {
+    const videoFormOptions = {
+      tab: "main",
+    };
+    console.log("check how often this is called 2");
+    //TODO: wenn dies gesynced wird dann wird es überschrieben von der Datenbank
+    registerVideoField(
+      {
+        type: "html",
+        html: "Analyse-Tool (overwrite)",
+        default: "",
+        hidden: false,
+        error: false,
+      },
+      {
+        type,
+        ...videoFormOptions,
+      }
+    );
+    registerVideoField(
+      {
+        name: "analyseMediainfo",
+        label: "with mediainfo",
+        type: "input-checkbox",
+        hidden: false,
+        error: false,
+      },
+      {
+        type,
+        ...videoFormOptions,
+        value: false,
+      }
+    );
+  }
+
   function getData() {
     const fetchSettings = peertubeHelpers.getSettings();
 
@@ -22,30 +57,10 @@ async function register({ registerVideoField, peertubeHelpers }) {
       }
     ).then((response) => response.json());
 
-    const fetchGenre = fetch(
-      peertubeHelpers.getBaseRouterRoute() + "/genre/all",
-      {
-        method: "GET",
-        headers: peertubeHelpers.getAuthHeader(),
-      }
-    ).then((response) => response.json());
-
-    Promise.all([
-      fetchSettings,
-      fetchCreator,
-      fetchOrganizations,
-      fetchGenre,
-    ]).then(
-      ([
-        settingsResponse,
-        creatorResponse,
-        organizationsResponse,
-        genreResponse,
-      ]) => {
-        const creators = creatorResponse.data;
-        const organizations = organizationsResponse.data;
-        const genre = genreResponse.data;
-
+    Promise.all([fetchSettings, fetchCreator, fetchOrganizations]).then(
+      ([settingsResponse, creatorResponse, organizationsResponse]) => {
+        const creators = creatorResponse;
+        const organizations = organizationsResponse;
         for (const type of [
           "upload",
           "import-url",
@@ -55,70 +70,21 @@ async function register({ registerVideoField, peertubeHelpers }) {
         ]) {
           const videoFormOptions = {
             tab: "plugin-settings",
-          }; //"main",
+          };
 
-          //TODO set multiple locations
-          //TODO Location nach dates.coverage.recordingLocation
-          //TODO Issued recordingLocations
-          //TODO Video Information Genre
-          //TODO Location
-          //TODO rights.usageRights.coverage ???
           var form = JSON.parse(settingsResponse.form);
-          console.log("form123123123123123", form);
           for (var i = 0; i < form.length; i++) {
             var field = form[i];
-            console.log(field);
 
             if (field.visibleVideoEdit == false) {
               continue;
             }
 
             if (field.type === "line") {
-              //only frontend
               continue;
             }
 
             if (field.type == "entity") {
-              if (field.mappingname == "videoInformation.showType.type") {
-                if (genre === undefined || genre.length === 0) {
-                  registerVideoField(
-                    {
-                      type: "Add a Genre",
-                      default: "",
-                      hidden: false,
-                      error: false,
-                    },
-                    {
-                      type,
-                      ...videoFormOptions,
-                    }
-                  );
-                  continue;
-                } else {
-                  const genreOptions = genre.map((x) => {
-                    return { label: x.name, value: x.id };
-                  });
-
-                  registerVideoField(
-                    {
-                      name: "videoInformation.showType.type",
-                      label: `${field.label}`,
-                      descriptionHTML: `${field.caption}`,
-                      type: "select",
-                      options: genreOptions,
-                      default: "",
-                      hidden: false,
-                      error: false,
-                    },
-                    {
-                      type,
-                      ...videoFormOptions,
-                    }
-                  );
-                  continue;
-                }
-              }
-
               if (field.mappingname == "creator") {
                 if (creators == undefined || creators.length == 0) {
                   registerVideoField(
@@ -293,7 +259,10 @@ async function register({ registerVideoField, peertubeHelpers }) {
               continue;
             }
 
-            if (field.visibleVideoEdit && field.type == "input") {
+            if (
+              (field.type == "input" || field.type == "input-textarea") &&
+              field.visibleVideoEdit
+            ) {
               registerVideoField(
                 {
                   name: `${field.mappingname}`,
@@ -301,7 +270,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
                   descriptionHTML: `${
                     field.caption != "" ? field.caption : "-"
                   }`,
-                  type: "input",
+                  type: field.type,
                   default: "",
                   error: ({ formValues, value }) => {
                     if (!field.required || value !== "")
@@ -323,5 +292,6 @@ async function register({ registerVideoField, peertubeHelpers }) {
   }
   getData();
 }
+// TODO:
 
 export { register };

@@ -1,43 +1,68 @@
-const { v4: uuidv4 } = require('uuid');
-
-const initOrganizationController = (router, storageManager) => {
+const initOrganizationController = (organizationDAO, router) => {
   router.get("/organization/", async (req, res) => {
-      try {
-        var storedData = await storageManager.getData("organization");
-        if (storedData == null) {
-          res.send({});
-          return;
-        }
-        res.send(storedData);
-      } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
+    try {
+      const allOrganizations = await organizationDAO.getAllOrganizations();
+      res.send(allOrganizations);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
+  router.get("/organization/:id", async (req, res) => {
+    try {
+      const organizationId = req.params.id;
+      const foundOrganization = await organizationDAO.findOrganization(
+        organizationId
+      );
+
+      if (foundOrganization) {
+        res.send(foundOrganization);
+      } else {
+        res
+          .status(404)
+          .json({ success: false, message: "Organization not found" });
       }
-    });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
 
   router.post("/organization/", async (req, res) => {
     try {
-      var existingOrganization = await storageManager.getData("organization");
-      var organizationname = await req.body.name;
-      var organizationabbrev = await req.body.abbrev;
-      var newData = {
-        id: uuidv4(),
-        name: organizationname,
-        abbrev: organizationabbrev
-      };
-      if (existingOrganization == undefined) {
-        await storageManager.storeData("organization", {
-          data: [newData],
-        });
+      const { name, abbrev } = req.body;
 
-        res.send(newData);
+      // required
+      if (!name) {
+        res.status(400).send("'name' field must be set.");
         return;
       }
 
-      existingOrganization.data.push(newData);
-      await storageManager.storeData("organization", existingOrganization);
+      const newOrganization = {
+        name: name,
+        abbrev: abbrev,
+      };
 
-      res.send(newData);
+      const addedOrganization = await organizationDAO.addOrganization(
+        newOrganization
+      );
+      res.send(addedOrganization);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
+  router.put("/organization/:id", async (req, res) => {
+    try {
+      const organizationId = req.params.id;
+      const updatedData = req.body;
+      const modifiedOrganization = await organizationDAO.modifyOrganization(
+        organizationId,
+        updatedData
+      );
+      res.send(modifiedOrganization);
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");
@@ -46,35 +71,18 @@ const initOrganizationController = (router, storageManager) => {
 
   router.delete("/organization/:id", async (req, res) => {
     try {
-      var existingOrganization = await storageManager.getData("organization");
-      var organizationId = req.params.id;
-
-      if (existingOrganization == undefined) {
-        res
-          .status(404)
-          .json({ success: false, message: "Organization nicht gefunden." });
-        return;
-      }
-
-      var organizationIndex = existingOrganization.data.findIndex((org) => org.id == organizationId);
-      if (organizationIndex !== -1) {
-        existingOrganization.data.splice(organizationIndex, 1);
-        await storageManager.storeData("organization", existingOrganization);
-        res.status(200).json({
-          success: true,
-          message: "Organization erfolgreich gelöscht.",
-        });
-      } else {
-        res
-          .status(404)
-          .json({ success: false, message: "Organization nicht gefunden." });
-      }
+      const organizationId = req.params.id;
+      await organizationDAO.deleteOrganization(organizationId);
+      res.status(200).json({
+        success: true,
+        message: "Organization deleted",
+      });
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");
     }
   });
-}
+};
 
 module.exports = {
   initOrganizationController,
