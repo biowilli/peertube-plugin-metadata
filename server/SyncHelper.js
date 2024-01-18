@@ -29,7 +29,8 @@ class SyncHelper {
           if (ebuDefaults[key] != null || ebuDefaults[key] != undefined) {
             console.log(metadata[key]);
             ebuDefaults[key] = metadata[key];
-          } else {
+          }
+          /* else {
             if (key.startsWith("creator-")) {
               var creatorId = this.extractId(key);
               if (
@@ -38,9 +39,7 @@ class SyncHelper {
               ) {
                 ebuDefaults["creator"].push(creatorId);
               }
-            }
-
-            if (key.startsWith("contributor-")) {
+            } else if (key.startsWith("contributor-")) {
               var contributorId = this.extractId(key);
               if (
                 !ebuDefaults["contributor"].includes(contributorId) &&
@@ -48,9 +47,7 @@ class SyncHelper {
               ) {
                 ebuDefaults["contributor"].push(contributorId);
               }
-            }
-
-            if (key.startsWith("organization-")) {
+            } else if (key.startsWith("organization-")) {
               var organizationId = this.extractId(key);
               if (
                 !ebuDefaults["organization"].includes(organizationId) &&
@@ -58,9 +55,10 @@ class SyncHelper {
               ) {
                 ebuDefaults["organization"].push(organizationId);
               }
+            } else {
+              console.log(key, "Property does not exist in EbuDefaults");
             }
-            console.log(key, "Property does not exist in EbuDefaults");
-          }
+          } */
         }
       }
     } catch (error) {

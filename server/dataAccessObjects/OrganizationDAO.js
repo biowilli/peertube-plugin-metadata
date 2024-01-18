@@ -8,7 +8,7 @@ class OrganizationDAO {
 
   async initializeDatabase() {
     const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS fairkom_organization (
+      CREATE TABLE IF NOT EXISTS fairkom_metadata_organization (
         id VARCHAR(255) PRIMARY KEY,
         name VARCHAR(255),
         abbrev VARCHAR(255),
@@ -21,16 +21,19 @@ class OrganizationDAO {
       const result = await this.peertubeHelpers.database.query(
         createTableQuery
       );
-      console.log("fairkom_organization table created successfully");
+      console.log("fairkom_metadata_organization table created successfully");
     } catch (error) {
-      console.error("Error creating fairkom_organization table:", error);
+      console.error(
+        "Error creating fairkom_metadata_organization table:",
+        error
+      );
     }
   }
 
   async addOrganization(organizationData) {
     const organizationId = uuidv4();
     const insertOrganizationQuery = `
-      INSERT INTO fairkom_organization (id, name, abbrev) VALUES (
+      INSERT INTO fairkom_metadata_organization (id, name, abbrev) VALUES (
         '${organizationId}',
         '${organizationData.name}',
         '${organizationData.abbrev}'
@@ -42,35 +45,35 @@ class OrganizationDAO {
         insertOrganizationQuery
       );
       console.log(
-        `fairkom_organization ${organizationId} added successfully`,
+        `fairkom_metadata_organization ${organizationId} added successfully`,
         result
       );
       return organizationData;
     } catch (error) {
-      console.error("Error adding fairkom_organization:", error);
+      console.error("Error adding fairkom_metadata_organization:", error);
       throw error;
     }
   }
 
   async getAllOrganizations() {
     const getAllOrganizationsQuery = `
-      SELECT * FROM fairkom_organization
+      SELECT * FROM fairkom_metadata_organization
     `;
     try {
       const result = await this.peertubeHelpers.database.query(
         getAllOrganizationsQuery
       );
-      console.log("Retrieved all fairkom_organization:", result);
+      console.log("Retrieved all fairkom_metadata_organization:", result);
       return result[0];
     } catch (error) {
-      console.error("Error getting fairkom_organization:", error);
+      console.error("Error getting fairkom_metadata_organization:", error);
       throw error;
     }
   }
 
   async findOrganization(organizationId) {
     const findOrganizationQuery = `
-      SELECT * FROM fairkom_organization
+      SELECT * FROM fairkom_metadata_organization
       WHERE id = '${organizationId}'
     `;
 
@@ -78,17 +81,17 @@ class OrganizationDAO {
       const result = await this.peertubeHelpers.database.query(
         findOrganizationQuery
       );
-      console.log("Found fairkom_organization:", result.rows[0]);
-      return result.rows[0];
+      console.log("Found fairkom_metadata_organization:", result[0]);
+      return result[0];
     } catch (error) {
-      console.error("Error finding fairkom_organization:", error);
+      console.error("Error finding fairkom_metadata_organization:", error);
       throw error;
     }
   }
 
   async modifyOrganization(organizationId, updatedData) {
     const modifyOrganizationQuery = `
-      UPDATE fairkom_organization
+      UPDATE fairkom_metadata_organization
       SET
         name = '${updatedData.name}',
         abbrev = '${updatedData.abbrev}',
@@ -101,17 +104,17 @@ class OrganizationDAO {
       const result = await this.peertubeHelpers.database.query(
         modifyOrganizationQuery
       );
-      console.log("fairkom_organization modified successfully");
+      console.log("fairkom_metadata_organization modified successfully");
       return result;
     } catch (error) {
-      console.error("Error modifying fairkom_organization:", error);
+      console.error("Error modifying fairkom_metadata_organization:", error);
       throw error;
     }
   }
 
   async deleteOrganization(organizationId) {
     const deleteOrganizationQuery = `
-      DELETE FROM fairkom_organization
+      DELETE FROM fairkom_metadata_organization
       WHERE id = '${organizationId}'
     `;
 
@@ -120,11 +123,11 @@ class OrganizationDAO {
         deleteOrganizationQuery
       );
       console.log(
-        `fairkom_organization ${organizationId} deleted successfully`,
+        `fairkom_metadata_organization ${organizationId} deleted successfully`,
         result
       );
     } catch (error) {
-      console.error("Error deleting fairkom_organization:", error);
+      console.error("Error deleting fairkom_metadata_organization:", error);
       throw error;
     }
   }

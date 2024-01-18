@@ -12,8 +12,9 @@ const initCreatorController = (creatorDAO, router) => {
   router.get("/creator/:id", async (req, res) => {
     try {
       const creatorId = req.params.id;
+      console.log("creatorId", creatorId);
       const foundCreator = await creatorDAO.findCreator(creatorId);
-
+      console.log("foundCreator", foundCreator);
       if (foundCreator) {
         res.send(foundCreator);
       } else {

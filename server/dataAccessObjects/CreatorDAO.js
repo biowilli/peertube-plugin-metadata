@@ -106,8 +106,8 @@ class CreatorDAO {
       const result = await this.peertubeHelpers.database.query(
         findCreatorQuery
       );
-      console.log("Found creator:", result.rows[0]);
-      return result.rows[0];
+      console.log("Found creator:", result[0]);
+      return result[0];
     } catch (error) {
       console.error("Error finding creator:", error);
       throw error;

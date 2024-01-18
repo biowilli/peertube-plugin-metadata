@@ -49,7 +49,6 @@ async function register({
   settingsManager,
   peertubeHelpers: { videos: peertubeVideosHelpers },
 }) {
-
   // init Settings
   initRegisterSettings(registerSetting);
 
@@ -87,7 +86,6 @@ async function register({
     registerHook,
     peertubeVideosHelpers,
     storageManager,
-    settingsManager,
     mediainfoMetadataDAO,
     mediainfoMetadataEBUDAO,
     ffprobeMetadataDAO,
@@ -102,6 +100,9 @@ async function register({
     registerHook,
     storageManager,
     mediainfoMetadataDAO,
+    mediainfoMetadataEBUDAO,
+    ffprobeMetadataDAO,
+    metadataEBUDefaultDAO,
     videoMetadataDAO
   );
   initVideoResultHooks(

@@ -1,4 +1,4 @@
-const { getPath } = require("./../VideoHelper.js");
+const { syncMetaDataDAO } = require("./../VideoHelper.js");
 
 const initVideoUpdateHooks = (
   EBUDefaults,
@@ -7,62 +7,128 @@ const initVideoUpdateHooks = (
   registerHook,
   storageManager,
   mediainfoMetadataDAO,
+  mediainfoMetadataEBUDAO,
+  ffprobeMetadataDAO,
+  metadataEBUDefaultDAO,
   videoMetadataDAO
 ) => {
   // Store data associated to this video
   registerHook({
     target: "action:api.video.updated",
     handler: async ({ video, body }) => {
+      console.log("action:api.video.updated");
       if (!body.pluginData) return;
       var pluginVideoData = body.pluginData;
-      var videoMetaData = await videoMetadataDAO.findVideoMetadataByVideoId(
-        video.id
-      );
-
-      var mediainfoMetaData;
       if (pluginVideoData["analyseMediainfo"]) {
-        try {
-          //TODO: not every upload and every update should intstanzaite a class
-          const MediaInfo = require("./../tools/Mediainfo.js");
-          const mediaInfo = new MediaInfo();
-          const path = await getPath(videoId, peertubeVideosHelpers);
-          const result = await mediaInfo.analyzeVideo(path);
-          console.log("mediainfoStreams");
-          console.log(result);
-          mediainfoMetaData =
-            await mediainfoMetadataDAO.modifyMediainfoMetadata(
-              videoMetaData.fk_mediainfo_metadata_id,
-              JSON.stringify(result)
-            );
-          console.log("pluginVideoData[true]", mediainfoMetaData);
-        } catch (error) {
-          console.error("Error in mediainfo: ", error);
-        }
+        console.log("syncMetaDataDAO");
+        await videoMetadataDAO
+          .deleteVideoMetadata(video.id)
+          .then(async (deleted) => {
+            console.log("syncMetaDataDAO because triggered");
+            await syncMetaDataDAO(
+              video.id,
+              peertubeVideosHelpers,
+              mediainfoMetadataDAO,
+              mediainfoMetadataEBUDAO,
+              ffprobeMetadataDAO,
+              metadataEBUDefaultDAO,
+              videoMetadataDAO
+            ).then((resolvedVideoMetaData) => {
+              var videoMetaData = resolvedVideoMetaData;
+              if (videoMetaData != undefined) {
+                makeProcess(
+                  videoMetaData,
+                  mediainfoMetadataDAO,
+                  video,
+                  syncHelper,
+                  storageManager,
+                  body,
+                  EBUDefaults,
+                  pluginVideoData
+                );
+              }
+            });
+          });
+
+        pluginVideoData["analyseMediainfo"] = false;
+      } else {
+        videoMetadataDAO
+          .findVideoMetadataByVideoId(video.id)
+          .then(async (resolvedVideoMetaData) => {
+            console.log("resolvedVideoMetaData", resolvedVideoMetaData);
+            if (resolvedVideoMetaData == undefined) {
+              console.log("syncMetaDataDAO because not found");
+              await syncMetaDataDAO(
+                video.id,
+                peertubeVideosHelpers,
+                mediainfoMetadataDAO,
+                mediainfoMetadataEBUDAO,
+                ffprobeMetadataDAO,
+                metadataEBUDefaultDAO,
+                videoMetadataDAO
+              ).then((resolvedVideoMetaData) => {
+                var videoMetaData = resolvedVideoMetaData;
+                if (videoMetaData != undefined) {
+                  makeProcess(
+                    videoMetaData,
+                    mediainfoMetadataDAO,
+                    video,
+                    syncHelper,
+                    storageManager,
+                    body,
+                    EBUDefaults,
+                    pluginVideoData
+                  );
+                }
+              });
+            } else {
+              videoMetaData = resolvedVideoMetaData;
+              makeProcess(
+                videoMetaData,
+                mediainfoMetadataDAO,
+                video,
+                syncHelper,
+                storageManager,
+                body,
+                EBUDefaults,
+                pluginVideoData
+              );
+            }
+          });
       }
-      if (!mediainfoMetaData) {
-        mediainfoMetaData = await mediainfoMetadataDAO.findMediainfoMetadata(
-          videoMetaData.fk_mediainfo_metadata_id
-        );
-      }
-
-      var userId = video.VideoChannel.Account.dataValues.userId;
-      const result = await syncHelper.makeCompleteSync(
-        body,
-        mediainfoMetaData.mediainfo,
-        pluginVideoData,
-        EBUDefaults.values,
-        userId
-      );
-
-      console.log("CompleteSync", result);
-
-      //trigger reset
-      pluginVideoData["analyseMediainfo"] = false;
-
-      //TODO: use also metadataDAO;
-      await storageManager.storeData("metadata-" + video.id + "-" + 0, result);
     },
   });
+
+  async function makeProcess(
+    videoMetaData,
+    mediainfoMetadataDAO,
+    video,
+    syncHelper,
+    storageManager,
+    body,
+    EBUDefaults,
+    pluginVideoData
+  ) {
+    console.log("videoMetaData not undefined anymore");
+    console.log(videoMetaData);
+    // das ist vermutlich auch ein promise
+    mediainfoMetaData = await mediainfoMetadataDAO.findMediainfoMetadata(
+      videoMetaData.fk_mediainfo_metadata_id
+    );
+    var userId = video.VideoChannel.Account.dataValues.userId;
+    const result = await syncHelper.makeCompleteSync(
+      body,
+      mediainfoMetaData.mediainfo,
+      pluginVideoData,
+      EBUDefaults.values,
+      userId
+    );
+
+    console.log("CompleteSync", result);
+    //TODO: use also metadataDAO;
+    await storageManager.storeData("metadata-" + video.id + "-" + 0, result);
+    console.log("ich bin hier 2");
+  }
 };
 
 module.exports = {

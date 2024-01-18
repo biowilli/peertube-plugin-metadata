@@ -1,12 +1,15 @@
 const path = require("path");
 const EsmWebpackPlugin = require("@purtuga/esm-webpack-plugin");
-const clientFiles = ["video-edit-client-plugin.js",
-                      "video-watch-client-plugin.js",
-                      "video-client-plugin.js",
-                      'router-client-plugin',
-                      'creator-client-plugin',
-                      'genre-client-plugin',
-                      'organization-client-plugin'];
+const { webpack } = require("webpack");
+const clientFiles = [
+  "video-edit-client-plugin.js",
+  "video-watch-client-plugin.js",
+  "video-client-plugin.js",
+  "router-client-plugin",
+  "creator-client-plugin",
+  "genre-client-plugin",
+  "organization-client-plugin",
+];
 
 let config = clientFiles.map((f) => ({
   entry: "./client/" + f,

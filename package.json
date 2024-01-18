@@ -93,6 +93,7 @@
   },
   "translations": {},
   "dependencies": {
+    "alpinejs": "^3.13.3",
     "ffprobe-static": "^3.1.0",
     "uuid": "^9.0.0"
   },

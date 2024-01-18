@@ -5,7 +5,6 @@ class VideoMetadataDAO {
     this.peertubeHelpers = peertubeHelpers;
     this.initializeDatabase();
   }
-
   async initializeDatabase() {
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS fairkom_videometadata (
@@ -14,7 +13,7 @@ class VideoMetadataDAO {
         fk_mediainfo_metadata_id VARCHAR(36) REFERENCES fairkom_mediainfo_metadata(id) ON DELETE CASCADE,
         fk_mediainfo_metadata_ebu_id VARCHAR(36) REFERENCES fairkom_mediainfo_metadata_ebu(id) ON DELETE CASCADE,
         fk_metadata_ebu_default_id VARCHAR(36) REFERENCES fairkom_metadata_ebu_default(id) ON DELETE CASCADE,
-        fk_video_id INTEGER REFERENCES video(id),
+        fk_video_id INTEGER REFERENCES video(id) ON DELETE CASCADE,
         created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )

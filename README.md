@@ -69,6 +69,7 @@ Entity-Relationship-Diagramm wurde so konzepiert, damit es einfach in einzelne F
 
 // TODO: List
 // Sync the different data from the tools
+
 // TODO: Streams has multiple segments. What specific elements need to be included?
 // values in 'EbuDefaults.js' to store the data in and the formdefintion in 'settings.js'
 // Presently, I straightforward approach by storing all stream data in one input-textarea: (mediainfo.audioStreams, mediainfo.textStreams, mediainfo.menuStreams)

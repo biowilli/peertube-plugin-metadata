@@ -72,6 +72,8 @@ class MediainfoMetadataDAO {
       WHERE id = '${metadataId}'
     `;
 
+    console.log("findMetadataQuery", findMetadataQuery);
+
     try {
       const result = await this.peertubeHelpers.database.query(
         findMetadataQuery
