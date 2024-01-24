@@ -1,7 +1,5 @@
-//TODO: mehrere elemente einfügen
 window.alpineJsElements = ["refCreator", "refContributor", "refOrganization"];
 window.allCreator = [];
-window.isRefMainExecuded = false;
 window.tabHasFocus = false;
 
 const observer = new MutationObserver((mutatiionlist, observer) => {
@@ -350,8 +348,6 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
 //Thanks to https://github.com/alexpechkarev/alpinejs-multiselect
 window.addEventListener("alpine:init", () => {
-  console.log("alpine init");
-
   window.Alpine = Alpine;
   Alpine.data("alpineMuliSelect", (obj) => ({
     elementId: obj.elementId,
@@ -374,6 +370,7 @@ window.addEventListener("alpine:init", () => {
     },
 
     // Initializing component
+
     init() {
       const options = document.getElementById(this.elementId).options;
       for (let i = 0; i < options.length; i++) {
@@ -408,6 +405,8 @@ window.addEventListener("alpine:init", () => {
             this.options.push(newel);
           });
       });
+
+      this.initUpdateReferences(this.elementId);
     },
     // clear search field
     clear() {
@@ -471,7 +470,6 @@ window.addEventListener("alpine:init", () => {
       return this.selectedValues().join(", ");
     },
     selectedElementNamesString() {
-      console.log("selected element anmes");
       return this.selectedElements()
         .map((el) => el.text)
         .join(", ");
@@ -486,6 +484,36 @@ window.addEventListener("alpine:init", () => {
       inputValues.value = this.selectedValuesString();
 
       inputValues.dispatchEvent(new Event("input"));
+    },
+    initUpdateReferences(refId) {
+      const selectorIndex = refId.indexOf("Selector");
+      var reference = refId.substring(0, selectorIndex);
+      var inputValues = document.getElementById(reference);
+
+      if (inputValues.value == undefined) {
+        return;
+      }
+      var valueArray = inputValues.value.split(", ");
+      var optionElements = document.getElementById(reference + "Options");
+
+      valueArray.forEach((element) => {
+        for (let i = 0; i < optionElements.children.length; i++) {
+          const child = optionElements.children[i];
+          if (child.firstChild.id === element) {
+            child.firstChild.checked = true;
+            break;
+          }
+        }
+
+        for (var op of this.options) {
+          if (op.value === element) {
+            op.selected = true;
+            break;
+          }
+        }
+      });
+      var inputElements = document.getElementById(reference + "Values");
+      inputElements.innerText = this.selectedElementNamesString();
     },
   }));
 });
@@ -519,7 +547,6 @@ const elementAvailable = () => {
     subtree: true,
   });
 
-  //TODO: if focus than not again:
   setSubElements();
 };
 
@@ -554,13 +581,19 @@ function registerDropdownElement(ref, options, selector) {
   divForInputs.style.width = "400px";
   divForInputs.style.height = "30px";
   divForInputs.style.border = "1px solid #ccc";
+  divForInputs.setAttribute(
+    "x-on:click.outside",
+    "$refs.divForOptions.style.display = 'none';"
+  );
 
   const divForOptions = document.createElement("div");
+  divForOptions.id = ref + "Options";
   divForOptions.style.display = "none";
   divForOptions.style.overflowY = "auto";
   divForOptions.style.maxHeight = "150px";
   divForOptions.style.border = "1px solid #ccc";
   let optionsVisible = false;
+  divForOptions.setAttribute("x-ref", "divForOptions");
 
   divForInputs.addEventListener("click", (event) => {
     optionsVisible = !optionsVisible;
@@ -574,26 +607,24 @@ function registerDropdownElement(ref, options, selector) {
 
   const select = document.createElement("select");
   refInput.parentElement.insertBefore(div, refInput);
+
   refInput.setAttribute("hidden", "false");
   select.setAttribute("hidden", "true");
   select.id = selector;
+  div.appendChild(divForOptions);
 
   options.forEach(function (creator, index) {
+    console.log("ALpine");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-
+    checkbox.id = creator.id;
     const label = document.createElement("label");
-    label.innerHTML = creator.name;
 
-    /*     
-      const isSelected = selectedOption.includes(index);
-      checkbox.checked = isSelected;
-    */
+    label.innerHTML = creator.name;
 
     const checkboxContainer = document.createElement("div");
     checkboxContainer.appendChild(checkbox);
     checkboxContainer.appendChild(label);
-
     checkbox.setAttribute("x-on:click", "select(" + index + ", $event)");
     checkbox.addEventListener("click", (event) => {
       event.stopPropagation();
@@ -610,13 +641,11 @@ function registerDropdownElement(ref, options, selector) {
     divForOptions.appendChild(checkboxContainer);
   });
   div.appendChild(divForInputs);
-  div.appendChild(divForOptions);
 
   options.forEach(function (creator, index) {
     const opt = document.createElement("option");
     opt.value = creator.id;
     opt.innerHTML = creator.name;
-    opt.checked = false;
     opt.setAttribute("x-on:click", "select(" + index + ", $event)");
     select.appendChild(opt);
   });
