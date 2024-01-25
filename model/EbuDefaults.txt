@@ -1,6 +1,4 @@
-class EBUDefaults {
-  static values = {
-    uuidVideoMetadata: "",
+{
     changedBy: "",
     lastModified: "",
     refCreator: "",
@@ -209,9 +207,4 @@ class EBUDefaults {
     "mediainfo.menuStreams.chaptersPosBegin": "",
     "mediainfo.menuStreams.chaptersPosEnd": "",
     "mediainfo.menuStreams.extra": "",
-  };
 }
-
-module.exports = {
-  EBUDefaults,
-};

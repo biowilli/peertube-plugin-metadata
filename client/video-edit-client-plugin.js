@@ -1,17 +1,18 @@
 window.alpineJsElements = ["refCreator", "refContributor", "refOrganization"];
 window.allCreator = [];
 window.tabHasFocus = false;
+window.elementsCreated = false;
 
 const observer = new MutationObserver((mutatiionlist, observer) => {
   if (document.getElementById("refMain")) {
     if (!window.tabHasFocus) {
+      window.tabHasFocus = true;
       console.log("MutationObserver");
-
       elementAvailable();
     }
-    window.tabHasFocus = true;
   } else {
     window.tabHasFocus = false;
+    window.elementsCreated = false;
   }
 });
 
@@ -551,9 +552,12 @@ const elementAvailable = () => {
 };
 
 const setSubElements = () => {
-  registerDropdownElement("refCreator", window.allCreator);
-  registerDropdownElement("refContributor", window.allCreator);
-  registerDropdownElement("refOrganization", window.allOrganization);
+  if (!window.elementsCreated) {
+    registerDropdownElement("refCreator", window.allCreator);
+    registerDropdownElement("refContributor", window.allCreator);
+    registerDropdownElement("refOrganization", window.allOrganization);
+    window.elementsCreated = true;
+  }
 };
 
 function registerDropdownElement(ref, options, selector) {
@@ -577,10 +581,15 @@ function registerDropdownElement(ref, options, selector) {
   );
 
   const divForInputs = document.createElement("div");
+
   divForInputs.id = ref + "Values";
   divForInputs.style.width = "400px";
   divForInputs.style.height = "30px";
   divForInputs.style.border = "1px solid #ccc";
+  //TODO:style.overflow.hidden  does not work:
+  //divForInputs.style.overflow.hidden = true;
+  //divForInputs.style.whiteSpace = "nowrap";
+
   divForInputs.setAttribute(
     "x-on:click.outside",
     "$refs.divForOptions.style.display = 'none';"
@@ -611,10 +620,8 @@ function registerDropdownElement(ref, options, selector) {
   refInput.setAttribute("hidden", "false");
   select.setAttribute("hidden", "true");
   select.id = selector;
-  div.appendChild(divForOptions);
 
   options.forEach(function (creator, index) {
-    console.log("ALpine");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.id = creator.id;
@@ -633,6 +640,9 @@ function registerDropdownElement(ref, options, selector) {
       "x-on:click",
       "select(" + index + ", $event)"
     );
+    checkboxContainer.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
 
     checkboxContainer.addEventListener("click", (event) => {
       checkbox.checked = !checkbox.checked;
@@ -641,7 +651,7 @@ function registerDropdownElement(ref, options, selector) {
     divForOptions.appendChild(checkboxContainer);
   });
   div.appendChild(divForInputs);
-
+  div.appendChild(divForOptions);
   options.forEach(function (creator, index) {
     const opt = document.createElement("option");
     opt.value = creator.id;

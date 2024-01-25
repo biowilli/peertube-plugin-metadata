@@ -1,6 +1,9 @@
 const { syncMetaDataDAO } = require("./../VideoHelper.js");
 
 const initVideoUploadHooks = (
+  mediaInfo,
+  mediainfoEBU,
+  ffprobe,
   registerHook,
   peertubeVideosHelpers,
   mediainfoMetadataDAO,
@@ -13,6 +16,9 @@ const initVideoUploadHooks = (
     target: "action:api.video.uploaded",
     handler: (data) =>
       syncMetaDataDAO(
+        mediaInfo,
+        mediainfoEBU,
+        ffprobe,
         data.video.dataValues.id,
         peertubeVideosHelpers,
         mediainfoMetadataDAO,

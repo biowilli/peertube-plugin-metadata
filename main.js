@@ -36,6 +36,9 @@ const { initVideoUpdateHooks } = require("./server/hooks/videoUpdateHooks.js");
 const { initVideoUploadHooks } = require("./server/hooks/videoUploadHooks.js");
 const { initVideoResultHooks } = require("./server/hooks/videoResultHooks.js");
 const { SyncHelper } = require("./server/SyncHelper.js");
+const MediaInfo = require("./server/tools/Mediainfo.js");
+const MediainfoEBU = require("./server/tools/MediainfoEBU.js");
+const FFProbe = require("./server/tools/FFprobe.js");
 
 async function register({
   registerHook,
@@ -51,21 +54,19 @@ async function register({
 }) {
   // init Settings
   initRegisterSettings(registerSetting);
+  console.log("Initialized plugin settings");
 
   // init DataAccessObjects
   var creatorDAO = new CreatorDAO(peertubeHelpers);
   var organizationDAO = new OrganizationDAO(peertubeHelpers);
+
   var mediainfoMetadataEBUDAO = new MediainfoEbuMetadataDAO(peertubeHelpers);
   var ffprobeMetadataDAO = new FfprobeMetadataDAO(peertubeHelpers);
   var mediainfoMetadataDAO = new MediainfoMetadataDAO(peertubeHelpers);
 
   var metadataEBUDefaultDAO = new MetadataEBUDefaultDAO(peertubeHelpers);
-
   var videoMetadataDAO = new VideoMetadataDAO(peertubeHelpers);
-
-  //TODO mediainfoMetadataDAO Get Data from There
-  //TODO videoMetadataDAO, u have to now with video is important
-  //TODO: Save this again here: metadataEBUDefaultDAO
+  console.log("Initialized data access objects");
 
   // init Controllers
   var router = getRouter();
@@ -80,20 +81,32 @@ async function register({
 
   initVideoController(router, storageManager);
   initMetadataController(router, storageManager);
+  console.log("Initialized controllers");
 
+  // init Tools
+  const mediaInfo = new MediaInfo();
+  const mediainfoEBU = new MediainfoEBU();
+  const ffprobe = new FFProbe();
+  console.log("Initialized tools");
+  var syncHelper = new SyncHelper();
   // init Hooks
   initVideoUploadHooks(
+    mediaInfo,
+    mediainfoEBU,
+    ffprobe,
     registerHook,
     peertubeVideosHelpers,
-    storageManager,
     mediainfoMetadataDAO,
     mediainfoMetadataEBUDAO,
     ffprobeMetadataDAO,
     metadataEBUDefaultDAO,
     videoMetadataDAO
   );
-  var syncHelper = new SyncHelper();
+
   initVideoUpdateHooks(
+    mediaInfo,
+    mediainfoEBU,
+    ffprobe,
     EBUDefaults,
     syncHelper,
     peertubeVideosHelpers,

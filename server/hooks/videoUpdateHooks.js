@@ -1,6 +1,9 @@
 const { syncMetaDataDAO } = require("./../VideoHelper.js");
 
 const initVideoUpdateHooks = (
+  mediaInfo,
+  mediainfoEBU,
+  ffprobe,
   EBUDefaults,
   syncHelper,
   peertubeVideosHelpers,
@@ -26,6 +29,9 @@ const initVideoUpdateHooks = (
           .then(async (deleted) => {
             console.log("syncMetaDataDAO because triggered");
             await syncMetaDataDAO(
+              mediaInfo,
+              mediainfoEBU,
+              ffprobe,
               video.id,
               peertubeVideosHelpers,
               mediainfoMetadataDAO,
@@ -36,7 +42,7 @@ const initVideoUpdateHooks = (
             ).then((resolvedVideoMetaData) => {
               var videoMetaData = resolvedVideoMetaData;
               if (videoMetaData != undefined) {
-                makeProcess(
+                syncAndUpdate(
                   videoMetaData,
                   mediainfoMetadataDAO,
                   video,
@@ -59,6 +65,9 @@ const initVideoUpdateHooks = (
             if (resolvedVideoMetaData == undefined) {
               console.log("syncMetaDataDAO because not found");
               await syncMetaDataDAO(
+                mediaInfo,
+                mediainfoEBU,
+                ffprobe,
                 video.id,
                 peertubeVideosHelpers,
                 mediainfoMetadataDAO,
@@ -69,7 +78,7 @@ const initVideoUpdateHooks = (
               ).then((resolvedVideoMetaData) => {
                 var videoMetaData = resolvedVideoMetaData;
                 if (videoMetaData != undefined) {
-                  makeProcess(
+                  syncAndUpdate(
                     videoMetaData,
                     mediainfoMetadataDAO,
                     video,
@@ -83,7 +92,7 @@ const initVideoUpdateHooks = (
               });
             } else {
               videoMetaData = resolvedVideoMetaData;
-              makeProcess(
+              syncAndUpdate(
                 videoMetaData,
                 mediainfoMetadataDAO,
                 video,
@@ -99,7 +108,7 @@ const initVideoUpdateHooks = (
     },
   });
 
-  async function makeProcess(
+  async function syncAndUpdate(
     videoMetaData,
     mediainfoMetadataDAO,
     video,
@@ -111,23 +120,42 @@ const initVideoUpdateHooks = (
   ) {
     console.log("videoMetaData not undefined anymore");
     console.log(videoMetaData);
-    // das ist vermutlich auch ein promise
+
     mediainfoMetaData = await mediainfoMetadataDAO.findMediainfoMetadata(
       videoMetaData.fk_mediainfo_metadata_id
     );
-    var userId = video.VideoChannel.Account.dataValues.userId;
-    const result = await syncHelper.makeCompleteSync(
-      body,
-      mediainfoMetaData.mediainfo,
-      pluginVideoData,
-      EBUDefaults.values,
-      userId
+    console.log(
+      "was ist im mediainfoMetaData",
+      videoMetaData.fk_metadata_ebu_default_id
     );
+    var userId = video.VideoChannel.Account.dataValues.userId;
+    await syncHelper
+      .sync(
+        body,
+        mediainfoMetaData.mediainfo,
 
-    console.log("CompleteSync", result);
+        pluginVideoData,
+        EBUDefaults.values,
+        userId
+      )
+      .then(async (result) => {
+        console.log("CompleteSync", result);
+        console.log(body);
+        console.log(mediainfoMetaData);
+
+        //findMediainfoMetadata
+        //videoMetaData.fk_mediainfo_metadata_ebu_id
+
+        mediainfoEbuDefaultsId =
+          await metadataEBUDefaultDAO.modifyMediainfoMetadata(result);
+
+        await storageManager.storeData(
+          "metadata-" + video.id + "-" + 0,
+          result
+        );
+      });
+
     //TODO: use also metadataDAO;
-    await storageManager.storeData("metadata-" + video.id + "-" + 0, result);
-    console.log("ich bin hier 2");
   }
 };
 

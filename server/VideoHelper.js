@@ -1,4 +1,7 @@
 async function syncMetaDataDAO(
+  mediaInfo,
+  mediainfoEBU,
+  ffprobe,
   videoId,
   peertubeVideosHelpers,
   mediainfoMetadataDAO,
@@ -13,11 +16,8 @@ async function syncMetaDataDAO(
   let mediainfoEbuDefaultsId = "";
   const path = await getPath(videoId, peertubeVideosHelpers);
 
-  console.log("ich bin hier jz");
   // mediainfo
   try {
-    const MediaInfo = require("./tools/Mediainfo.js");
-    const mediaInfo = new MediaInfo();
     const result = await mediaInfo.analyzeVideo(path);
     console.log("mediainfoStreams");
     console.log(result);
@@ -30,8 +30,6 @@ async function syncMetaDataDAO(
 
   // mediainfoEBU
   try {
-    const MediainfoEBU = require("./tools/MediainfoEBU.js");
-    const mediainfoEBU = new MediainfoEBU();
     const result = await mediainfoEBU.analyzeVideo(path);
     mediainfoEbuId = await mediainfoMetadataEBUDAO.addMediainfoMetadataEBU(
       JSON.stringify(result)
@@ -42,8 +40,6 @@ async function syncMetaDataDAO(
 
   // ffprobe
   try {
-    const FFProbe = require("./tools/FFprobe.js");
-    const ffprobe = new FFProbe();
     const result = await ffprobe.analyzeVideo(path);
     console.log("ffprobeStreams");
     console.log(result);
@@ -54,9 +50,14 @@ async function syncMetaDataDAO(
     console.error("Error in ffprobe: ", error);
   }
 
-  mediainfoEbuDefaultsId = await metadataEBUDefaultDAO.addMetadataEBUDefault(
-    "{}"
-  );
+  // sync
+  try {
+    mediainfoEbuDefaultsId = await metadataEBUDefaultDAO.addMetadataEBUDefault(
+      "{}"
+    );
+  } catch (error) {
+    console.error("Error in ffprobe: ", error);
+  }
 
   try {
     await Promise.all([
