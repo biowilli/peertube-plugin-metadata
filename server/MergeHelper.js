@@ -1,5 +1,5 @@
-class SyncHelper {
-  async syncStandardVideoData(standardVideoData, pluginVideoData) {
+class MergeHelper {
+  async mergeStandardVideoData(standardVideoData, pluginVideoData) {
     try {
       if (!standardVideoData) {
         console.error("Invalid input: standardVideoData is missing.");
@@ -28,7 +28,7 @@ class SyncHelper {
     }
   }
 
-  async syncMetadata(metadata, pluginVideoData) {
+  async mergeMetadata(metadata, pluginVideoData) {
     try {
       if (!metadata) {
         console.error("Invalid input: metadata is missing.");
@@ -51,7 +51,7 @@ class SyncHelper {
     }
   }
 
-  async syncSidecarfile() {
+  async mergeSidecarfile() {
     var metadata = {
       "title.alternativeTitle": "asddsadasadadasdsa",
       "title.alternativeTitleNote": "",
@@ -614,5 +614,5 @@ class SyncHelper {
 }
 
 module.exports = {
-  SyncHelper,
+  MergeHelper,
 };

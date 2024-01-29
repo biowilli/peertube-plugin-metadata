@@ -15,29 +15,18 @@ const initVideoResultHooks = (
       if (!video.pluginData) video.pluginData = {};
       var videoId = video.dataValues.id;
 
-      var syncedMetadata = syncedMetadataDAO.findSyncedMetadata(videoId);
-
-      //cache
-      /*       
-      var storedData = await storageManager.getData(
-        "metadata-" + videoId + "-" + 0
-      ); 
-      */
-
-      if (storedData === null || undefined) {
-        console.log("storedData is null or not defined");
-        return video;
-      }
-
+      var syncedMetadata = await syncedMetadataDAO.findSyncedMetadata(videoId);
       if (syncedMetadata === null || undefined) {
         console.log("syncedMetadata is null or not defined");
         return video;
       }
 
-      //TODO: use DAOs for everything
-      video.pluginData = syncedMetadata;
+      if (syncedMetadata[0][0].metadata === null || undefined) {
+        console.log("metadata in syncedMetadata is null or not defined");
+        return video;
+      }
 
-      //video.pluginData = storedData;
+      video.pluginData = JSON.parse(syncedMetadata[0][0].metadata);
       return video;
     },
   });

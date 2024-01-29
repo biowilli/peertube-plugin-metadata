@@ -12,7 +12,6 @@ class MetadataDAO {
         id VARCHAR(36) PRIMARY KEY,
         fk_video_id INTEGER REFERENCES video(id) ON DELETE CASCADE,
         metadata TEXT,
-        parsed_metadata TEXT,
         created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -28,14 +27,13 @@ class MetadataDAO {
     }
   }
 
-  async addMetadata(metadata, parsedMetadata, fkVideoId) {
+  async addMetadata(metadata, fkVideoId) {
     const metadataId = uuidv4();
     const insertMetadataQuery = `
-      INSERT INTO fairkom_metadata (id, fk_video_id, metadata, parsed_metadata) VALUES (
+      INSERT INTO fairkom_metadata (id, fk_video_id, metadata) VALUES (
         '${metadataId}',
         '${fkVideoId}',
-        '${metadata}',
-        '${parsedMetadata}'
+        '${metadata}'
       )
     `;
 

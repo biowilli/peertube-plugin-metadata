@@ -81,8 +81,8 @@ class SyncedMetadataDAO {
       const result = await this.peertubeHelpers.database.query(
         findMetadataQuery
       );
-      console.log("Found Synced Metadata:", result.rows);
-      return result.rows;
+      console.log("Found Synced Metadata:", result);
+      return result;
     } catch (error) {
       console.error("Error finding Synced Metadata:", error.message);
       throw error;
@@ -102,8 +102,8 @@ class SyncedMetadataDAO {
       const result = await this.peertubeHelpers.database.query(
         findMetadataQuery
       );
-      console.log("Found Synced Metadata:", result.rows);
-      return result.rows;
+      console.log("Found Synced Metadata:", result);
+      return result;
     } catch (error) {
       console.error("Error finding Synced Metadata:", error.message);
       throw error;
