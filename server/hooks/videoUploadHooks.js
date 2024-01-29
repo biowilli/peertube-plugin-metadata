@@ -123,7 +123,7 @@ const initVideoUploadHooks = (
 
       console.log("analysedJSON", analysedJSON);
       console.log("formDataJSON", formDataJSON);
-      //const parseredData = setParser(analysedJSON, formDataJSON);
+      const parseredData = setParser(analysedJSON, formDataJSON);
       //console.log("parseredData", parseredData);
       //TODO: nicht im table
       await metadataDAO.addMetadata(
