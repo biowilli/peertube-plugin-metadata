@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 
-class MediainfoMetadataDAO {
+class MetadataDAO {
   constructor(peertubeHelpers) {
     this.peertubeHelpers = peertubeHelpers;
     this.initializeDatabase();
@@ -8,10 +8,11 @@ class MediainfoMetadataDAO {
 
   async initializeDatabase() {
     const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS fairkom_mediainfo_metadata (
+      CREATE TABLE IF NOT EXISTS fairkom_metadata (
         id VARCHAR(36) PRIMARY KEY,
         fk_video_id INTEGER REFERENCES video(id) ON DELETE CASCADE,
-        mediainfo TEXT,
+        metadata TEXT,
+        parsed_metadata TEXT,
         created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -21,19 +22,20 @@ class MediainfoMetadataDAO {
       const result = await this.peertubeHelpers.database.query(
         createTableQuery
       );
-      console.log("fairkom_mediainfo_metadata table created successfully");
+      console.log("fairkom_metadata table created successfully");
     } catch (error) {
-      console.error("Error creating fairkom_mediainfo_metadata table:", error);
+      console.error("Error creating fairkom_metadata table:", error);
     }
   }
 
-  async addMediainfoMetadata(mediainfoData, fkVideoId) {
+  async addMetadata(metadata, parsedMetadata, fkVideoId) {
     const metadataId = uuidv4();
     const insertMetadataQuery = `
-      INSERT INTO fairkom_mediainfo_metadata (id, fk_video_id, mediainfo) VALUES (
+      INSERT INTO fairkom_metadata (id, fk_video_id, metadata, parsed_metadata) VALUES (
         '${metadataId}',
         '${fkVideoId}',
-        '${mediainfoData}'
+        '${metadata}',
+        '${parsedMetadata}'
       )
     `;
 
@@ -41,56 +43,51 @@ class MediainfoMetadataDAO {
       const result = await this.peertubeHelpers.database.query(
         insertMetadataQuery
       );
-      console.log(
-        `fairkom_mediainfo_metadata ${metadataId} added successfully`,
-        result
-      );
+      console.log(`fairkom_metadata ${metadataId} added successfully`, result);
       return metadataId;
     } catch (error) {
-      console.error("Error adding fairkom_mediainfo_metadata:", error);
+      console.error("Error adding fairkom_metadata:", error);
       throw error;
     }
   }
 
-  async getAllMediainfoMetadata() {
+  async getAllMetadata() {
     const getAllMetadataQuery = `
-      SELECT * FROM fairkom_mediainfo_metadata
+      SELECT * FROM fairkom_metadata
     `;
     try {
       const result = await this.peertubeHelpers.database.query(
         getAllMetadataQuery
       );
-      console.log("Retrieved all fairkom_mediainfo_metadata:", result);
+      console.log("Retrieved all fairkom_metadata:", result);
       return result[0];
     } catch (error) {
-      console.error("Error getting fairkom_mediainfo_metadata:", error);
+      console.error("Error getting fairkom_metadata:", error);
       throw error;
     }
   }
 
-  async findMediainfoMetadata(fkVideoId) {
+  async findMetadata(fkVideoId) {
     const findMetadataQuery = `
-      SELECT * FROM fairkom_mediainfo_metadata
+      SELECT * FROM fairkom_metadata
       WHERE fk_video_id = '${fkVideoId}'
       ORDER BY created_date DESC 
       LIMIT 1;
     `;
 
-    console.log("findMetadataQuery", findMetadataQuery);
-
     try {
       const result = await this.peertubeHelpers.database.query(
         findMetadataQuery
       );
-      console.log("Found fairkom_mediainfo_metadata:", result);
-      return result[0][0];
+      console.log("Found fairkom_metadata:", result);
+      return result;
     } catch (error) {
-      console.error("Error finding fairkom_mediainfo_metadata:", error);
+      console.error("Error finding fairkom_metadata:", error);
       throw error;
     }
   }
 }
 
 module.exports = {
-  MediainfoMetadataDAO,
+  MetadataDAO,
 };

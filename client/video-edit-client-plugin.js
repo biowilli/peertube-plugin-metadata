@@ -17,9 +17,6 @@ const observer = new MutationObserver((mutatiionlist, observer) => {
 });
 
 async function register({ registerVideoField, peertubeHelpers }) {
-  //TODO: error Promise for
-  //TODO: Fetch Language id instead nice to have
-
   registerVideoField(
     {
       name: "refMain",
@@ -37,7 +34,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
     }
   );
 
-  registerVideoField(
+  /*   registerVideoField(
     {
       type: "html",
       html: "Analyse-Tool (overwrite)",
@@ -49,7 +46,7 @@ async function register({ registerVideoField, peertubeHelpers }) {
       type: "update",
       tab: "main",
     }
-  );
+  ); */
 
   for (const type of ["import-url", "import-torrent", "update", "go-live"]) {
     const videoFormOptions = {
@@ -124,6 +121,9 @@ async function register({ registerVideoField, peertubeHelpers }) {
           };
 
           var form = JSON.parse(settingsResponse.form);
+
+          //starts with mediainfo
+
           for (var i = 0; i < form.length; i++) {
             var field = form[i];
 

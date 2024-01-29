@@ -10,6 +10,7 @@ class MediainfoEbuMetadataDAO {
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS fairkom_mediainfo_metadata_ebu (
         id VARCHAR(36) PRIMARY KEY,
+        fk_video_id INTEGER REFERENCES video(id) ON DELETE CASCADE,
         mediainfo_ebu TEXT,
         created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -29,11 +30,12 @@ class MediainfoEbuMetadataDAO {
     }
   }
 
-  async addMediainfoMetadataEBU(mediainfoDataEBU) {
+  async addMediainfoMetadataEBU(mediainfoDataEBU, fkVideoId) {
     const metadataId = uuidv4();
     const insertMetadataQuery = `
-      INSERT INTO fairkom_mediainfo_metadata_ebu (id, mediainfo_ebu) VALUES (
+      INSERT INTO fairkom_mediainfo_metadata_ebu (id, fk_video_id, mediainfo_ebu) VALUES (
         '${metadataId}',
+        '${fkVideoId}',
         '${mediainfoDataEBU}'
       )
     `;
@@ -69,10 +71,12 @@ class MediainfoEbuMetadataDAO {
     }
   }
 
-  async findMediainfoMetadataEBU(metadataId) {
+  async findMediainfoMetadataEBU(fkVideoId) {
     const findMetadataQuery = `
       SELECT * FROM fairkom_mediainfo_metadata_ebu
-      WHERE id = '${metadataId}'
+      WHERE fk_video_id = '${fkVideoId}'
+      ORDER BY created_date DESC 
+      LIMIT 1;
     `;
 
     try {
@@ -83,48 +87,6 @@ class MediainfoEbuMetadataDAO {
       return result.rows[0];
     } catch (error) {
       console.error("Error finding fairkom_mediainfo_metadata_ebu:", error);
-      throw error;
-    }
-  }
-
-  async modifyMediainfoMetadataEBU(metadataId, updatedData) {
-    const modifyMetadataQuery = `
-      UPDATE fairkom_mediainfo_metadata_ebu
-      SET
-        mediainfo_ebu = '${updatedData.mediainfo_ebu}',
-        modified_date = CURRENT_TIMESTAMP
-      WHERE id = '${metadataId}'
-      RETURNING *
-    `;
-
-    try {
-      const result = await this.peertubeHelpers.database.query(
-        modifyMetadataQuery
-      );
-      console.log("fairkom_mediainfo_metadata_ebu modified successfully");
-      return result;
-    } catch (error) {
-      console.error("Error modifying fairkom_mediainfo_metadata_ebu:", error);
-      throw error;
-    }
-  }
-
-  async deleteMediainfoMetadataEBU(metadataId) {
-    const deleteMetadataQuery = `
-      DELETE FROM fairkom_mediainfo_metadata_ebu
-      WHERE id = '${metadataId}'
-    `;
-
-    try {
-      const result = await this.peertubeHelpers.database.query(
-        deleteMetadataQuery
-      );
-      console.log(
-        `fairkom_mediainfo_metadata_ebu ${metadataId} deleted successfully`,
-        result
-      );
-    } catch (error) {
-      console.error("Error deleting fairkom_mediainfo_metadata_ebu:", error);
       throw error;
     }
   }

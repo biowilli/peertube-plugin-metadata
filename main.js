@@ -1,12 +1,9 @@
-const { EBUDefaults } = require("./model/EbuDefaults.js");
+/* const { EBUDefaults } = require("./model/EbuDefaults.js"); */
 
 const { CreatorDAO } = require("./server/dataAccessObjects/CreatorDAO.js");
 const {
   OrganizationDAO,
 } = require("./server/dataAccessObjects/OrganizationDAO.js");
-const {
-  VideoMetadataDAO,
-} = require("./server/dataAccessObjects/VideoMetadataDAO.js");
 const {
   FfprobeMetadataDAO,
 } = require("./server/dataAccessObjects/FfprobeMetadataDAO.js");
@@ -17,8 +14,9 @@ const {
   MediainfoEbuMetadataDAO,
 } = require("./server/dataAccessObjects/MediainfoEbuMetadataDAO.js");
 const {
-  MetadataEBUDefaultDAO,
-} = require("./server/dataAccessObjects/MetadataEBUDefaultDAO.js");
+  SyncedMetadataDAO,
+} = require("./server/dataAccessObjects/SyncedMetadataDAO.js");
+const { MetadataDAO } = require("./server/dataAccessObjects/MetadataDAO.js");
 
 const { initRegisterSettings } = require("./server/settings.js");
 const { initCategoryController } = require("./server/controller/category.js");
@@ -31,6 +29,9 @@ const {
 } = require("./server/controller/organization.js");
 const { initVideoController } = require("./server/controller/video.js");
 const { initMetadataController } = require("./server/controller/metadata.js");
+const {
+  initSidecarfileController,
+} = require("./server/controller/sidecarfile.js");
 
 const { initVideoUpdateHooks } = require("./server/hooks/videoUpdateHooks.js");
 const { initVideoUploadHooks } = require("./server/hooks/videoUploadHooks.js");
@@ -63,9 +64,9 @@ async function register({
   var mediainfoMetadataEBUDAO = new MediainfoEbuMetadataDAO(peertubeHelpers);
   var ffprobeMetadataDAO = new FfprobeMetadataDAO(peertubeHelpers);
   var mediainfoMetadataDAO = new MediainfoMetadataDAO(peertubeHelpers);
+  var metadataDAO = new MetadataDAO(peertubeHelpers);
+  var syncedMetadataDAO = new SyncedMetadataDAO(peertubeHelpers);
 
-  var metadataEBUDefaultDAO = new MetadataEBUDefaultDAO(peertubeHelpers);
-  var videoMetadataDAO = new VideoMetadataDAO(peertubeHelpers);
   console.log("Initialized data access objects");
 
   // init Controllers
@@ -81,6 +82,7 @@ async function register({
 
   initVideoController(router, storageManager);
   initMetadataController(router, storageManager);
+  initSidecarfileController(router, storageManager);
   console.log("Initialized controllers");
 
   // init Tools
@@ -91,6 +93,7 @@ async function register({
   var syncHelper = new SyncHelper();
   // init Hooks
   initVideoUploadHooks(
+    settingsManager,
     mediaInfo,
     mediainfoEBU,
     ffprobe,
@@ -99,30 +102,24 @@ async function register({
     mediainfoMetadataDAO,
     mediainfoMetadataEBUDAO,
     ffprobeMetadataDAO,
-    metadataEBUDefaultDAO,
-    videoMetadataDAO
+    metadataDAO
   );
 
   initVideoUpdateHooks(
-    mediaInfo,
-    mediainfoEBU,
-    ffprobe,
-    EBUDefaults,
+    settingsManager,
     syncHelper,
-    peertubeVideosHelpers,
     registerHook,
     storageManager,
     mediainfoMetadataDAO,
-    mediainfoMetadataEBUDAO,
-    ffprobeMetadataDAO,
-    metadataEBUDefaultDAO,
-    videoMetadataDAO
+    syncedMetadataDAO,
+    metadataDAO
   );
   initVideoResultHooks(
     registerHook,
     storageManager,
     creatorDAO,
-    organizationDAO
+    organizationDAO,
+    syncedMetadataDAO
   );
 }
 

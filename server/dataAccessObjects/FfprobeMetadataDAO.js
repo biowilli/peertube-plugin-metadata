@@ -10,6 +10,7 @@ class FfprobeMetadataDAO {
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS fairkom_ffprobe_metadata (
         id VARCHAR(36) PRIMARY KEY,
+        fk_video_id INTEGER REFERENCES video(id) ON DELETE CASCADE,
         ffprobe TEXT,
         created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -26,11 +27,12 @@ class FfprobeMetadataDAO {
     }
   }
 
-  async addFfprobeMetadata(ffprobeData) {
+  async addFfprobeMetadata(ffprobeData, fkVideoId) {
     const metadataId = uuidv4();
     const insertMetadataQuery = `
-      INSERT INTO fairkom_ffprobe_metadata (id, ffprobe) VALUES (
+      INSERT INTO fairkom_ffprobe_metadata (id, fk_video_id, ffprobe) VALUES (
         '${metadataId}',
+        '${fkVideoId}',
         '${ffprobeData}'
       )
     `;
@@ -66,10 +68,12 @@ class FfprobeMetadataDAO {
     }
   }
 
-  async findFfprobeMetadata(metadataId) {
+  async findFfprobeMetadata(fkVideoId) {
     const findMetadataQuery = `
       SELECT * FROM fairkom_ffprobe_metadata
-      WHERE id = '${metadataId}'
+      WHERE fk_video_id = '${fkVideoId}'
+      ORDER BY created_date DESC 
+      LIMIT 1;
     `;
 
     try {
@@ -80,48 +84,6 @@ class FfprobeMetadataDAO {
       return result.rows[0];
     } catch (error) {
       console.error("Error finding fairkom_ffprobe_metadata:", error);
-      throw error;
-    }
-  }
-
-  async modifyFfprobeMetadata(metadataId, updatedData) {
-    const modifyMetadataQuery = `
-      UPDATE fairkom_ffprobe_metadata
-      SET
-        ffprobe = '${updatedData.ffprobe}',
-        modified_date = CURRENT_TIMESTAMP
-      WHERE id = '${metadataId}'
-      RETURNING *
-    `;
-
-    try {
-      const result = await this.peertubeHelpers.database.query(
-        modifyMetadataQuery
-      );
-      console.log("fairkom_ffprobe_metadata modified successfully");
-      return result;
-    } catch (error) {
-      console.error("Error modifying fairkom_ffprobe_metadata:", error);
-      throw error;
-    }
-  }
-
-  async deleteFfprobeMetadata(metadataId) {
-    const deleteMetadataQuery = `
-      DELETE FROM fairkom_ffprobe_metadata
-      WHERE id = '${metadataId}'
-    `;
-
-    try {
-      const result = await this.peertubeHelpers.database.query(
-        deleteMetadataQuery
-      );
-      console.log(
-        `fairkom_ffprobe_metadata ${metadataId} deleted successfully`,
-        result
-      );
-    } catch (error) {
-      console.error("Error deleting fairkom_ffprobe_metadata:", error);
       throw error;
     }
   }

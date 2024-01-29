@@ -70,6 +70,7 @@ function register({ registerHook, peertubeHelpers }) {
                 var form = JSON.parse(setting["form"].replace(/'/g, '"'));
                 console.log(form);
                 console.log(video.pluginData);
+
                 for (var i = 0; i < form.length; i++) {
                   var field = form[i];
                   if (field.visibleVideoWatch == false) {
@@ -142,6 +143,16 @@ function register({ registerHook, peertubeHelpers }) {
                 }
               }
             });
+
+            createButton("Download EBU Sidecarfile", () => {
+              fetch(peertubeHelpers.getBaseRouterRoute() + "/sidecarfile", {
+                method: "GET",
+                headers: peertubeHelpers.getAuthHeader(),
+              }).then((response) => {
+                console.log("Server Response:", response);
+                return response.json();
+              });
+            });
           }
         );
       }
@@ -169,22 +180,31 @@ function extractReadablInfo(id, dataStore) {
   }
 }
 
+function createButton(name, callback) {
+  const button = document.createElement("button");
+  button.classList.add("button");
+  button.addEventListener("click", callback);
+  button.textContent = name;
+  const myVideoAttributes = document.querySelector("my-video-attributes");
+  myVideoAttributes.appendChild(button);
+}
+
 function createLine() {
-  const myLine = document.querySelector("my-video-attributes");
+  const myVideoAttributes = document.querySelector("my-video-attributes");
   const newLine = document.createElement("div");
   newLine.classList.add("line");
   newLine.innerHTML = `<hr>`;
-  myLine.appendChild(newLine);
+  myVideoAttributes.appendChild(newLine);
 }
 
 function createHeaderField(header, headerlevel) {
-  const myHeader = document.querySelector("my-video-attributes");
+  const myVideoAttributes = document.querySelector("my-video-attributes");
   const newHeader = document.createElement("div");
   newHeader.classList.add("header-field");
   newHeader.innerHTML = `
     <h${headerlevel} class="header-label">${header}</h${headerlevel}>
   `;
-  myHeader.appendChild(newHeader);
+  myVideoAttributes.appendChild(newHeader);
 }
 
 function createVideoInfo(label, value) {

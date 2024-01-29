@@ -57,7 +57,6 @@ Upload hook: When uploading a video, the plugin uses tools such as Mediainfo, Me
 
 Update hook: On the main video editing page, there is an option to use these analysis tools again. By clicking on 'Refresh', the metadata in the database is updated. This updated information will then be visible on a subsequent visit to the page.
 
-
 ## Entity-Relationship-Diagramm
 
 ![Entity-Relationship-Diagramm](./assets/erDiagram.png)
@@ -65,27 +64,21 @@ Entity-Relationship-Diagramm wurde so konzepiert, damit es einfach in einzelne F
 
 ## TODO
 
-//TODO: set standardVideoData required not poosible at the moment because hook is missing: https://docs.joinpeertube.org/api/plugins#server-hooks-only-plugins (it is planned https://github.com/Chocobozzz/PeerTube/issues/5704)
+//TODO: getPitures from PluginData
+
+//TODO: set standardVideoData required not possible at the moment because hook is missing: https://docs.joinpeertube.org/api/plugins#server-hooks-only-plugins (it is planned https://github.com/Chocobozzz/PeerTube/issues/5704),
+
+//TODO: Required: + Error Message
 
 // TODO: List
-// Sync the different data from the tools
-
-// TODO: Streams has multiple segments. What specific elements need to be included?
-// values in 'EbuDefaults.js' to store the data in and the formdefintion in 'settings.js'
-// Presently, I straightforward approach by storing all stream data in one input-textarea: (mediainfo.audioStreams, mediainfo.textStreams, mediainfo.menuStreams)
-// The question now is which details stream values are important, should be changeable and synced
 
 //TODO: Save everything to the DB and nothing more in the plugin data
 
 //TODO: Version
 
-//TODO: Sidecardfile download: kannst du mir die Vorlage geben bitte
-
-//TODO: Seite ladet zu lange bei Creator modus
+//TODO: Sidecardfile
 
 //TODO: - Licence vorlage Category: https://gitlab.mim-libre.fr/extensions-peertube/categories-management-plugin/
-
-- Required: + Error Message:
 
 ### Development
 

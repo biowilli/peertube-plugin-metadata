@@ -1,0 +1,265 @@
+{
+	"ebucore:ebuCoreMain": {
+		"@version": "1.8",
+		"@writingLibraryName": "MediaInfoLib",
+		"@writingLibraryVersion": "23.10",
+		"@dateLastModified": "2023-11-27",
+		"@timeLastModified": "14:30:43",
+		"ebucore:coreMetadata": [
+			{
+				"ebucore:format": [
+					{
+						"ebucore:videoFormat": [
+							{
+								"@videoFormatName": "AVC",
+								"ebucore:width": [
+									{
+										"@unit": "pixel",
+										"#value": "1920"
+									}
+								],
+								"ebucore:height": [
+									{
+										"@unit": "pixel",
+										"#value": "1080"
+									}
+								],
+								"ebucore:frameRate": [
+									{
+										"#value": "25"
+									}
+								],
+								"ebucore:aspectRatio": [
+									{
+										"@typeLabel": "display",
+										"ebucore:factorNumerator": [
+											{
+												"#value": "16"
+											}
+										],
+										"ebucore:factorDenominator": [
+											{
+												"#value": "9"
+											}
+										]
+									}
+								],
+								"ebucore:videoEncoding": [
+									{
+										"@typeLabel": "High@L4.2"
+									}
+								],
+								"ebucore:codec": [
+									{
+										"ebucore:codecIdentifier": [
+											{
+												"dc:identifier": [
+													{
+														"#value": "avc1"
+													}
+												]
+											}
+										]
+									}
+								],
+								"ebucore:bitRate": [
+									{
+										"#value": "8345781"
+									}
+								],
+								"ebucore:scanningFormat": [
+									{
+										"#value": "progressive"
+									}
+								],
+								"ebucore:videoTrack": [
+									{
+										"@trackId": "1"
+									}
+								],
+								"ebucore:technicalAttributeString": [
+									{
+										"@typeLabel": "ColorSpace",
+										"#value": "YUV"
+									},
+									{
+										"@typeLabel": "ChromaSubsampling",
+										"#value": "4:2:0"
+									},
+									{
+										"@typeLabel": "GOP",
+										"#value": "M=1, N=30"
+									}
+								],
+								"ebucore:technicalAttributeInteger": [
+									{
+										"@typeLabel": "BitDepth",
+										"@unit": "bit",
+										"#value": "8"
+									},
+									{
+										"@typeLabel": "StreamSize",
+										"@unit": "byte",
+										"#value": "2309945234"
+									}
+								],
+								"ebucore:technicalAttributeBoolean": [
+									{
+										"@typeLabel": "CABAC",
+										"#value": "true"
+									},
+									{
+										"@typeLabel": "MBAFF",
+										"#value": "false"
+									}
+								]
+							}
+						],
+						"ebucore:audioFormat": [
+							{
+								"@audioFormatName": "AAC",
+								"ebucore:audioEncoding": [
+									{
+									}
+								],
+								"ebucore:codec": [
+									{
+										"ebucore:codecIdentifier": [
+											{
+												"dc:identifier": [
+													{
+														"#value": "mp4a-40-2"
+													}
+												]
+											}
+										]
+									}
+								],
+								"ebucore:samplingRate": [
+									{
+										"#value": "48000"
+									}
+								],
+								"ebucore:bitRate": [
+									{
+										"#value": "317374"
+									}
+								],
+								"ebucore:bitRateMax": [
+									{
+										"#value": "520875"
+									}
+								],
+								"ebucore:bitRateMode": [
+									{
+										"#value": "variable"
+									}
+								],
+								"ebucore:audioTrack": [
+									{
+										"@trackId": "2",
+										"@trackLanguage": "en"
+									}
+								],
+								"ebucore:channels": [
+									{
+										"#value": "2"
+									}
+								],
+								"ebucore:technicalAttributeString": [
+									{
+										"@typeLabel": "ChannelPositions",
+										"#value": "Front: L R"
+									},
+									{
+										"@typeLabel": "ChannelLayout",
+										"#value": "L R"
+									}
+								],
+								"ebucore:technicalAttributeInteger": [
+									{
+										"@typeLabel": "StreamSize",
+										"@unit": "byte",
+										"#value": "87842537"
+									}
+								]
+							}
+						],
+						"ebucore:containerFormat": [
+							{
+								"@containerFormatName": "MPEG-4",
+								"ebucore:containerEncoding": [
+									{
+										"@formatLabel": "MPEG-4"
+									}
+								],
+								"ebucore:codec": [
+									{
+										"ebucore:codecIdentifier": [
+											{
+												"dc:identifier": [
+													{
+														"#value": "mp42"
+													}
+												]
+											}
+										]
+									}
+								],
+								"ebucore:technicalAttributeString": [
+									{
+										"@typeLabel": "FormatProfile",
+										"#value": "Base Media / Version 2"
+									}
+								]
+							}
+						],
+						"ebucore:duration": [
+							{
+								"ebucore:normalPlayTime": [
+									{
+										"#value": "PT36M54.240S"
+									}
+								]
+							}
+						],
+						"ebucore:fileSize": [
+							{
+								"#value": "2398577876"
+							}
+						],
+						"ebucore:fileName": [
+							{
+								"#value": "20230206_KUK_KUL_0082_FS1_S11_E01_Kultmagazin_Selbstversuch-in-der-Kunst.mp4"
+							}
+						],
+						"ebucore:locator": [
+							{
+								"#value": "/Volumes/Sendungen/_Auswahl_VoD/Videos/Kunst&Kultur/KULTmagazin/2023_S11/20230206_KUK_KUL_0082_FS1_S11_E01_Kultmagazin_Selbstversuch-in-der-Kunst.mp4"
+							}
+						],
+						"ebucore:technicalAttributeInteger": [
+							{
+								"@typeLabel": "OverallBitRate",
+								"@unit": "bps",
+								"#value": "8666009"
+							}
+						],
+						"ebucore:dateCreated": [
+							{
+								"@startDate": "2023-11-07",
+								"@startTime": "21:18:36"
+							}
+						],
+						"ebucore:dateModified": [
+							{
+								"@startDate": "2023-11-07",
+								"@startTime": "21:19:33"
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

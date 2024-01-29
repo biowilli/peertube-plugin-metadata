@@ -1,19 +1,13 @@
-const { syncMetaDataDAO } = require("./../VideoHelper.js");
+const { getParser, setParser } = require("./../ParserHelper.js");
 
 const initVideoUpdateHooks = (
-  mediaInfo,
-  mediainfoEBU,
-  ffprobe,
-  EBUDefaults,
+  settingsManager,
   syncHelper,
-  peertubeVideosHelpers,
   registerHook,
   storageManager,
   mediainfoMetadataDAO,
-  mediainfoMetadataEBUDAO,
-  ffprobeMetadataDAO,
-  metadataEBUDefaultDAO,
-  videoMetadataDAO
+  syncedMetadataDAO,
+  metadataDAO
 ) => {
   // Store data associated to this video
   registerHook({
@@ -22,141 +16,66 @@ const initVideoUpdateHooks = (
       console.log("action:api.video.updated");
       if (!body.pluginData) return;
       var pluginVideoData = body.pluginData;
-      if (pluginVideoData["analyseMediainfo"]) {
-        console.log("syncMetaDataDAO");
-        await videoMetadataDAO
-          .deleteVideoMetadata(video.id)
-          .then(async (deleted) => {
-            console.log("syncMetaDataDAO because triggered");
-            await syncMetaDataDAO(
-              mediaInfo,
-              mediainfoEBU,
-              ffprobe,
-              video.id,
-              peertubeVideosHelpers,
-              mediainfoMetadataDAO,
-              mediainfoMetadataEBUDAO,
-              ffprobeMetadataDAO,
-              metadataEBUDefaultDAO,
-              videoMetadataDAO
-            ).then((resolvedVideoMetaData) => {
-              var videoMetaData = resolvedVideoMetaData;
-              if (videoMetaData != undefined) {
-                syncAndUpdate(
-                  videoMetaData,
-                  mediainfoMetadataDAO,
-                  video,
-                  syncHelper,
-                  storageManager,
-                  body,
-                  EBUDefaults,
-                  pluginVideoData
-                );
-              }
-            });
-          });
+      var videoId = video.id;
+      console.log("body");
+      console.log(body);
+      console.log("body.pluginData");
+      console.log(body.pluginData);
 
-        pluginVideoData["analyseMediainfo"] = false;
-      } else {
-        videoMetadataDAO
-          .findVideoMetadataByVideoId(video.id)
-          .then(async (resolvedVideoMetaData) => {
-            console.log("resolvedVideoMetaData", resolvedVideoMetaData);
-            if (resolvedVideoMetaData == undefined) {
-              console.log("syncMetaDataDAO because not found");
-              await syncMetaDataDAO(
-                mediaInfo,
-                mediainfoEBU,
-                ffprobe,
-                video.id,
-                peertubeVideosHelpers,
-                mediainfoMetadataDAO,
-                mediainfoMetadataEBUDAO,
-                ffprobeMetadataDAO,
-                metadataEBUDefaultDAO,
-                videoMetadataDAO
-              ).then((resolvedVideoMetaData) => {
-                var videoMetaData = resolvedVideoMetaData;
-                if (videoMetaData != undefined) {
-                  syncAndUpdate(
-                    videoMetaData,
-                    mediainfoMetadataDAO,
-                    video,
-                    syncHelper,
-                    storageManager,
-                    body,
-                    EBUDefaults,
-                    pluginVideoData
-                  );
-                }
-              });
-            } else {
-              videoMetaData = resolvedVideoMetaData;
-              syncAndUpdate(
-                videoMetaData,
-                mediainfoMetadataDAO,
-                video,
-                syncHelper,
-                storageManager,
-                body,
-                EBUDefaults,
-                pluginVideoData
-              );
-            }
-          });
+      // get JSON from DB
+      // body.pluginData
+      // update
+      // JSON format
+      // pluginData parsen
+
+      const mediainfoMetaData = await metadataDAO.findMetadata(videoId);
+      console.log("mediainfoMetaData", mediainfoMetaData);
+
+      const standardVideoDataSynced = await syncHelper.syncStandardVideoData(
+        body,
+        pluginVideoData
+      );
+
+      var anaylsedMetadataJSON = JSON.parse(mediainfoMetaData[0][0].metadata);
+
+      //TODO setParser
+      var metadataJSON = JSON.parse(mediainfoMetaData[0][0].parsed_metadata);
+      console.log("JSON compare");
+      console.log(anaylsedMetadataJSON);
+      console.log(metadataJSON);
+
+      //formdata
+      const setting = await settingsManager.getSetting("form");
+      if (!setting) {
+        console.log('Error: "setting" is undefined or null');
+        return;
       }
+
+      let formDataJSON;
+      try {
+        formDataJSON = JSON.parse(setting.replace(/'/g, '"'));
+      } catch (error) {
+        console.error("Error parsing JSON in setting:", error);
+        return;
+      }
+      var parsedData = await setParser(anaylsedMetadataJSON, formDataJSON);
+      console.log(parsedData);
+      //should I use the parsed one or the synced one? getParser worked not as it should
+      const result = await syncHelper.syncMetadata(
+        metadataJSON,
+        standardVideoDataSynced
+      );
+      console.log("result12121221");
+      console.log(result);
+      var metadataData = JSON.stringify(result);
+      await syncedMetadataDAO.addSyncedMetadata(metadataData, videoId);
+
+      //cache
+      /*       
+      await storageManager.storeData("metadata-" + videoId + "-" + 0, result); 
+      */
     },
   });
-
-  async function syncAndUpdate(
-    videoMetaData,
-    mediainfoMetadataDAO,
-    video,
-    syncHelper,
-    storageManager,
-    body,
-    EBUDefaults,
-    pluginVideoData
-  ) {
-    console.log("videoMetaData not undefined anymore");
-    console.log(videoMetaData);
-
-    mediainfoMetaData = await mediainfoMetadataDAO.findMediainfoMetadata(
-      videoMetaData.fk_mediainfo_metadata_id
-    );
-    console.log(
-      "was ist im mediainfoMetaData",
-      videoMetaData.fk_metadata_ebu_default_id
-    );
-    var userId = video.VideoChannel.Account.dataValues.userId;
-    await syncHelper
-      .sync(
-        body,
-        mediainfoMetaData.mediainfo,
-
-        pluginVideoData,
-        EBUDefaults.values,
-        userId
-      )
-      .then(async (result) => {
-        console.log("CompleteSync", result);
-        console.log(body);
-        console.log(mediainfoMetaData);
-
-        //findMediainfoMetadata
-        //videoMetaData.fk_mediainfo_metadata_ebu_id
-
-        mediainfoEbuDefaultsId =
-          await metadataEBUDefaultDAO.modifyMediainfoMetadata(result);
-
-        await storageManager.storeData(
-          "metadata-" + video.id + "-" + 0,
-          result
-        );
-      });
-
-    //TODO: use also metadataDAO;
-  }
 };
 
 module.exports = {

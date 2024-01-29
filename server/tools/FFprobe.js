@@ -1,7 +1,3 @@
-// TODO: sort index
-// TODO: title: null, extract title out of filename
-// TODO: duration -> Timestampfield
-
 const ffprobeStatic = require("ffprobe-static");
 const exec = require("child_process").exec;
 const {
