@@ -1,0 +1,545 @@
+{
+  "ebucore:ebuCoreMain": {
+    "version": 1.9,
+    "coreMetadata": {
+      "title": {
+        "title": "Testvideo - Chris am 15.02.2024 (Änderungstest)"
+      },
+      "titleNote": {
+        "title": "Notiz zum Titel"
+      },
+      "descriptiveTitle": {
+        "title": "beschreibender Titel"
+      },
+      "descriptiveTitleNote": {
+        "title": "Notiz zum beschreibenden Titel"
+      },
+      "alternativeTitle": {
+        "title": "Testvideo"
+      },
+      "alternativeTitleNote": {
+        "title": "Notiz zum Sendungsnamen"
+      },
+      "shortcode": {
+        "title": "TES"
+      },
+      "creator": {
+        "contactDetails": {
+          "name": "Laura Strauss",
+          "username": "l.strauss",
+          "occupation": "Redaktionsleitung"
+        },
+        "organisationDetails": {
+          "organisationName": "FS1",
+          "organisationCode": "",
+          "organisationDepartment": "organisationDepartment3"
+        },
+        "role": "presenter"
+      },
+      "contributor": {
+        "contactDetails": {
+          "name": "Darta Oseniece",
+          "username": "d.oseniece",
+          "occupation": ""
+        },
+        "organisationDetails": {
+          "organisationName": "",
+          "organisationCode": "",
+          "organisationDepartment": ""
+        },
+        "role": "crew"
+      },
+      "subject": [
+        {
+          "subject": "Hier wird getestet",
+          "subjectCode": ""
+        }
+      ],
+      "description": {
+        "description": "Lorem Ipsum dolor sit amet"
+      },
+      "tags": [
+        {
+          "tags": "Kunst"
+        },
+        {
+          "tags": "Kultur"
+        },
+        {
+          "tags": "Musik"
+        },
+        {
+          "tags": "Rockhouse"
+        },
+        {
+          "tags": "LocalHeroes"
+        }
+      ],
+      "oldTags": [
+        {
+          "tags": "Kunst"
+        },
+        {
+          "tags": "Kultur"
+        },
+        {
+          "tags": "Musik"
+        },
+        {
+          "tags": "Rockhouse"
+        },
+        {
+          "tags": "LocalHeroes"
+        }
+      ],
+      "type": {
+        "objectType": "Series",
+        "series": {
+          "season": "1",
+          "episode": "5"
+        },
+        
+        "genre": "Kunst",
+        "type": "Test",
+        "targetAudience": "Tester"
+      },
+      "language": {
+        "language": "de"
+      },
+      "version": "1.3",
+      "publisher": {
+        "organisationDetails": {
+          "organisationName": "FS1",
+          "organisationDepartment": "Produktion",
+          "details": {
+            "emailAddress": "",
+            "webAddress": "fs1.tv",
+            "address": {
+              "addressLine": ["", "FS1", "Bergstrasse 12", "5020"],
+              "addressTownCity": "Salzburg",
+              "country": "Austria"
+            },
+            "telephoneNumber": "+123456789"
+          }
+        },
+        "role": ""
+      },
+      "date": {
+        "created": "07.03.2024",
+        "issued": "07.03.2024",
+        "modified": "14.03.2024",
+        "recorded": "06.03.2024",
+        "digitalised": "07.03.2024"
+      },
+      "format": [
+        {
+          "locator": "https://dev.fs1.tv/sendung/goetterfunk-studiosessions/"
+        },
+        {
+          "videoFormat": {
+            "technicalAttributeRational": 1
+          },
+          "duration": {
+            "editUnitNumber": 2280
+          },
+          "locator": "\\172.16.20.30\\Archiv\\Kunst&Kultur\\ARGE\\2016_S01"
+        }
+      ],
+      "coverage": {
+        "spatial": {
+          "location": [
+            {
+              "name": "SALZBURG"
+            },
+            {
+              "name": "AUSTRIA",
+              "code": "country:AUS"
+            }
+          ]
+        }
+      },
+      "archiveData": [
+        {
+          "fileSize": "10.5 GB",
+          "locator": "\\172.16.20.30\\Archiv\\Kunst&Kultur\\ARGE\\2016_S01",
+          "locatorArchive": "NAS",
+          "fileName": "0001_FS1_S01_E01_Theaterstueck_WirSchlafenNicht"
+        }
+      ],
+      "rights": [
+        {
+          "rights": "Nicht für Werbezwecke",
+          "disclaimer": "Alle Angaben nur zum Testen",
+          "clearanceFlag": "gesetzt",
+          "rightsHolder": {
+            "organisationDetails": {
+              "organisationName": "FS1"
+            },
+            "dates": {
+              "startDate": "07.03.2024",
+              "endDate": "07.03.2034"
+            }
+          }
+        },
+        {
+          "rights": "CC",
+          "rightsID": "9",
+          "rightsHolder": "FS1"
+        }
+      ],
+      "rating": {
+        "ratingScaleMax": "5",
+        "ratingScaleMin": "1",
+        "ratingValue": "5",
+        "ratingNotes": "Super Testvideo!"
+      },
+      "publicationHistory": {
+        "publicationEvent": {
+          "publicationDate": "14.03.2024",
+          "publicationTime": "14:33",
+          "publicationChannel": "https://mediathek.fs1.tv/w/hMm93Sj7R6S5xb22GF7dxw"
+        },
+        "publicationEvent1": {
+          "publicationDate": "14.03.2024",
+          "publicationTime": "14:33",
+          "publicationChannel": "A1 TV"
+        }
+      },
+      "part": [
+        {
+          "description": [
+            {
+              "description": 1
+            },
+            {
+              "description": "Teil 1, Politik in Salzburg"
+            }
+          ],
+          "format": [
+            {
+              "locator": ""
+            },
+            {
+              "start": {
+                "editUnitNumber": ""
+              }
+            }
+          ],
+          "language": {
+            "language": "de"
+          }
+        }
+      ]
+    },
+    "metadataProvider": {
+      "organisationDetails": {
+        "organisationName": "FS1",
+        "organisationDepartment": "",
+        "details": {
+          "emailAddress": "",
+          "webAddress": "fs1.tv",
+          "address": {
+            "addressLine": "Bergstrasse 12",
+            "addressTownCity": "Salzburg",
+            "addressCountyState": "Salzburg",
+            "addressDeliveryCode": "5020",
+            "country": "Austria"
+          }
+        },
+        "contacts": {
+          "contactDetails": {
+            "name": "Stella Patzlaff",
+            "username": "s.patzlaff",
+            "occupation": "IT",
+            "details": {
+              "emailAddress": "s.patzlaff@fs1.tv",
+              "webAddress": "fs1.tv",
+              "telephoneNumber": "+1234567890"
+            }
+          },
+          "role": ""
+        }
+      }
+    },
+    "ebucore:format": [
+      {
+        "ebucore:videoFormat": [
+          {
+            "@videoFormatName": "format",
+            "ebucore:width": [
+              {
+                "@unit": "pixel",
+                "#value": "1920"
+              }
+            ],
+            "ebucore:height": [
+              {
+                "@unit": "pixel",
+                "#value": "1080"
+              }
+            ],
+            "ebucore:frameRate": [
+              {
+                "#value": "50"
+              }
+            ],
+            "ebucore:aspectRatio": [
+              {
+                "@typeLabel": "display",
+                "ebucore:factorNumerator": [
+                  {
+                    "#value": "16"
+                  }
+                ],
+                "ebucore:factorDenominator": [
+                  {
+                    "#value": "9"
+                  }
+                ]
+              }
+            ],
+            "ebucore:videoEncoding": [
+              {
+                "@typeLabel": "High@L4.2"
+              }
+            ],
+            "ebucore:codec": [
+              {
+                "ebucore:codecIdentifier": [
+                  {
+                    "dc:identifier": [
+                      {
+                        "#value": "avc1"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "ebucore:bitRate": [
+              {
+                "#value": "969579"
+              }
+            ],
+            "ebucore:scanningFormat": [
+              {
+                "#value": "Progressive"
+              }
+            ],
+            "ebucore:videoTrack": [
+              {
+                "@trackId": 1
+              }
+            ],
+            "ebucore:technicalAttributeString": [
+              {
+                "@typeLabel": "ColorSpace",
+                "#value": "YUV"
+              },
+              {
+                "@typeLabel": "ChromaSubsampling",
+                "#value": "4:2:0"
+              },
+              {
+                "@typeLabel": "GOP",
+                "#value": null
+              },
+              {
+                "@typeLabel": "colour_primaries",
+                "#value": "BT.709"
+              },
+              {
+                "@typeLabel": "transfer_characteristics",
+                "#value": "BT.709"
+              },
+              {
+                "@typeLabel": "matrix_coefficients",
+                "#value": "BT.709"
+              },
+              {
+                "@typeLabel": "colour_range",
+                "#value": "Limited"
+              },
+              {
+                "@typeLabel": "WritingLibrary",
+                "#value": "undefined undefined"
+              },
+              {
+                "@typeLabel": "Default",
+                "#value": "No"
+              },
+              {
+                "@typeLabel": "Forced",
+                "#value": "No"
+              }
+            ],
+            "ebucore:technicalAttributeInteger": [
+              {
+                "@typeLabel": "BitDepth",
+                "@unit": "bit",
+                "#value": 8
+              },
+              {
+                "@typeLabel": "StreamSize",
+                "@unit": "byte",
+                "#value": 218160054
+              }
+            ],
+            "ebucore:technicalAttributeBoolean": [
+              {
+                "@typeLabel": "CABAC",
+                "#value": true
+              },
+              {
+                "@typeLabel": "MBAFF",
+                "#value": "false"
+              }
+            ]
+          }
+        ],
+        "ebucore:audioFormat": [
+          {
+            "@audioFormatName": "AAC",
+            "ebucore:audioEncoding": [
+              {
+                "@typeLabel": "null"
+              }
+            ],
+            "ebucore:codec": [
+              {
+                "ebucore:codecIdentifier": [
+                  {
+                    "dc:identifier": [
+                      {
+                        "#value": "mp4a-40-2"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "ebucore:samplingRate": [
+              {
+                "#value": "44100"
+              }
+            ],
+            "ebucore:bitRate": [
+              {
+                "#value": "127999"
+              }
+            ],
+            "ebucore:bitRateMax": [
+              {
+                "#value": 0
+              }
+            ],
+            "ebucore:bitRateMode": [
+              {
+                "#value": "constant"
+              }
+            ],
+            "ebucore:audioTrack": [
+              {
+                "@trackId": 2,
+                "@trackLanguage": "en"
+              }
+            ],
+            "ebucore:channels": [
+              {
+                "#value": 2
+              }
+            ],
+            "ebucore:technicalAttributeString": [
+              {
+                "@typeLabel": "ChannelPositions",
+                "#value": "Front: L R"
+              },
+              {
+                "@typeLabel": "ChannelLayout",
+                "#value": "L R"
+              },
+              {
+                "@typeLabel": "Endianness",
+                "#value": null
+              }
+            ],
+            "ebucore:technicalAttributeInteger": [
+              {
+                "@typeLabel": "StreamSize",
+                "@unit": "byte",
+                "#value": 28801660
+              }
+            ]
+          }
+        ],
+        "ebucore:containerFormat": [
+          {
+            "@containerFormatName": "MPEG-4",
+            "ebucore:containerEncoding": [
+              {
+                "@formatLabel": "MPEG-4"
+              }
+            ],
+            "ebucore:codec": [
+              {
+                "ebucore:codecIdentifier": [
+                  {
+                    "dc:identifier": [
+                      {
+                        "#value": "isom"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "ebucore:technicalAttributeString": [
+              {
+                "@typeLabel": "FormatProfile",
+                "#value": "Base Media"
+              }
+            ]
+          }
+        ],
+        "ebucore:duration": [
+          {
+            "ebucore:normalPlayTime": [
+              {
+                "#value": "PT30M0.104S"
+              }
+            ]
+          }
+        ],
+        "ebucore:fileSize": [
+          {
+            "#value": "{248554392"
+          }
+        ],
+        "ebucore:fileName": [
+          {
+            "#value": ""
+          }
+        ],
+        "ebucore:locator": [
+          {
+            "#value": ""
+          }
+        ],
+        "ebucore:technicalAttributeInteger": [
+          {
+            "@typeLabel": "OverallBitRate",
+            "@unit": "bps",
+            "#value": null
+          }
+        ],
+        "ebucore:dateCreated": [
+          {
+            "@startDate": "",
+            "@startTime": ""
+          }
+        ],
+        "ebucore:dateModified": [{}]
+      }
+    ]
+  }
+}

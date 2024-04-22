@@ -1,0 +1,103 @@
+{
+  "name": "peertube-plugin-metadata",
+  "description": "Enables the addition of metadata",
+  "version": "1.8.0",
+  "author": "biowilli",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/biowilli/peertube-plugin-metadata.git"
+  },
+  "license": "AGPL-3.0",
+  "bugs": "https://github.com/biowilli/peertube-plugin-metadata/issues",
+  "clientScripts": [
+    {
+      "script": "client/router-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/video-edit-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/video-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/creator-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/genre-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/organization-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/video-watch-client-plugin.js",
+      "scopes": [
+        "video-watch"
+      ]
+    }
+  ],
+  "css": [
+    "assets/style.css"
+  ],
+  "peerDependencies": {
+    "@peertube/peertube-types": "^5.1.0",
+    "@purtuga/esm-webpack-plugin": "^1.1.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "engine": {
+    "peertube": ">=3.4.0"
+  },
+  "homepage": "https://fairkom.eu",
+  "keywords": [
+    "peertube",
+    "ebu",
+    "mediainfo",
+    "ffprobe",
+    "plugin",
+    "licenses",
+    "ebu",
+    "metadata",
+    "fairkom",
+    "broadcast",
+    "videodata",
+    "data",
+    "fairkom",
+    "opensource"
+  ],
+  "library": "./main.js",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "webpack --mode=production"
+  },
+  "staticDirs": {
+    "images": "public/images",
+    "ebudata": "ebudata"
+  },
+  "translations": {},
+  "dependencies": {
+    "alpinejs": "^3.13.3",
+    "ffprobe-static": "^3.1.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@peertube/peertube-types": "^5.2.0"
+  }
+}

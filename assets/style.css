@@ -1,0 +1,110 @@
+.attribute-ebu {
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-size: 13px;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.attribute-label-ebu {
+  min-width: 142px;
+  padding-right: 5px;
+  display: inline-block;
+  color: var(--greyForegroundColor);
+  font-weight: 700;
+}
+
+.attribute-category,
+.attribute-licence,
+.attribute-language,
+.attribute-tags,
+.attribute-duration,
+.attribute-privacy {
+  display: none !important;
+}
+
+.col-md-12 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.col-xl-8 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.form-group h2 {
+  width: calc(100vw - 240px);
+}
+
+.form-group h3 {
+  width: calc(100vw - 240px);
+}
+
+.form-group h4 {
+  width: calc(100vw - 240px);
+}
+
+.video-info{
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.dynamic-table {
+  width: 80%;
+  border-collapse: collapse;
+}
+
+.label-cell,
+.value-cell {
+  padding: 3px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.label-cell {
+  max-width: 15%;
+}
+
+.value-cell {
+  max-width: 35%;
+}
+
+.empty-row {
+  border: none;
+  border-top: 2px solid;
+}
+
+@media screen and (max-width: 768px) {
+  /* If the screen size is smaller than 768px */
+  .label-cell,
+  .value-cell {
+    width: 100%; /* Make both label and value cells full width */
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .label-cell {
+    width: 10%;
+    white-space: nowrap; /* Verhindert das Umbruch von langen Texten */
+    overflow: hidden; /* Versteckt den überlaufenden Text */
+    text-overflow: ellipsis; /* Zeigt "..." an, wenn der Text abgeschnitten wird */
+  }
+
+  .value-cell {
+    max-width: 35%;
+    flex-shrink: 1;
+    overflow: hidden; 
+    word-wrap: break-word;
+    text-overflow: ellipsis; /* Zeigt "..." an, wenn der Text abgeschnitten wird */
+  }
+}
