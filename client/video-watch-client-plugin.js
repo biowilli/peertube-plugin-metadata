@@ -325,16 +325,6 @@ function register({ registerHook, peertubeHelpers }) {
                       label: field.label,
                       value: value,
                     });
-                  } else if (field.mappingname == "show.videoLinks") {
-                    var value = turnUndefinedIntoString(
-                      video.pluginData[field.mappingname]
-                    );
-                    console.log("value", value);
-                    data.push({
-                      mappingname: field.mappingname,
-                      label: field.label,
-                      value: value,
-                    });
                   } else if (field.mappingname == "show.category") {
                     var value = turnUndefinedIntoString(
                       extractReadablInfo(
@@ -493,9 +483,9 @@ function createDynamicTable(data) {
       headerRow.appendChild(headerCell);
       table.appendChild(headerRow);
     } else if (item.mappingname === "line") {
-      const emptyRow = table.insertRow(); // Fügt eine leere Zeile ein
-      const emptyCell = emptyRow.insertCell(); // Fügt eine Zelle in der leeren Zeile ein
-      emptyCell.colSpan = maxColumns; // Setzt die Zellenbreite auf die Anzahl der Spalten
+      const emptyRow = table.insertRow();
+      const emptyCell = emptyRow.insertCell();
+      emptyCell.colSpan = maxColumns;
       emptyRow.classList.add("empty-row");
     } else {
       if (currentColumn === 0) {
@@ -507,13 +497,24 @@ function createDynamicTable(data) {
       labelCell.classList.add("label-cell");
 
       const valueCell = currentRow.insertCell();
-      valueCell.textContent = item.value;
+
+      if (item.mappingname == "show.videoLinks") {
+        console.log("show.videoLinks");
+        const link = document.createElement("a");
+        link.setAttribute("class", "attribute-value-ebu");
+        link.setAttribute("href", item.value);
+        link.textContent = item.value;
+        valueCell.innerHTML = "";
+        valueCell.appendChild(link);
+      } else {
+        valueCell.textContent = item.value;
+      }
+
       valueCell.classList.add("value-cell");
 
-      currentColumn += 2; // Two columns for each data item
+      currentColumn += 2;
 
       if (currentColumn >= maxColumns || index === data.length - 1) {
-        // If the row is full or it's the last item
         currentColumn = 0; // Reset column count for the next row
       }
     }
@@ -570,28 +571,6 @@ function createButton(name, callback) {
   button.textContent = name;
   const myVideoAttributes = document.querySelector("my-video-attributes");
   myVideoAttributes.appendChild(button);
-}
-
-function createVideoInfo(label, value) {
-  const myVideoAttributes = document.querySelector("my-video-attributes");
-  const newField = document.createElement("div");
-  newField.classList.add("attribute-ebu");
-  newField.innerHTML = `
-    <span class="attribute-label-ebu">${label}</span>
-    <span class="attribute-value-ebu">${value}</span>
-    `;
-  myVideoAttributes.appendChild(newField);
-}
-
-function createVideoLink(label, value) {
-  const myVideoAttributes = document.querySelector("my-video-attributes");
-  const newField = document.createElement("div");
-  newField.classList.add("attribute-ebu");
-  newField.innerHTML = `
-    <span class="attribute-label-ebu">${label}</span>
-    <a class="attribute-value-ebu" href="${value}">${value}</a>
-    `;
-  myVideoAttributes.appendChild(newField);
 }
 
 function turnUndefinedIntoString(data) {
