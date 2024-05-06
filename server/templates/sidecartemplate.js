@@ -12,8 +12,12 @@ async function getContributorRoles(metadata) {
   };
 }
 
-async function filterCreatorsByRole(allCreator, role) {
-  return allCreator.filter((creator) => role.includes(creator.id));
+async function filterCreatorsByRole(allCreators, role) {
+  if (role === null) {
+    return [];
+  }
+
+  return allCreators.filter((creator) => role.includes(creator.id));
 }
 
 const sanitizeValue = (value) => {
@@ -94,6 +98,11 @@ async function getAllFormattedContributors(metadata, creatorDAO) {
 async function getAllFormattedOrganizations(metadata, organizationDAO) {
   var producerRole = metadata["show.role.producer"];
   var allOrganization = await organizationDAO.getAllOrganizations();
+
+  if (producerRole === null) {
+    return [];
+  }
+
   var organizationProducer = allOrganization.filter((organization) =>
     producerRole.includes(organization.id)
   );
