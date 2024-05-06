@@ -28,8 +28,8 @@ async function register({ registerClientRoute, peertubeHelpers }) {
               ${generateInputField("Telefonnummer", "telephone")}
               ${generateInputField("Mobiltelefonnummer", "mobile")}
               ${generateInputField("Bühnenname", "stage")}
-              ${generateInputField("Vernetzter Kontakt", "contacts")} -->
-              ${generateInputField("Role", "role")}
+              ${generateInputField("Vernetzter Kontakt", "contacts")} 
+              ${generateInputField("Role", "role")} -->
             </div>
             <br>
             <button id="myButton" class="iconButton" title="Add Creator">
@@ -60,8 +60,8 @@ async function register({ registerClientRoute, peertubeHelpers }) {
                 <th>Mobiltelefonnummer</th>
                 <th>Bühnenname</th>
                 <th>Vernetzter Kontakt</th>
-                -->
                 <th>Role</th>
+                -->
               </tr>
             </table>
           </div>
@@ -260,8 +260,8 @@ async function register({ registerClientRoute, peertubeHelpers }) {
                 <th>Telefonnummer</th>
                 <th>Mobiltelefonnummer</th>
                 <th>Bühnenname</th>
-                <th>Vernetzter Kontakt</th> -->
-                <th>Role</th>
+                <th>Vernetzter Kontakt</th>
+                <th>Role</th> -->
               `;
               newTableBody.appendChild(tableHeaderRow);
               creators.forEach((creator) => {
@@ -282,8 +282,8 @@ async function register({ registerClientRoute, peertubeHelpers }) {
                     <td id="telephoneCell">${creator.telephone}</td>
                     <td id="mobileCell">${creator.mobile}</td>
                     <td id="stageCell">${creator.stage}</td>
-                    <td id="contactsCell">${creator.contacts}</td> -->
-                    <td id="roleCell">${creator.role}</td>
+                    <td id="contactsCell">${creator.contacts}</td> 
+                    <td id="roleCell">${creator.role}</td>-->
                     <td>
                       <div class="modifyButton" data-id="${creator.id}" title="edit">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#4CBDC9" fill="none" stroke-linecap="round" stroke-linejoin="round">

@@ -29,7 +29,7 @@ const sanitizeValue = (value) => {
   }
 };
 
-function formatCreator(creator) {
+function formatCreator(creator, role) {
   let fullName =
     creator.name !== null && creator.name !== undefined ? creator.name : "";
   +(creator.familyname !== null && creator.familyname !== undefined
@@ -47,18 +47,36 @@ function formatCreator(creator) {
       organisationCode: "",
       organisationDepartment: "",
     },
-    role: creator.role,
+    role: role,
   };
 }
 
 async function formatCreators(allCreators, roles) {
   let formattedCreators = [];
+
   for (let role in roles) {
     let filteredCreators = await filterCreatorsByRole(allCreators, roles[role]);
-    let formattedRoleCreators = filteredCreators.map(formatCreator);
+
+    let formattedRoleCreators = filteredCreators.map((creator) =>
+      formatCreator(creator, role)
+    );
     formattedCreators = formattedCreators.concat(formattedRoleCreators);
   }
   return formattedCreators;
+}
+
+async function formatTags(tags) {
+  console.log("tags", tags);
+  let formattedTags = tags.map((tag) => ({ tags: tag }));
+  return formattedTags;
+}
+
+async function formatOldTags(oldtags) {
+  console.log("oldtags", oldtags);
+  const tagsArray = oldtags.split(",").map((tag) => tag.trim());
+  let formattedTags = tagsArray.map((tag) => ({ tags: tag }));
+
+  return formattedTags;
 }
 
 async function getAllFormattedCreators(metadata, creatorDAO) {
@@ -156,12 +174,16 @@ async function getCoreMetadataTemplate(
     },
   ];
 
-  //TODO: tags FS1 checkt
   let tags = metadata["show.description.tags"];
+  let formatedTags = await formatTags(tags);
   let oldTags = metadata["show.description.oldtags"];
+  let formatedOldTags = await formatOldTags(oldTags);
 
   console.log("tags", tags);
   console.log("oldTags", oldTags);
+
+  console.log("formatedTags", formatedTags);
+  console.log("formatedOldTags", formatedOldTags);
 
   let type = {
     objectType: "Series",
@@ -314,8 +336,8 @@ async function getCoreMetadataTemplate(
     description: {
       description: metadata["show.description.text"],
     },
-    tags: tags,
-    oldTags: oldTags,
+    tags: formatedTags,
+    oldTags: formatedOldTags,
     type: type,
     language: {
       language: metadata["show.language"],
