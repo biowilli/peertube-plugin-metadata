@@ -71,16 +71,20 @@ async function formatCreators(allCreators, roles) {
 
 async function formatTags(tags) {
   console.log("tags", tags);
+
   let formattedTags = tags.map((tag) => ({ tags: tag }));
   return formattedTags;
 }
 
 async function formatOldTags(oldtags) {
   console.log("oldtags", oldtags);
-  const tagsArray = oldtags.split(",").map((tag) => tag.trim());
-  let formattedTags = tagsArray.map((tag) => ({ tags: tag }));
 
-  return formattedTags;
+  if (Array.isArray(oldtags)) {
+    return oldtags.map((tag) => ({ tags: tag.trim() }));
+  } else {
+    const tagsArray = oldtags.split(",").map((tag) => tag.trim());
+    return tagsArray.map((tag) => ({ tags: tag }));
+  }
 }
 
 async function getAllFormattedCreators(metadata, creatorDAO) {
