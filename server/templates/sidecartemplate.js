@@ -324,43 +324,43 @@ async function getCoreMetadataTemplate(
   ];
 
   const coreMetadataTemplate = {
-    title: {
+    "ebucore:title": {
       title: metadata["show.title.title"],
     },
-    titleNote: {
+    "ebucore:titleNote": {
       title: metadata["show.title.titleNote"],
     },
-    descriptiveTitle: {
+    "ebucore:descriptiveTitle": {
       title: metadata["show.title.descriptiveTitle"],
     },
-    descriptiveTitleNote: {
+    "ebucore:descriptiveTitleNote": {
       title: metadata["show.title.descriptiveTitleNote"],
     },
-    alternativeTitle: {
+    "ebucore:alternativeTitle": {
       title: metadata["show.title.alternativeTitle"],
     },
-    alternativeTitleNote: {
+    "ebucore:alternativeTitleNote": {
       title: metadata["show.title.alternativeTitleNote"],
     },
-    shortcode: shortcode,
-    creator: creator,
-    contributor: contributors,
-    subject: subject,
-    description: {
+    "ebucore:shortcode": shortcode,
+    "ebucore:creator": creator,
+    "ebucore:contributor": contributors,
+    "ebucore:subject": subject,
+    "ebucore:description": {
       description: metadata["show.description.text"],
     },
-    tags: formatedTags,
-    oldTags: formatedOldTags,
-    type: type,
-    language: {
+    "ebucore:tags": formatedTags,
+    "ebucore:oldTags": formatedOldTags,
+    "ebucore:type": type,
+    "ebucore:language": {
       language: metadata["show.language"],
     },
-    version: metadata["show.version"],
-    publisher: publisher,
-    date: dates,
-    format: formatCoreMetadata,
-    coverage: coverage,
-    archiveData: [
+    "ebucore:version": metadata["show.version"],
+    "ebucore:publisher": publisher,
+    "ebucore:date": dates,
+    "ebucore:format": formatCoreMetadata,
+    "ebucore:coverage": coverage,
+    "ebucore:archiveData": [
       {
         fileSize: metadata["archiveData.filesize"],
         locator: metadata["archiveData.archiveFilePath"],
@@ -368,10 +368,10 @@ async function getCoreMetadataTemplate(
         fileName: metadata["archiveData.filename"],
       },
     ],
-    rights: rigthsTemplate,
-    rating: rating,
-    publicationHistory: publicationHistory,
-    part: part,
+    "ebucore:rights": rigthsTemplate,
+    "ebucore:rating": rating,
+    "ebucore:publicationHistory": publicationHistory,
+    "part:ebucore": part,
   };
 
   return coreMetadataTemplate;
@@ -379,7 +379,7 @@ async function getCoreMetadataTemplate(
 
 function getMetadataProviderTemplate(metadata) {
   return {
-    organisationDetails: {
+    "ebucore:organisationDetails": {
       organisationName: "FS1",
       organisationDepartment: "",
       details: {

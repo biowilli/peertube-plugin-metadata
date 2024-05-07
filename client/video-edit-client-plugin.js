@@ -191,25 +191,48 @@ async function register({ registerVideoField, peertubeHelpers }) {
 
             if (field.type === "checkbox") {
               const currentFieldCheckbox = field;
-              registerVideoField(
-                {
-                  name: `${field.mappingname}`,
-                  label: `${field.label}`,
-                  descriptionHTML: `${
-                    field.caption != "" ? field.caption : "-"
-                  }`,
-                  type: "input-checkbox",
-                  default: "",
-                  error: false,
-                  hidden: () => {
-                    return !currentFieldCheckbox.visibleVideoEdit;
+
+              if (field.mappingname === "dates.publicationHistory") {
+                registerVideoField(
+                  {
+                    name: `${field.mappingname}`,
+                    label: `${field.label}`,
+                    descriptionHTML: `${
+                      field.caption != "" ? field.caption : "-"
+                    }`,
+                    type: "input-checkbox",
+                    default: true,
+                    error: false,
+                    hidden: () => {
+                      return !currentFieldCheckbox.visibleVideoEdit;
+                    },
                   },
-                },
-                {
-                  type,
-                  ...videoFormOptions,
-                }
-              );
+                  {
+                    type,
+                    ...videoFormOptions,
+                  }
+                );
+              } else {
+                registerVideoField(
+                  {
+                    name: `${field.mappingname}`,
+                    label: `${field.label}`,
+                    descriptionHTML: `${
+                      field.caption != "" ? field.caption : "-"
+                    }`,
+                    type: "input-checkbox",
+                    default: "",
+                    error: false,
+                    hidden: () => {
+                      return !currentFieldCheckbox.visibleVideoEdit;
+                    },
+                  },
+                  {
+                    type,
+                    ...videoFormOptions,
+                  }
+                );
+              }
             }
             if (field.type === "select") {
               const currentFieldSelect = field;
