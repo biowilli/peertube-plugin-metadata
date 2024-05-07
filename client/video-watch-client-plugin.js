@@ -431,7 +431,6 @@ function register({ registerHook, peertubeHelpers }) {
                 }
               }
 
-              console.log("data1212", data);
               createDynamicTable(data);
             });
 
