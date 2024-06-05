@@ -1,4 +1,6 @@
 function register({ registerHook, peertubeHelpers }) {
+  var sidecarFilename = "";
+
   // Function to convert file size from Mebibyte to Megabyte
   function convertFileSize(bytes) {
     const megabyte = bytes / (1024 * 1024); // 1 Megabyte = 1024 * 1024 Bytes
@@ -140,6 +142,17 @@ function register({ registerHook, peertubeHelpers }) {
                   var field = form[i];
                   if (field.visibleVideoWatch == false) {
                     continue;
+                  } else if (field.mappingname == "archiveData.filename") {
+                    var filenameArchive = video.pluginData[field.mappingname];
+
+                    if (filenameArchive.includes(".")) {
+                      sidecarFilename = filenameArchive.substring(
+                        0,
+                        filenameArchive.lastIndexOf(".")
+                      );
+                    } else {
+                      sidecarFilename = filenameArchive;
+                    }
                   } else if (field.mappingname == "mediainfo.info.fileSize") {
                     var value = video.pluginData[field.mappingname];
 
@@ -448,7 +461,7 @@ function register({ registerHook, peertubeHelpers }) {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = video.name + "_sidecarfile.json";
+                a.download = sidecarFilename + ".json";
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
